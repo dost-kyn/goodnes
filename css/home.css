@@ -1,0 +1,418 @@
+@font-face {
+  font-family: "Calypso";
+  src: url("../fonts/Calypso.ttf");
+}
+
+@font-face {
+  font-family: "Rounded Mplus 1c";
+  src: url("../fonts/MPLUSRounded1c-Regular.ttf");
+}
+
+html {
+  color: #410e28;
+  overflow-x: hidden;
+}
+body {
+  max-width: 1440px;
+  margin: 0 auto 0 auto;
+  background-color: #fff8f0;
+  font-family: "Rounded Mplus 1c";
+  position: relative;
+  padding: 0 20px;
+}
+a {
+  color: #410e28;
+  text-decoration: none;
+}
+hr{
+  height: 1px;
+  background-color: #410e28;
+}
+input[type='checkbox'] {
+  width: 30px;
+  background-color: #B0206B;
+  border: none;
+}
+
+/*               section header             */
+
+.header {
+  background-color: #fff;
+  width: 100vw; /* Занимает всю ширину viewport */
+  position: relative;
+  left: 50%; /* Смещаем влево на 50% от viewport */
+  transform: translateX(-50%); /* Корректируем положение */
+  padding: 10px 0 3px;
+}
+
+.header_content {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+.header_logo {
+  max-width: 70px;
+}
+.header_logo_img {
+  max-width: 100%;
+}
+.header_nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  font-size: 20px;
+}
+.header_nav_tema {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: #fff;
+  max-width: 35px;
+  cursor: pointer;
+}
+.header_nav_tema_img {
+  max-width: 100%;
+}
+
+/*               section header             */
+
+/*               section banner             */
+
+.banner_image {
+  width: 100vw; /* Занимает всю ширину viewport */
+  position: relative;
+  left: 50%; /* Смещаем влево на 50% от viewport */
+  transform: translateX(-50%); /* Корректируем положение */
+}
+
+.banner_image_img {
+  width: 100%;
+  display: block; /* Убирает лишние отступы у img */
+}
+.banner_text {
+  position: absolute;
+  top: 5%;
+  font-size: 2.8vw;
+  font-family: "Calypso";
+  max-width: 700px;
+  line-height: 1.7;
+  padding-left: 10px;
+  z-index: 10;
+}
+/*               section banner             */
+
+/*               section menu             */
+
+.menu_buttons {
+  display: flex;
+  margin: 120px auto 0 auto;
+  justify-content: space-between;
+  max-width: 1148px;
+}
+.menu_btn {
+  position: relative;
+  width: 130px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  border: none;
+  cursor: pointer;
+}
+.menu_btn_icon {
+  position: absolute;
+  margin-bottom: 30px;
+  width: 80px;
+  justify-content: center;
+  align-items: center;
+  top: -40px;
+  left: 19%;
+}
+.menu_btn_icon_img{
+  width: 100%;
+}
+.menu_btn_name {
+  margin-top: 50px;
+  font-size: 25px;
+  font-family: "Calypso";
+  text-decoration-line: underline;
+}
+.one_or_hour {
+  text-decoration-color: #e7bcd3;
+}
+.two_or_five {
+  text-decoration-color: #efceba;
+}
+.three_or_six {
+  text-decoration-color: #f2c1b7;
+}
+
+/*               section menu             */
+
+/*               section popular_recipes             */
+.popular_recipes {
+  margin: 150px 0;
+  width: 100%;
+}
+
+.popular_recipes_title {
+  font-size: 2.6vw;
+  font-family: "Calypso";
+  font-weight: 300;
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.container_card {
+  display: flex;
+  max-width: 1440px;
+  justify-content: space-between;
+  align-items: center; /* Центрируем по вертикали */
+}
+
+.recipes_cards {
+  width: 100%;
+  display: flex;
+
+  justify-content: space-between;
+}
+
+.pre, .next {
+  border: none;
+  height: 80px;
+  background-color: #edc6d1;
+  font-size: 40px;
+  color: #fff;
+  font-family: "Rounded Mplus 1c";
+  border-radius: 1000%;
+  cursor: pointer;
+}
+
+.pre {
+  border-radius: 1000% 0 0 1000%; /
+}
+
+.next {
+  border-radius: 0 1000% 1000% 0; 
+}
+
+.recipes_card {
+  background-color: #fff;
+  max-width: 270px;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center; /* Центрирование по горизонтали */
+}
+.recipes_image{
+  max-width: 260px;
+}
+.recipes_image_img{
+  width: 100%;
+}
+
+.recipes_title {
+  font-size: 30px;
+  font-family: "Calypso";
+  font-weight: 300;
+  text-align: center;
+  margin: 0 0 20px 0;
+}
+
+.recipes_info p {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.recipes_calory {
+  margin: 20px 0 0 0;
+}
+
+.recipes_category {
+  margin: 0 0 25px 0;
+}
+
+.recipes_btn {
+  text-align: center;
+  font-size: 20px;
+  margin: 10px auto 0 auto;
+  font-weight: 500;
+  font-family: "Rounded Mplus 1c";
+  height: 45px;
+  width: 190px;
+  background-color: #d587af;
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  cursor: pointer;
+}
+
+/*               section popular_recipes             */
+
+/*               section for_us             */
+.for_us{
+  margin: 0 0 190px 0;
+  max-width: 100%;
+}
+.for_us_title{
+  font-size: 2.6vw;
+  font-family: "Calypso";
+  font-weight: 300;
+  text-align: center;
+  margin-bottom: 60px;
+  margin: 0 0 60px 0;
+}
+.for_us_cards{
+  display: flex;
+  justify-content: space-between;
+  max-width: 1148px;
+  margin: 0 auto;
+}
+.for_us_card{
+  width: 200px;
+  background-color: #fff;
+  text-align: center;
+  justify-content: center;
+
+}
+.for_us_image{
+  margin: 35px auto 20px auto;
+  max-width: 80px;
+}
+.for_us_img{
+  width: 100%;
+}
+.for_us_text{
+  font-size: 1.6vw;
+  margin: 0 0 30px 0;
+}
+/*               section for_us             */
+
+
+/*               section baking_for             */
+.baking_for{
+  margin: 0 0 190px 0;
+}
+.baking_for_title{
+  font-size: 2.6vw;
+  font-family: "Calypso";
+  font-weight: 300;
+  text-align: center;
+  margin-bottom: 60px;
+  margin: 0 0 60px 0;
+}
+.baking_for_cards{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0 auto;
+}
+.baking_for_card{
+  max-width: 390px;
+  background-color: #fff;
+}
+.baking_for_image{
+  max-width: 390px;
+}
+.baking_for_img{
+  width: 100%;
+}
+.baking_for_card_info{
+  padding: 10px 40px;
+}
+.baking_for_card_title{
+  text-align: center;
+  font-size: 30px;
+  margin: 0 auto;
+}
+.baking_for_text{
+  text-align: center;
+  font-size: 18px;
+  margin: 20px auto;
+}
+/*               section baking_for             */
+
+
+/*               section subscription             */
+.subscription{
+  margin: 0 0 190px 0;
+  max-width: 100%;
+}
+.subscription_title{
+  font-size: 2.6vw;
+  font-family: "Calypso";
+  font-weight: 300;
+  text-align: center;
+  margin-bottom: 60px;
+  margin: 0 0 60px 0;
+}
+.subscription_content{
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  gap: 30px;
+}
+.subscription_inp{
+  width: 566px;
+  background-color: #fff8f0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+.subscription_inp::f{
+border: none;
+}
+.subscription_btn{
+  text-align: center;
+  font-size: 20px;
+  font-weight: 500;
+  font-family: "Rounded Mplus 1c";
+  height: 45px;
+  width: 220px;
+  background-color: #d587af;
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  cursor: pointer;
+}
+.subscription_approval{
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 30px;
+}
+.subscription_approval_inp {
+  display: none; /* Скрываем стандартный чекбокс */
+}
+
+.custom-checkbox {
+  width: 30px;
+  height: 30px;
+  background-color: #EDC6D1; /* Цвет фона по умолчанию */
+  border: 0px; /* Цвет бордюра */
+  border-radius: 10px;
+  display: inline-block;
+  position: relative;
+  margin: auto 0;
+  cursor: pointer;
+}
+
+.custom-checkbox.checked {
+  background-color: #B0206B; /* Цвет фона при выборе */
+}
+.subscription_approval_text{
+  font-size: 16px;
+}
+
+
+.footer_content{
+  background-color: #fff;
+  width: 100%;
+}
