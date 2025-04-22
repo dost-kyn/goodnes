@@ -1,0 +1,441 @@
+@font-face {
+    font-family: "Calypso";
+    src: url("../fonts/Calypso.ttf");
+  }
+  
+  @font-face {
+    font-family: "Rounded Mplus 1c";
+    src: url("../fonts/MPLUSRounded1c-Regular.ttf");
+  }
+  
+  html {
+    color: #410e28;
+    overflow-x: hidden;
+  }
+  body {
+    max-width: 1440px;
+    margin: 0 auto 0 auto;
+    background-color: #fff8f0;
+    font-family: "Rounded Mplus 1c";
+    position: relative;
+    padding: 0 20px;
+  }
+  a {
+    color: #410e28;
+    text-decoration: none;
+  }
+  hr{
+    height: 1px;
+    background-color: #410e28;
+  }
+  input[type='checkbox'] {
+    width: 30px;
+    background-color: #B0206B;
+    border: none;
+  }
+  
+  /*               section header             */
+  
+  .header {
+    background-color: #fff;
+    width: 100vw; /* Занимает всю ширину viewport */
+    position: relative;
+    left: 50%; /* Смещаем влево на 50% от viewport */
+    transform: translateX(-50%); /* Корректируем положение */
+    padding: 10px 0 3px;
+  }
+  
+  .header_content {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+  .header_logo {
+    max-width: 70px;
+  }
+  .header_logo_img {
+    max-width: 100%;
+  }
+  .header_nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    font-size: 20px;
+  }
+  .header_nav_tema {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: #fff;
+    max-width: 35px;
+    cursor: pointer;
+  }
+  .header_nav_tema_img {
+    max-width: 100%;
+  }
+  
+  /*               section header             */
+  
+
+/*               section menu             */
+.menu_buttons {
+    display: flex;
+    margin: 90px auto 0 auto;
+    justify-content: space-between;
+    max-width: 1148px;
+  }
+  .menu_btn {
+    position: relative;
+    width: 130px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  .menu_btn_icon {
+    position: absolute;
+    margin-bottom: 30px;
+    width: 80px;
+    justify-content: center;
+    align-items: center;
+    top: -40px;
+    left: 19%;
+  }
+  .menu_btn_icon_img{
+    width: 100%;
+  }
+  .menu_btn_name {
+    margin-top: 50px;
+    font-size: 25px;
+    font-family: "Calypso";
+    text-decoration-line: underline;
+  }
+  .one_or_hour {
+    text-decoration-color: #e7bcd3;
+  }
+  .two_or_five {
+    text-decoration-color: #efceba;
+  }
+  .three_or_six {
+    text-decoration-color: #f2c1b7;
+  }
+  
+  /*               section menu             */
+
+  /*               section crumds             */
+  .crumds{
+    margin-top: 60px;
+  }
+  .crumbs_content a{
+    font-size: 15px;
+  }
+
+  /*               section crumds             */
+
+  /*               section main_info             */
+
+  .main_info {
+    margin: 150px 0;
+    width: 100%;
+  }
+.main_info_content{
+display: flex;
+justify-content: center;
+gap: 30px;
+}
+.main_info_image{
+  max-width: 560px;
+}
+.main_info_img{
+  width: 100%;
+}
+.main_info_name {
+    font-size: 2.6vw;
+    font-family: "Calypso";
+    font-weight: 300;
+    margin: 15px 0 0 0;
+  }
+.main_info_mini{
+    margin-top: 140px;
+    max-width: 520px;
+    display: grid;
+    grid-template-columns: repeat(2, 280px);
+    row-gap: 20px;
+    column-gap: 20px;
+    font-size: 18px;
+}
+.main_info_save{
+    margin: 30px auto 0 auto;
+    justify-content: center;
+    text-align: center;
+  }
+  .main_info_btn {
+    text-align: center;
+    font-size: 18px;
+    margin: 10px auto 0 auto;
+    font-weight: 500;
+    font-family: "Rounded Mplus 1c";
+    height: 40px;
+    width: 290px;
+    background-color: #d587af;
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    cursor: pointer;
+  }  
+
+  /*               section main_info             */
+
+  /*               section description             */
+  .description {
+    margin: 150px 0;
+    width: 100%;
+  }
+  .description_title {
+    font-size: 2.6vw;
+    font-family: "Calypso";
+    font-weight: 300;
+    margin: 0 auto 30px auto;
+    text-align: center;
+  }
+  .desc_text{
+    font-size: 24px;
+    text-align: center;
+  }
+
+  /*               section description             */
+
+  /*               section ingredients             */
+  .ingredients {
+    margin: 150px 0;
+    width: 100%;
+  }
+  .ingre_title {
+    font-size: 2.6vw;
+    font-family: "Calypso";
+    font-weight: 300;
+    margin: 0 auto 30px auto;
+    text-align: center;
+  }
+  .ingre_content{
+    display: grid;
+    grid-template-columns: repeat(3, 460px);
+    row-gap: 30px;
+    column-gap: 25px;
+  }
+
+  .ingre_box{
+    display: flex;
+    height: 40px;
+    gap: 15px;
+    margin-top: 0;
+  }
+  .ingre_inp {
+    display: none; /* Скрываем стандартный чекбокс */
+  }
+  .custom-checkbox {
+    width: 35px;
+    height: 35px;
+    background-color: #EDC6D1; 
+    border: 0px; 
+    border-radius: 10px;
+    display: inline-block;
+    position: relative;
+    margin: auto 0;
+    cursor: pointer;
+  }
+  .custom-checkbox:focus {
+    /* background-color: #B0206B; Цвет фона при выборе */
+    border: 0px;
+    outline: none;
+  }
+  .ingre_text{
+    font-size: 20px;
+    margin: auto 0;
+  }
+
+  /*               section ingredients             */
+
+  /*               section ingredients             */
+  .instruction {
+    margin: 150px 0;
+    width: 100%;
+  }
+  .instru_title {
+    font-size: 2.6vw;
+    font-family: "Calypso";
+    font-weight: 300;
+    margin: 0 auto 30px auto;
+    text-align: center;
+  }
+  .instru_item{
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 60px;
+  }
+  .main_info_image{
+    max-width: 590px;
+  }
+  .main_info_img{
+    width: 100%;
+  }
+  .instru_item_text{
+    font-size: 20px;
+  }
+  .instru_item_text p{
+    margin: 0 0 15px 0;
+  }
+
+  /*               section ingredients             */
+
+  /*               section save_auto             */
+  .save_auto {
+    margin: 150px 0;
+    width: 100%;
+    text-align: center;
+  }
+  .save_auto_title {
+    font-size: 2.6vw;
+    font-family: "Calypso";
+    font-weight: 300;
+    margin: 0 auto 20px auto;
+    text-align: center;
+  }
+  .save_auto_undertitle{
+    max-width: 550px;
+    font-size: 18px;
+    text-align: center;
+    margin: 0 auto 60px auto;
+  }
+  .save_auto_akk{
+    font-size: 22px;
+    text-align: center;
+    margin: 0 auto 40px auto;
+  }
+  .save_auto_akk a{
+    text-decoration: underline;
+  }
+  .save_auto_content{
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    margin: 0 auto 30px auto;
+  }
+  .save_auto_inp{
+    width: 460px;
+    background-color: #fff8f0;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-size: 18px;
+    color: #410e28;
+  }
+  .save_auto_inp:focus{
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  outline: none;
+  }
+  .save_auto_auto{
+    margin: 30px auto 0 auto;
+    justify-content: center;
+    text-align: center;
+  }
+  .save_auto_btn {
+    text-align: center;
+    font-size: 20px;
+    margin: 10px auto 0 auto;
+    font-weight: 500;
+    font-family: "Rounded Mplus 1c";
+    height: 45px;
+    width: 220px;
+    background-color: #d587af;
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    cursor: pointer;
+  } 
+
+  /*               section save_auto             */
+
+  /*               section review             */
+  .save_auto {
+    margin: 150px 0;
+    width: 100%;
+  }
+  .review_info{
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    margin: 0 auto 30px auto;
+  }
+  .review_quantity{
+    font-size: 30px;
+  }
+  .review_leave{
+    margin:0;
+  }
+  .review_leave_btn {
+    font-size: 18px;
+    margin: 0 auto 0 auto;
+    font-weight: 500;
+    font-family: "Rounded Mplus 1c";
+    height: 45px;
+    width: 220px;
+    background-color: #d587af;
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    cursor: pointer;
+  } 
+
+  .review_content{
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+  .review_box{
+    max-width: 650px;
+    background-color: #fff;
+    padding: 20px 25px 30px 20px;
+  }
+  .review_box_info{
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  .review_box_text{
+    font-size: 22px;
+  }
+
+  .review_more{
+    margin: 60px auto 0 auto;
+    text-align: center;
+  }
+  .review_more_btn {
+    font-size: 18px;
+    margin: 0 auto 0 auto;
+    font-weight: 500;
+    font-family: "Rounded Mplus 1c";
+    height: 45px;
+    width: 220px;
+    background-color: #d587af;
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    cursor: pointer;
+  } 
+
+
+  /*               section review             */
