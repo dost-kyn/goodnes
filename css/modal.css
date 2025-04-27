@@ -1,0 +1,95 @@
+@font-face {
+    font-family: "Calypso";
+    src: url("../fonts/Calypso.ttf");
+  }
+  
+  @font-face {
+    font-family: "Rounded Mplus 1c";
+    src: url("../fonts/MPLUSRounded1c-Regular.ttf");
+  }
+  
+  html {
+    color: #410e28;
+    overflow-x: hidden;
+  }
+  body {
+    max-width: 1440px;
+    margin: 0 auto 0 auto;
+    background-color: #fff8f0;
+    font-family: "Rounded Mplus 1c";
+    position: relative;
+    padding: 0 20px;
+  }
+  a {
+    color: #410e28;
+    text-decoration: none;
+  }
+  hr{
+    height: 1px;
+    background-color: #410e28;
+  }
+  input[type='checkbox'] {
+    width: 30px;
+    background-color: #B0206B;
+    border: none;
+  }
+
+
+
+  .modal-content{
+    margin: auto;
+    text-align: center;
+    justify-content: center;
+    max-width: 460px;
+    padding: 50px 40px;
+    border: 3px solid #410e28 ;
+  }
+
+
+
+  .approval{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 30px;
+  }
+  .approval_inp {
+    display: none; /* Скрываем стандартный чекбокс */
+  }
+  
+  .custom-checkbox {
+    width: 30px;
+    height: 30px;
+    background-color: #EDC6D1; /* Цвет фона по умолчанию */
+    border: 0px; /* Цвет бордюра */
+    border-radius: 10px;
+    display: inline-block;
+    position: relative;
+    margin: auto 0;
+    cursor: pointer;
+  }
+  /* .custom-checkbox.checked {
+    background-color: #B0206B; 
+  } */
+  .approval_text{
+    font-size: 16px;
+  }
+  .btn {
+    text-align: center;
+    font-size: 18px;
+    margin: 10px auto 0 auto;
+    font-weight: 500;
+    font-family: "Rounded Mplus 1c";
+    height: 40px;
+    width: 330px;
+    background-color: #d587af;
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s; 
+  }  
+  .btn:hover {
+    background-color: #c17099; 
+  }
