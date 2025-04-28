@@ -9,39 +9,135 @@
 }
 
 html {
-  color: #410e28;
+
   overflow-x: hidden;
 }
+
 body {
   max-width: 1440px;
   margin: 0 auto 0 auto;
-  background-color: #fff8f0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   font-family: "Rounded Mplus 1c";
   position: relative;
   padding: 0 20px;
 }
+
 a {
-  color: #410e28;
+  color: var(--text-color);
   text-decoration: none;
 }
-hr{
+
+hr {
   height: 1px;
-  background-color: #410e28;
+  background-color: var(--border-color);
 }
+
 input[type='checkbox'] {
   width: 30px;
   background-color: #B0206B;
   border: none;
 }
 
+:root {
+  /* Светлая тема (по умолчанию) */
+  --bg-color: #fff8f0;
+  --text-color: #410e28;
+  --header-bg: #fff;
+  --card-bg: #fff;
+  --button-bg: #d587af;
+  --button-text: #fff;
+  --border-color: #410e28;
+  --chekbox: #EDC6D1;
+}
+
+[data-theme="dark"] {
+  /* Тёмная тема */
+  --bg-color: #5D4A58;
+  --text-color: #FBF5F8;
+  --header-bg: #806868;
+  --card-bg: #806868;
+  --button-bg: #602E47;
+  --button-text: #FBF5F8;
+  --border-color: #FBF5F8;
+  --chekbox: #BEA4B2;
+}
+
+
+[data-theme-image] {
+  transition: opacity 0.3s ease;
+}
+
+/* Добавьте эти стили в ваш CSS файл */
+
+/* Общие стили для изображений с темой */
+[data-theme-image] {
+  transition: opacity 0.3s ease;
+  position: relative;
+}
+
+/* Светлая версия изображения (по умолчанию) */
+[data-theme-image]::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: var(--light-image);
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+/* Темная версия изображения */
+[data-theme-image]::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: var(--dark-image);
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+/* При темной теме показываем темное изображение */
+[data-theme="dark"] [data-theme-image]::before {
+  opacity: 0;
+}
+
+[data-theme="dark"] [data-theme-image]::after {
+  opacity: 1;
+}
+
+/* Скрываем оригинальный тег img */
+[data-theme-image] img {
+  opacity: 0;
+  width: 100%;
+  height: auto;
+}
+
+
 /*               section header             */
 
 .header {
-  background-color: #fff;
-  width: 100vw; /* Занимает всю ширину viewport */
+  background-color: var(--header-bg);
+  width: 100vw;
+  /* Занимает всю ширину viewport */
   position: relative;
-  left: 50%; /* Смещаем влево на 50% от viewport */
-  transform: translateX(-50%); /* Корректируем положение */
+  left: 50%;
+  /* Смещаем влево на 50% от viewport */
+  transform: translateX(-50%);
+  /* Корректируем положение */
   padding: 10px 0 3px;
 }
 
@@ -53,12 +149,15 @@ input[type='checkbox'] {
   align-items: center;
   padding: 0 20px;
 }
+
 .header_logo {
   max-width: 70px;
 }
+
 .header_logo_img {
   max-width: 100%;
 }
+
 .header_nav {
   display: flex;
   align-items: center;
@@ -66,17 +165,43 @@ input[type='checkbox'] {
   gap: 50px;
   font-size: 20px;
 }
+
 .header_nav_tema {
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
-  background-color: #fff;
+  background-color: var(--header-bg);
   max-width: 35px;
   cursor: pointer;
 }
+
 .header_nav_tema_img {
   max-width: 100%;
+}
+
+
+.header_nav_btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.header_nav_span {
+  width: 35px;
+  height: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.header_nav_span span {
+  width: 100%;
+  height: 2.5px;
+  border-radius: 30px;
+  background-color: var(--border-color);
 }
 
 /*               section header             */
@@ -84,17 +209,23 @@ input[type='checkbox'] {
 /*               section banner             */
 
 .banner_image {
-  width: 100vw; /* Занимает всю ширину viewport */
+  width: 100vw;
+  /* Занимает всю ширину viewport */
   position: relative;
-  left: 50%; /* Смещаем влево на 50% от viewport */
-  transform: translateX(-50%); /* Корректируем положение */
+  left: 50%;
+  /* Смещаем влево на 50% от viewport */
+  transform: translateX(-50%);
+  /* Корректируем положение */
 }
 
 .banner_image_img {
   width: 100%;
-  display: block; /* Убирает лишние отступы у img */
+  display: block;
+  /* Убирает лишние отступы у img */
 }
+
 .banner_text {
+  color: #410e28;
   position: absolute;
   top: 5%;
   font-size: 2.8vw;
@@ -104,6 +235,7 @@ input[type='checkbox'] {
   padding-left: 10px;
   z-index: 10;
 }
+
 /*               section banner             */
 
 /*               section menu             */
@@ -114,14 +246,17 @@ input[type='checkbox'] {
   justify-content: space-between;
   max-width: 1148px;
 }
+
 .menu_btn {
+  color: var(--text-color);
   position: relative;
   width: 130px;
   margin-bottom: 20px;
-  background-color: #fff;
+  background-color: var(--header-bg);
   border: none;
   cursor: pointer;
 }
+
 .menu_btn_icon {
   position: absolute;
   margin-bottom: 30px;
@@ -131,21 +266,26 @@ input[type='checkbox'] {
   top: -40px;
   left: 19%;
 }
-.menu_btn_icon_img{
+
+.menu_btn_icon_img {
   width: 100%;
 }
+
 .menu_btn_name {
   margin-top: 50px;
   font-size: 25px;
   font-family: "Calypso";
   text-decoration-line: underline;
 }
+
 .one_or_hour {
   text-decoration-color: #e7bcd3;
 }
+
 .two_or_five {
   text-decoration-color: #efceba;
 }
+
 .three_or_six {
   text-decoration-color: #f2c1b7;
 }
@@ -170,48 +310,55 @@ input[type='checkbox'] {
   display: flex;
   max-width: 1440px;
   justify-content: space-between;
-  align-items: center; /* Центрируем по вертикали */
+  align-items: center;
+  /* Центрируем по вертикали */
 }
 
 .recipes_cards {
   width: 100%;
-  display: flex;
-
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 45px;
   justify-content: space-between;
 }
 
-.pre, .next {
+.pre,
+.next {
   border: none;
   height: 80px;
-  background-color: #edc6d1;
+  width: 50px;
+  background-color: var(--button-bg);
   font-size: 40px;
-  color: #fff;
+  color: #FBF5F8;
   font-family: "Rounded Mplus 1c";
   border-radius: 1000%;
   cursor: pointer;
 }
 
 .pre {
-  border-radius: 1000% 0 0 1000%; /
+  border-radius: 1000% 0 0 1000%;/
 }
 
 .next {
-  border-radius: 0 1000% 1000% 0; 
+  border-radius: 0 1000% 1000% 0;
 }
 
 .recipes_card {
-  background-color: #fff;
+  background-color: var(--card-bg);
   max-width: 270px;
   padding: 32px 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: center; /* Центрирование по горизонтали */
+  align-items: center;
+  /* Центрирование по горизонтали */
 }
-.recipes_image{
+
+.recipes_image {
   max-width: 260px;
 }
-.recipes_image_img{
+
+.recipes_image_img {
   width: 100%;
 }
 
@@ -246,21 +393,22 @@ input[type='checkbox'] {
   font-family: "Rounded Mplus 1c";
   height: 45px;
   width: 190px;
-  background-color: #d587af;
+  background-color: var(--button-bg);
+  color: var(--button-text);
   border: none;
   border-radius: 12px;
-  color: #fff;
   cursor: pointer;
 }
 
 /*               section popular_recipes             */
 
 /*               section for_us             */
-.for_us{
+.for_us {
   margin: 0 0 190px 0;
   max-width: 100%;
 }
-.for_us_title{
+
+.for_us_title {
   font-size: 2.6vw;
   font-family: "Calypso";
   font-weight: 300;
@@ -268,38 +416,45 @@ input[type='checkbox'] {
   margin-bottom: 60px;
   margin: 0 0 60px 0;
 }
-.for_us_cards{
+
+.for_us_cards {
   display: flex;
   justify-content: space-between;
   max-width: 1148px;
   margin: 0 auto;
 }
-.for_us_card{
+
+.for_us_card {
   width: 200px;
-  background-color: #fff;
+  background-color: var(--card-bg);
   text-align: center;
   justify-content: center;
 
 }
-.for_us_image{
+
+.for_us_image {
   margin: 35px auto 20px auto;
   max-width: 80px;
 }
-.for_us_img{
+
+.for_us_img {
   width: 100%;
 }
-.for_us_text{
+
+.for_us_text {
   font-size: 1.6vw;
   margin: 0 0 30px 0;
 }
+
 /*               section for_us             */
 
 
 /*               section baking_for             */
-.baking_for{
+.baking_for {
   margin: 0 0 190px 0;
 }
-.baking_for_title{
+
+.baking_for_title {
   font-size: 2.6vw;
   font-family: "Calypso";
   font-weight: 300;
@@ -307,44 +462,53 @@ input[type='checkbox'] {
   margin-bottom: 60px;
   margin: 0 0 60px 0;
 }
-.baking_for_cards{
+
+.baking_for_cards {
   display: flex;
   justify-content: space-between;
   width: 100%;
   margin: 0 auto;
 }
-.baking_for_card{
+
+.baking_for_card {
   max-width: 390px;
-  background-color: #fff;
+  background-color: var(--card-bg);
 }
-.baking_for_image{
+
+.baking_for_image {
   max-width: 390px;
 }
-.baking_for_img{
+
+.baking_for_img {
   width: 100%;
 }
-.baking_for_card_info{
+
+.baking_for_card_info {
   padding: 10px 40px;
 }
-.baking_for_card_title{
+
+.baking_for_card_title {
   text-align: center;
   font-size: 30px;
   margin: 0 auto;
 }
-.baking_for_text{
+
+.baking_for_text {
   text-align: center;
   font-size: 18px;
   margin: 20px auto;
 }
+
 /*               section baking_for             */
 
 
 /*               section subscription             */
-.subscription{
+.subscription {
   margin: 0 0 190px 0;
   max-width: 100%;
 }
-.subscription_title{
+
+.subscription_title {
   font-size: 2.6vw;
   font-family: "Calypso";
   font-weight: 300;
@@ -352,51 +516,60 @@ input[type='checkbox'] {
   margin-bottom: 60px;
   margin: 0 0 60px 0;
 }
-.subscription_content{
+
+.subscription_content {
   display: flex;
   text-align: center;
   justify-content: center;
   gap: 30px;
 }
-.subscription_inp{
+
+.subscription_inp {
   width: 566px;
-  background-color: #fff8f0;
+  background-color: var(--bg-color);
   border-top: none;
   border-left: none;
   border-right: none;
 }
-.subscription_inp::f{
-border: none;
+
+.subscription_inp::f {
+  border: none;
 }
-.subscription_btn{
+
+.subscription_btn {
   text-align: center;
   font-size: 20px;
   font-weight: 500;
   font-family: "Rounded Mplus 1c";
   height: 45px;
   width: 220px;
-  background-color: #d587af;
+  background-color: var(--button-bg);
+  color: var(--button-text);
   border: none;
   border-radius: 12px;
-  color: #fff;
   cursor: pointer;
 }
-.subscription_approval{
+
+.subscription_approval {
   display: flex;
   text-align: center;
   justify-content: center;
   gap: 30px;
   margin-top: 30px;
 }
+
 .subscription_approval_inp {
-  display: none; /* Скрываем стандартный чекбокс */
+  display: none;
+  /* Скрываем стандартный чекбокс */
 }
 
 .custom-checkbox {
   width: 30px;
   height: 30px;
-  background-color: #EDC6D1; /* Цвет фона по умолчанию */
-  border: 0px; /* Цвет бордюра */
+  background-color: var(--chekbox);
+  /* Цвет фона по умолчанию */
+  border: 0px;
+  /* Цвет бордюра */
   border-radius: 10px;
   display: inline-block;
   position: relative;
@@ -405,14 +578,874 @@ border: none;
 }
 
 .custom-checkbox.checked {
-  background-color: #B0206B; /* Цвет фона при выборе */
+  background-color: #B0206B;
+  /* Цвет фона при выборе */
 }
-.subscription_approval_text{
+
+.subscription_approval_text {
   font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/*               section subscription             */
+
+
+
+/*               footer             */
+
+.footer {
+  background-color: var(--header-bg);
+  width: 100vw;
+  /* Занимает всю ширину viewport */
+  position: relative;
+  left: 50%;
+  /* Смещаем влево на 50% от viewport */
+  transform: translateX(-50%);
+  padding: 60px 0;
+
+}
+
+.footer_content {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.footer_content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.footer_logo {
+  width: 162px;
+}
+
+.footer_logo_img {
+  width: 100%;
+}
+
+.footer_cataloge {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 60px;
+  text-align: center;
+  font-size: 20px;
+}
+
+.footer_info {
+  display: grid;
+  text-align: right;
+  row-gap: 5px;
+}
+
+.footer_phone {
+  font-size: 20px;
+  margin: 0;
+}
+
+.footer_email {
+  font-size: 16px;
+  margin: 0;
+}
+
+.footer_social {
+  display: flex;
+}
+
+.footer_social_img {
+  width: 50px;
+  margin-left: 10px;
 }
 
 
-.footer_content{
-  background-color: #fff;
-  width: 100%;
+
+
+
+
+
+
+
+
+
+/* Обновленный медиазапрос для 1300px */
+@media (max-width: 1300px) {
+  body {
+    padding: 0 30px;
+  }
+
+  /* recipes_cards */
+  .recipes_cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .recipes_card:nth-child(4) {
+    display: none;
+  }
+
+  .container_card {
+    padding: 0 30px;
+  }
+
+  .recipes_card {
+    max-width: 100%;
+    padding: 20px 20px;
+  }
+
+  .recipes_title {
+    font-size: 24px;
+    margin: 0 0 15px 0;
+  }
+
+  .recipes_image {
+    max-width: 200px;
+  }
+
+  .recipes_info p {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .recipes_btn {
+    text-align: center;
+    font-size: 17px;
+    margin: 10px auto 0 auto;
+    font-weight: 500;
+    font-family: "Rounded Mplus 1c";
+    height: 35px;
+    width: 150px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+
+  .pre,
+  .next {
+    height: 70px;
+    width: 35px;
+    font-size: 30px;
+  }
+
+  /* recipes_cards */
+
+
+
+
+  /*               section baking_for             */
+  .baking_for {
+    margin: 0 0 190px 0;
+  }
+
+  .baking_for_card {
+    max-width: 300px;
+  }
+
+  .baking_for_card_info {
+    padding: 10px 20px;
+  }
+
+  .baking_for_card_title {
+    font-size: 22px;
+  }
+
+  .baking_for_text {
+    font-size: 14px;
+    margin: 10px auto;
+  }
+
+  hr {
+    height: 0.7px;
+  }
+  /*               section baking_for             */
+
+
+  /*               section footer             */
+
+  .footer {
+    width: 100%;
+    position: relative;
+    padding: 60px 60px;
+  
+  }
+  /*               section footer             */
+}
+
+
+
+
+
+
+
+
+@media (max-width: 1000px) {
+
+  /* menu */
+  .menu_btn {
+    width: 100px;
+    margin-bottom: 20px;
+  }
+
+  .menu_btn_icon {
+    width: 70px;
+    top: -40px;
+    left: 15.5%;
+  }
+
+  .menu_btn_name {
+    margin-top: 40px;
+    font-size: 18px;
+  }
+
+  /* menu */
+
+
+  /* recipes_cards */
+  .popular_recipes_title {
+    font-size: 3.1vw;
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .recipes_cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Скрываем 4-ю карточку */
+  .recipes_card:nth-child(3) {
+    display: none;
+  }
+
+  /* Корректируем отступы */
+  .container_card {
+    padding: 0 20px;
+  }
+
+  .recipes_image {
+    max-width: 240px;
+  }
+
+  .pre,
+  .next {
+    height: 50px;
+    width: 25px;
+    font-size: 20px;
+  }
+
+  /* recipes_cards */
+
+
+  /* for_us */
+  .for_us {
+    margin: 0 0 150px 0;
+  }
+
+  .for_us_card {
+    width: 160px;
+  }
+
+  .for_us_text {
+    font-size: 1.9vw;
+    margin: 0 0 30px 0;
+  }
+
+  .for_us_image {
+    margin: 35px auto 20px auto;
+    max-width: 60px;
+  }
+
+  /* for_us */
+
+
+
+  /*               section baking_for             */
+  .baking_for {
+    margin: 0 0 150px 0;
+  }
+
+  .baking_for_card {
+    max-width: 200px;
+  }
+
+  .baking_for_card_info {
+    padding: 0px 20px 10px 20px;
+  }
+
+  .baking_for_card_title {
+    font-size: 20px;
+  }
+
+  .baking_for_text {
+    font-size: 12px;
+    margin: 5px auto;
+  }
+
+  hr {
+    height: 0.5px;
+  }
+
+  /*               section baking_for             */
+
+
+    /*               section footer             */
+    .footer {
+      left: 50%;
+      padding: 60px 60px;
+    
+    }
+    .footer_content {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+    .footer_logo {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 100px;
+    }
+    .footer_cataloge {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: 30px;
+      text-align: center;
+      font-size: 16px;
+    }
+    .footer_info {
+      row-gap: 1px;
+    }
+    
+    .footer_phone {
+      font-size: 16px;
+      margin: 5px;
+    }
+    
+    .footer_email {
+      font-size: 12px;
+      margin: 5px;
+    }
+    
+    .footer_social {
+      display: flex;
+    }
+    
+    .footer_social_img {
+      width: 40px;
+      margin-left: 10px;
+    }
+  /*               section footer             */
+
+}
+
+
+
+/* Обновленный медиазапрос для 900px */
+@media (max-width: 900px) {
+
+  /* header */
+  .header_logo {
+    max-width: 55px;
+  }
+
+  .header {
+    padding: 8px 0 0px;
+  }
+
+  .header_nav {
+    gap: 35px;
+    font-size: 16px;
+  }
+
+  .banner_text {
+    top: 3.5%;
+    font-size: 3.5vw;
+    font-family: "Calypso";
+    max-width: 700px;
+    line-height: 1.7;
+    padding-left: 10px;
+    z-index: 10;
+  }
+
+  /* header */
+
+
+  .subscription_btn {
+    font-size: 18px;
+    font-weight: 500;
+    font-family: "Rounded Mplus 1c";
+    height: 35px;
+    width: 200px;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .subscription_inp {
+    width: 400px;
+  }
+
+  .subscription_approval_text {
+    font-size: 10px;
+  }
+
+  .custom-checkbox {
+    width: 20px;
+    height: 20px;
+    background-color: var(--chekbox);
+    border: 0px;
+    border-radius: 5px;
+    display: inline-block;
+    position: relative;
+    margin: auto 0;
+    cursor: pointer;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 700px) {
+  .menu_buttons {
+    margin: 80px auto 0 auto;
+  }
+
+  .menu_btn {
+    background-color: var(--bg-color);
+  }
+
+  .menu_btn_icon {
+    width: 65px;
+    top: -40px;
+    left: 15.5%;
+  }
+
+  .menu_btn_name {
+    display: none;
+  }
+
+
+  .popular_recipes {
+    margin: 120px 0;
+    width: 100%;
+  }
+
+  .popular_recipes_title {
+    font-size: 4.1vw;
+    margin-bottom: 40px;
+  }
+
+  .recipes_cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Скрываем 4-ю карточку */
+  .recipes_card:nth-child(3) {
+    display: none;
+  }
+
+  /* Корректируем отступы */
+  .container_card {
+    padding: 0 20px;
+  }
+
+  .recipes_image {
+    max-width: 240px;
+  }
+
+  .pre,
+  .next {
+    height: 50px;
+    width: 25px;
+    font-size: 20px;
+  }
+
+
+
+
+
+  /*               section baking_for             */
+  .baking_for {
+    margin: 0 0 150px 0;
+  }
+
+  .baking_for_card {
+    max-width: 150px;
+  }
+
+  .baking_for_card_info {
+    padding: 0px 10px 10px 10px;
+  }
+
+  .baking_for_card_title {
+    font-size: 16px;
+  }
+
+  .baking_for_text {
+    font-size: 8px;
+    margin: 5px auto;
+  }
+
+  hr {
+    height: 0.5px;
+  }
+
+  /*               section baking_for             */
+
+
+
+      /*               section footer             */
+
+      .footer {
+        left: 50%;
+        width: 95vw;
+        padding: 30px 40px;
+      
+      }
+      .footer_content {
+        max-width: 1440px;
+        margin: 0 auto;
+      }
+      .footer_logo {
+        width: 80px;
+      }
+      .footer_cataloge {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 10px;
+        text-align: center;
+        font-size: 13px;
+      }
+      .footer_info {
+        row-gap: -10px;
+      }
+      
+      .footer_phone {
+        font-size: 14px;
+        margin: 0px;
+      }
+      
+      .footer_email {
+        font-size: 12px;
+        margin: 5px;
+      }
+      
+      .footer_social {
+        display: flex;
+      }
+      
+      .footer_social_img {
+        text-align: right;
+        width: 30px;
+        margin-left: 10px;
+      }
+    /*               section footer             */
+}
+
+/* Обновленный медиазапрос для мобильных */
+@media (max-width: 600px) {
+
+
+  /* header */
+
+  .header_nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    font-size: 20px;
+  }
+
+  .header_nav_tema {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: var(--header-bg);
+    width: 35px;
+    cursor: pointer;
+  }
+
+  .header_nav_catalog,
+  .header_nav_blog,
+  .header_nav_exit {
+    display: none;
+  }
+
+  .header_nav_btn {
+    display: block;
+  }
+
+  /* header */
+
+
+
+  .banner_image_img {
+    width: 130%;
+    display: block;
+  }
+
+  .banner_image {
+    left: 20%;
+  }
+
+  .banner_text {
+    top: 5%;
+    font-size: 3.5vw;
+    font-family: "Calypso";
+    max-width: 700px;
+    line-height: 1.7;
+    padding-left: 10px;
+    z-index: 10;
+  }
+
+
+
+  .menu_buttons {
+    margin: 60px auto 0 auto;
+  }
+
+  .menu_btn {
+    background-color: var(--bg-color);
+  }
+
+  .menu_btn_icon {
+    width: 45px;
+    top: -40px;
+    left: 15.5%;
+  }
+
+  .menu_btn_name {
+    display: none;
+  }
+
+
+
+
+  .recipes_title {
+    font-size: 20px;
+    margin: 0 0 15px 0;
+  }
+
+  .recipes_card {
+    max-width: 230px;
+    padding: 20px 20px;
+    margin: 0 auto;
+  }
+
+  .popular_recipes {
+    margin: 40px 0;
+    width: 100%;
+  }
+
+  .popular_recipes_title {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .recipes_cards {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .recipes_card:nth-child(2) {
+    display: none;
+  }
+
+  .container_card {
+    padding: 0 20px;
+  }
+
+  .recipes_image {
+    max-width: 180px;
+  }
+
+  .recipes_info p {
+    font-size: 10px;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .pre,
+  .next {
+    height: 50px;
+    width: 25px;
+    font-size: 20px;
+  }
+
+  .recipes_btn {
+    text-align: center;
+    font-size: 12px;
+    margin: 10px auto 0 auto;
+    font-weight: 500;
+    font-family: "Rounded Mplus 1c";
+    height: 30px;
+    width: 130px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+
+
+  /* for_us */
+  .for_us {
+    margin: 0 0 90px 0;
+  }
+
+  .for_us_card {
+    width: 70px;
+    padding: 0 10px;
+  }
+
+  .for_us_text {
+    font-size: 12px;
+    margin: 0 0 10px 0;
+  }
+
+  .for_us_image {
+    margin: 35px auto 20px auto;
+    max-width: 30px;
+  }
+
+  /* for_us */
+
+
+
+  /*               section baking_for             */
+  .baking_for_card:nth-child(3) {
+    display: none;
+  }
+
+  .baking_for {
+    margin: 0 0 80px 0;
+  }
+
+  .baking_for_card {
+    max-width: 150px;
+  }
+
+  .baking_for_cards {
+    justify-content: center;
+    gap: 30px;
+  }
+
+  /*               section baking_for             */
+
+
+  /*               section subscription            */
+  .subscription_btn {
+    font-size: 15px;
+    font-weight: 500;
+    font-family: "Rounded Mplus 1c";
+    height: 30px;
+    width: 180px;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  /*               section subscription            */
+}
+
+
+
+
+@media (max-width: 450px) {
+
+  /*               section baking_for             */
+  .baking_for_card:nth-child(2) {
+    display: none;
+  }
+
+  /*               section baking_for             */
+
+
+
+  /*               section subscription            */
+  .subscription {
+    margin: 0 0 80px 0;
+    max-width: 100%;
+}
+  .subscription_content {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    gap: 30px;
+  }
+
+  .subscription_btn {
+    font-size: 12px;
+    font-weight: 500;
+    font-family: "Rounded Mplus 1c";
+    height: 30px;
+    width: 180px;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  /*               section subscription            */
+
+
+
+        /*               section footer             */
+
+        .footer {
+          left: 50%;
+          width: 95vw;
+          padding: 30px 40px;
+        
+        }
+        .footer_content {
+          max-width: 1440px;
+          margin: 0 auto;
+        }
+        .footer_logo {
+          width: 80px;
+        }
+        .footer_cataloge {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          column-gap: 10px;
+          text-align: center;
+          font-size: 13px;
+        }
+
+        .footer_cataloge_link{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        }
+
+        
+        .footer_phone {
+          display: none;
+        }
+        
+        .footer_email {
+          display: none;
+        }
+        
+        .footer_social {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+        }
+        
+        .footer_social_img {
+          width: 30px;
+          margin-left: 10px;
+        }
+      /*               section footer             */
 }
