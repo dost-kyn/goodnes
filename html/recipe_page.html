@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/header_footer.css">
     <link rel="stylesheet" href="/css/recipe_page.css">
     <title>*название рецепта*</title>
 </head>
@@ -11,17 +12,28 @@
 <body>
     <header class="header">
         <div class="header_content">
-            <div class="header_logo">
-                <img src="/image/лого.svg" alt="" class="header_logo_img">
-            </div>
+            <a class="header_logo" href="home.html">
+                <img src="/image/лого.svg" data-theme-image  data-light="/image/лого.svg" 
+                data-dark="/image/лого-dark.svg" class="header_logo_img">
+            </a>
 
             <div class="header_nav">
                 <button class="header_nav_tema">
-                    <img src="/image/tema.svg" alt="" class="header_nav_tema_img">
+                    <img src="/image/tema.svg" data-theme-image  data-light="/image/tema.svg" 
+                    data-dark="/image/tema-dark.svg" class="header_nav_tema_img">
                 </button>
                 <a href="" class="header_nav_catalog">Каталог</a>
                 <a href="" class="header_nav_blog">Блог</a>
                 <a href="" class="header_nav_exit">Вход</a>
+                
+                <button class="header_nav_btn">
+                    <div class="header_nav_span">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+
             </div>
         </div>
     </header>
@@ -32,42 +44,54 @@
 
             <button class="menu_btn">
                 <div class="menu_btn_icon">
-                    <img src="/image/cake_icon.svg" alt="Торты" class="menu_btn_icon_img">
+                    <img src="/image/cake_icon.svg" alt="Торты" class="menu_btn_icon_img" 
+                    data-theme-image  data-light="/image/cake_icon.svg" 
+                    data-dark="/image/cake_icon-dark.svg"> 
                 </div>
                 <p class="menu_btn_name one_or_hour">торты</p>
             </button>
 
             <button class="menu_btn">
                 <div class="menu_btn_icon">
-                    <img src="/image/cookie_icon.svg" alt="Торты" class="menu_btn_icon_img">
+                    <img src="/image/cookie_icon.svg" alt="Торты" class="menu_btn_icon_img" 
+                    data-theme-image  data-light="/image/cookie_icon.svg" 
+                    data-dark="/image/cookie_icon-dark.svg">
                 </div>
                 <p class="menu_btn_name two_or_five">печенье</p>
             </button>
 
             <button class="menu_btn">
                 <div class="menu_btn_icon">
-                    <img src="/image/pie_icon.svg" alt="Торты" class="menu_btn_icon_img">
+                    <img src="/image/pie_icon.svg" alt="Торты" class="menu_btn_icon_img"
+                    data-theme-image  data-light="/image/pie_icon.svg" 
+                    data-dark="/image/pie_icon-dark.svg">
                 </div>
                 <p class="menu_btn_name three_or_six">пироги</p>
             </button>
 
             <button class="menu_btn">
                 <div class="menu_btn_icon">
-                    <img src="/image/cupcakes_icon.svg" alt="Торты" class="menu_btn_icon_img">
+                    <img src="/image/cupcakes_icon.svg" alt="Торты" class="menu_btn_icon_img"
+                    data-theme-image  data-light="/image/cupcakes_icon.svg" 
+                    data-dark="/image/cupcakes_icon-dark.svg">
                 </div>
                 <p class="menu_btn_name one_or_hour">кексы</p>
             </button>
 
             <button class="menu_btn">
                 <div class="menu_btn_icon">
-                    <img src="/image/candy_icon.svg" alt="Торты" class="menu_btn_icon_img">
+                    <img src="/image/candy_icon.svg" alt="Торты" class="menu_btn_icon_img"
+                    data-theme-image  data-light="/image/candy_icon.svg" 
+                    data-dark="/image/candy_icon-dark.svg">
                 </div>
                 <p class="menu_btn_name two_or_five">конфеты</p>
             </button>
 
             <button class="menu_btn">
                 <div class="menu_btn_icon">
-                    <img src="/image/bread_icon.svg" alt="Торты" class="menu_btn_icon_img">
+                    <img src="/image/bread_icon.svg" alt="Торты" class="menu_btn_icon_img"
+                    data-theme-image  data-light="/image/bread_icon.svg" 
+                    data-dark="/image/bread_icon-dark.svg">
                 </div>
                 <p class="menu_btn_name three_or_six">хлеб</p>
             </button>
@@ -83,8 +107,11 @@
 
     <section class="main_info">
         <div class="main_info_content">
-            <div class="main_info_image">
+            <!-- <div class="main_info_image">
                 <img src="/image/recipe/main_image.jpg" class="main_info_img" alt="">
+            </div> -->
+            <div class="main_info_image">
+                <img src="/image/recipe/main_image.jpg" alt="" class="main_info_img">
             </div>
             <div class="main_info_conteiner">
                 <h1 class="main_info_name">Печенье овсяное</h1>
@@ -316,6 +343,36 @@
         </div>
     </section>
     
+    <footer class="footer">
+        <div class="footer_content">
+            <div class="footer_logo">
+                <img src="/image/лого.svg" data-theme-image  data-light="/image/лого.svg" 
+                data-dark="/image/лого-dark.svg" class="footer_logo_img">
+            </div>
+            <div class="footer_cataloge">
+                <a href="" class="footer_cataloge_link">Кексы</a>
+                <a href="" class="footer_cataloge_link">Пироги</a>
+                <a href="" class="footer_cataloge_link">Хлеб</a>
+                <a href="" class="footer_cataloge_link">Торты</a>
+                <a href="" class="footer_cataloge_link">Конфеты</a>
+                <a href="" class="footer_cataloge_link">Печенье</a>
+            </div>
+            <div class="footer_info">
+                <p class="footer_phone">+8 999 035 6471</p>
+                <p class="footer_email">Ovenly_Goodness@gmail</p>
+                <div class="footer_social">
+                    <img src="/image/footer_social_tg.svg" data-theme-image  data-light="/image/footer_social_tg.svg" 
+                    data-dark="/image/footer_social_tg-dark.svg" class="footer_social_img">
+                    <img src="/image/footer_social_ok.svg" data-theme-image  data-light="/image/footer_social_ok.svg" 
+                    data-dark="/image/footer_social_ok-dark.svg" class="footer_social_img">
+                    <img src="/image/footer_social_vk.svg" data-theme-image  data-light="/image/footer_social_vk.svg" 
+                    data-dark="/image/footer_social_vk-dark.svg" class="footer_social_img">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/home.js"></script>
 </body>
 
 </html>

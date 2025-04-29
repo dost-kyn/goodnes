@@ -34,98 +34,151 @@
     border: none;
   }
   
-  /*               section header             */
+  :root {
+    /* Светлая тема (по умолчанию) */
+    --bg-color: #fff8f0;
+    --text-color: #410e28;
+    --header-bg: #fff;
+    --card-bg: #fff;
+    --button-bg: #d587af;
+    --button-text: #fff;
+    --border-color: #410e28;
+    --chekbox: #EDC6D1;
+  }
   
-  .header {
-    background-color: #fff;
-    width: 100vw; /* Занимает всю ширину viewport */
+  [data-theme="dark"] {
+    /* Тёмная тема */
+    --bg-color: #5D4A58;
+    --text-color: #FBF5F8;
+    --header-bg: #806868;
+    --card-bg: #806868;
+    --button-bg: #602E47;
+    --button-text: #FBF5F8;
+    --border-color: #FBF5F8;
+    --chekbox: #BEA4B2;
+  }
+  
+  
+  [data-theme-image] {
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Добавьте эти стили в ваш CSS файл */
+  
+  /* Общие стили для изображений с темой */
+  [data-theme-image] {
+    transition: opacity 0.3s ease;
     position: relative;
-    left: 50%; /* Смещаем влево на 50% от viewport */
-    transform: translateX(-50%); /* Корректируем положение */
-    padding: 10px 0 3px;
   }
   
-  .header_content {
-    max-width: 1440px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-  }
-  .header_logo {
-    max-width: 70px;
-  }
-  .header_logo_img {
-    max-width: 100%;
-  }
-  .header_nav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 50px;
-    font-size: 20px;
-  }
-  .header_nav_tema {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    background-color: #fff;
-    max-width: 35px;
-    cursor: pointer;
-  }
-  .header_nav_tema_img {
-    max-width: 100%;
+  /* Светлая версия изображения (по умолчанию) */
+  [data-theme-image]::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: var(--light-image);
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    z-index: 1;
   }
   
-  /*               section header             */
+  /* Темная версия изображения */
+  [data-theme-image]::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: var(--dark-image);
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+  }
+  
+  /* При темной теме показываем темное изображение */
+  [data-theme="dark"] [data-theme-image]::before {
+    opacity: 0;
+  }
+  
+  [data-theme="dark"] [data-theme-image]::after {
+    opacity: 1;
+  }
+  
+  /* Скрываем оригинальный тег img */
+  [data-theme-image] img {
+    opacity: 0;
+    width: 100%;
+    height: auto;
+  }
+  
   
 
-/*               section menu             */
-.menu_buttons {
-    display: flex;
-    margin: 90px auto 0 auto;
-    justify-content: space-between;
-    max-width: 1148px;
-  }
-  .menu_btn {
-    position: relative;
-    width: 130px;
-    margin-bottom: 20px;
-    background-color: #fff;
-    border: none;
-    cursor: pointer;
-  }
-  .menu_btn_icon {
-    position: absolute;
-    margin-bottom: 30px;
-    width: 80px;
-    justify-content: center;
-    align-items: center;
-    top: -40px;
-    left: 19%;
-  }
-  .menu_btn_icon_img{
-    width: 100%;
-  }
-  .menu_btn_name {
-    margin-top: 50px;
-    font-size: 25px;
-    font-family: "Calypso";
-    text-decoration-line: underline;
-  }
-  .one_or_hour {
-    text-decoration-color: #e7bcd3;
-  }
-  .two_or_five {
-    text-decoration-color: #efceba;
-  }
-  .three_or_six {
-    text-decoration-color: #f2c1b7;
-  }
   
-  /*               section menu             */
+
+
+/*               section menu             */
+
+.menu_buttons {
+  display: flex;
+  margin: 120px auto 0 auto;
+  justify-content: space-between;
+  max-width: 1148px;
+}
+
+.menu_btn {
+  color: var(--text-color);
+  position: relative;
+  width: 130px;
+  margin-bottom: 20px;
+  background-color: var(--header-bg);
+  border: none;
+  cursor: pointer;
+}
+
+.menu_btn_icon {
+  position: absolute;
+  margin-bottom: 30px;
+  width: 80px;
+  justify-content: center;
+  align-items: center;
+  top: -40px;
+  left: 19%;
+}
+
+.menu_btn_icon_img {
+  width: 100%;
+}
+
+.menu_btn_name {
+  margin-top: 50px;
+  font-size: 25px;
+  font-family: "Calypso";
+  text-decoration-line: underline;
+}
+
+.one_or_hour {
+  text-decoration-color: #e7bcd3;
+}
+
+.two_or_five {
+  text-decoration-color: #efceba;
+}
+
+.three_or_six {
+  text-decoration-color: #f2c1b7;
+}
+
+/*               section menu             */
 
   /*               section crumds             */
   .crumds{
@@ -148,16 +201,28 @@
     justify-content: center;
     gap: 30px;
   }
-  .main_info_image{
-    max-width: 560px;
-    width: 100%; /* Добавляем гибкость */
-    margin: 0 auto; /* Центрирование */
+  /* .main_info_image{
+    width: 560px;
+    width: 360px;
+    margin: 0 auto; 
   }
   .main_info_img{
     width: 100%;
-    height: auto; /* Сохраняем пропорции */
-    display: block; /* Убираем лишнее пространство */
-    transition: all 0.3s ease; /* Плавное изменение */
+    height: auto; 
+    display: block; 
+    transition: all 0.3s ease;
+  } */
+
+  .main_info_image{
+    max-width: 560px;
+    margin-top: 15px;
+  }
+  .main_info_img{
+    width: 100%;
+  } 
+
+  .main_info_conteiner{
+    max-width: 380px;
   }
 .main_info_name {
     font-size: 2.6vw;
@@ -166,13 +231,14 @@
     margin: 15px 0 0 0;
   }
 .main_info_mini{
-    margin-top: 140px;
+    margin-top: 120px;
     max-width: 520px;
+    min-width: 320px;
     display: grid;
-    grid-template-columns: repeat(2, 280px);
+    grid-template-columns: repeat(2, 1fr);
     row-gap: 20px;
     column-gap: 20px;
-    font-size: 18px;
+    font-size: 16px;
 }
 .main_info_save{
     margin: 30px auto 0 auto;
@@ -380,8 +446,13 @@
 
   /*               section review             */
   .save_auto {
-    margin: 150px 0;
+    margin: 150px 0 ;
     width: 100%;
+  }
+
+
+  .review{
+    margin: 0 0 150px  ;
   }
   .review_info{
     max-width: 1200px;
@@ -458,6 +529,9 @@
 
   /*                         адаптив             */
   @media (max-width: 1100px) {
+    body {
+      padding: 0 30px;
+    }
     .main_info_mini {
       margin-top: 90px;
   }
@@ -480,6 +554,28 @@
 
 
 @media (max-width: 1000px){
+
+  /* menu */
+  .menu_btn {
+    width: 100px;
+    margin-bottom: 20px;
+  }
+
+  .menu_btn_icon {
+    width: 70px;
+    top: -40px;
+    left: 15.5%;
+  }
+
+  .menu_btn_name {
+    margin-top: 40px;
+    font-size: 18px;
+  }
+
+  /* menu */
+
+
+
 .main_info_mini {
   font-size: 14px;
 }
@@ -532,6 +628,20 @@
 
 
 @media (max-width: 900px){
+
+.main_info_m span{
+  font-size: 12px;
+}
+
+
+
+
+
+
+
+  .review{
+    margin: 0 0 100px  ;
+  }
   .main_info_name, .description_title, .ingre_title, .instru_title, .save_auto_title {
     font-size: 3.7vw;
 }
@@ -551,6 +661,13 @@
 
 
 @media (max-width: 800px){
+  .main_info_mini {
+    margin-top: 40px;
+}
+
+
+
+
 .ingre_content {
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   row-gap: 30px;
@@ -578,12 +695,35 @@
 
 
 @media (max-width: 720px){
+    /* menu */
+  .menu_buttons {
+    margin: 80px auto 0 auto;
+  }
+
+  .menu_btn {
+    background-color: var(--bg-color);
+  }
+
+  .menu_btn_icon {
+    width: 65px;
+    top: -40px;
+    left: 15.5%;
+  }
+
+  .menu_btn_name {
+    display: none;
+  }
+  /* menu */
+
+
+
+  .main_info_conteiner{
+    max-width: 340px;
+  }
+
   .main_info {
     margin: 90px 0;
 }
-  .main_info_mini {
-    max-width: 420px;
-    grid-template-columns: repeat(2, 180px);
 }
 .main_info_btn {
   font-size: 16px;
@@ -626,10 +766,33 @@
   align-items: flex-start;
   gap: 20px;
 }
-  }
+  
 
 
 @media (max-width: 600px){
+
+  /* menu */
+  .menu_buttons {
+    margin: 60px auto 0 auto;
+  }
+
+  .menu_btn {
+    background-color: var(--bg-color);
+  }
+
+  .menu_btn_icon {
+    width: 45px;
+    top: -40px;
+    left: 15.5%;
+  }
+
+  .menu_btn_name {
+    display: none;
+  }
+  /* menu */
+
+
+
   .crumbs_content a {
     font-size: 12px;
 }
@@ -669,6 +832,9 @@
 }
 .review_more {
   margin: 30px auto 0 auto;
+}
+.review{
+  margin: 0 0 60px  ;
 }
 }
 

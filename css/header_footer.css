@@ -1,0 +1,364 @@
+
+
+  /*               section header             */
+  
+  .header {
+    background-color: var(--header-bg);
+    width: 100vw;
+    /* Занимает всю ширину viewport */
+    position: relative;
+    left: 50%;
+    /* Смещаем влево на 50% от viewport */
+    transform: translateX(-50%);
+    /* Корректируем положение */
+    padding: 10px 0 3px;
+  }
+  
+  .header_content {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+  
+  .header_logo {
+    max-width: 70px;
+  }
+  
+  .header_logo_img {
+    max-width: 100%;
+  }
+  
+  .header_nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    font-size: 20px;
+  }
+  
+  .header_nav_tema {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: var(--header-bg);
+    max-width: 35px;
+    cursor: pointer;
+  }
+  
+  .header_nav_tema_img {
+    max-width: 100%;
+  }
+  
+  
+  .header_nav_btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+  }
+  
+  .header_nav_span {
+    width: 35px;
+    height: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .header_nav_span span {
+    width: 100%;
+    height: 2.5px;
+    border-radius: 30px;
+    background-color: var(--border-color);
+  }
+  
+  /*               section header             */
+  
+
+
+
+  /*               footer             */
+
+.footer {
+    background-color: var(--header-bg);
+    width: 100vw;
+    /* Занимает всю ширину viewport */
+    position: relative;
+    left: 50%;
+    /* Смещаем влево на 50% от viewport */
+    transform: translateX(-50%);
+    padding: 60px 0;
+  
+  }
+  
+  .footer_content {
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+  
+  .footer_content {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .footer_logo {
+    width: 162px;
+  }
+  
+  .footer_logo_img {
+    width: 100%;
+  }
+  
+  .footer_cataloge {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 60px;
+    text-align: center;
+    font-size: 20px;
+  }
+  
+  .footer_info {
+    display: grid;
+    text-align: right;
+    row-gap: 5px;
+  }
+  
+  .footer_phone {
+    font-size: 20px;
+    margin: 0;
+  }
+  
+  .footer_email {
+    font-size: 16px;
+    margin: 0;
+  }
+  
+  .footer_social {
+    display: flex;
+  }
+  
+  .footer_social_img {
+    width: 50px;
+    margin-left: 10px;
+  }
+
+
+/* Обновленный медиазапрос для 1300px */
+@media (max-width: 1300px) {
+  body {
+    padding: 0 30px;
+  }
+
+  /*               section footer             */
+  .footer {
+    width: 100%;
+    position: relative;
+    padding: 60px 60px;
+  }
+  /*               section footer             */
+}
+
+@media (max-width: 1000px) {
+  /*               section footer             */
+  .footer {
+    left: 50%;
+    padding: 60px 60px;
+  }
+  .footer_content {
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+  .footer_logo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100px;
+  }
+  .footer_cataloge {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 30px;
+    text-align: center;
+    font-size: 16px;
+  }
+  .footer_info {
+    row-gap: 1px;
+  }
+
+  .footer_phone {
+    font-size: 16px;
+    margin: 5px;
+  }
+
+  .footer_email {
+    font-size: 12px;
+    margin: 5px;
+  }
+
+  .footer_social {
+    display: flex;
+  }
+
+  .footer_social_img {
+    width: 40px;
+    margin-left: 10px;
+  }
+  /*               section footer             */
+}
+
+/* Обновленный медиазапрос для 900px */
+@media (max-width: 900px) {
+  /* header */
+  .header_logo {
+    max-width: 55px;
+  }
+
+  .header {
+    padding: 8px 0 0px;
+  }
+
+  .header_nav {
+    gap: 35px;
+    font-size: 16px;
+  }
+  /* header */
+
+}
+
+@media (max-width: 700px) {
+  /*               section footer             */
+
+  .footer {
+    left: 50%;
+    width: 95vw;
+    padding: 30px 40px;
+  }
+  .footer_content {
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+  .footer_logo {
+    width: 80px;
+  }
+  .footer_cataloge {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 10px;
+    text-align: center;
+    font-size: 13px;
+  }
+  .footer_info {
+    row-gap: -10px;
+  }
+
+  .footer_phone {
+    font-size: 14px;
+    margin: 0px;
+  }
+
+  .footer_email {
+    font-size: 12px;
+    margin: 5px;
+  }
+
+  .footer_social {
+    display: flex;
+  }
+
+  .footer_social_img {
+    text-align: right;
+    width: 30px;
+    margin-left: 10px;
+  }
+  /*               section footer             */
+}
+
+@media (max-width: 600px) {
+  /* header */
+
+  .header_nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    font-size: 20px;
+  }
+
+  .header_nav_tema {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: var(--header-bg);
+    width: 35px;
+    cursor: pointer;
+  }
+
+  .header_nav_catalog,
+  .header_nav_blog,
+  .header_nav_exit {
+    display: none;
+  }
+
+  .header_nav_btn {
+    display: block;
+  }
+
+  /* header */
+
+}
+
+@media (max-width: 450px) {
+  /*               section footer             */
+
+  .footer {
+    left: 50%;
+    width: 95vw;
+    padding: 30px 40px;
+  }
+  .footer_content {
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+  .footer_logo {
+    width: 80px;
+  }
+  .footer_cataloge {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 10px;
+    text-align: center;
+    font-size: 13px;
+  }
+
+  .footer_cataloge_link {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .footer_phone {
+    display: none;
+  }
+
+  .footer_email {
+    display: none;
+  }
+
+  .footer_social {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .footer_social_img {
+    width: 30px;
+    margin-left: 10px;
+  }
+  /*               section footer             */
+}
