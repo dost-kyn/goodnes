@@ -1,0 +1,324 @@
+@font-face {
+    font-family: "Calypso";
+    src: url("../fonts/Calypso.ttf");
+  }
+  
+  @font-face {
+    font-family: "Rounded Mplus 1c";
+    src: url("../fonts/MPLUSRounded1c-Regular.ttf");
+  }
+  
+  html {
+  
+    overflow-x: hidden;
+  }
+  
+  body {
+    max-width: 1440px;
+    margin: 0 auto 0 auto;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: "Rounded Mplus 1c";
+    position: relative;
+    padding: 0 20px;
+  }
+  
+  a {
+    color: var(--text-color);
+    text-decoration: none;
+  }
+  
+  hr {
+    height: 1px;
+    background-color: var(--border-color);
+  }
+  
+  input[type='checkbox'] {
+    width: 30px;
+    background-color: #B0206B;
+    border: none;
+  }
+  
+  :root {
+    /* Светлая тема (по умолчанию) */
+    --bg-color: #fff8f0;
+    --text-color: #410e28;
+    --header-bg: #fff;
+    --card-bg: #fff;
+    --button-bg: #d587af;
+    --button-text: #fff;
+    --border-color: #410e28;
+    --chekbox: #EDC6D1;
+  }
+  
+  [data-theme="dark"] {
+    /* Тёмная тема */
+    --bg-color: #5D4A58;
+    --text-color: #FBF5F8;
+    --header-bg: #806868;
+    --card-bg: #806868;
+    --button-bg: #602E47;
+    --button-text: #FBF5F8;
+    --border-color: #FBF5F8;
+    --chekbox: #BEA4B2;
+  }
+  
+  
+  [data-theme-image] {
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Добавьте эти стили в ваш CSS файл */
+  
+  /* Общие стили для изображений с темой */
+  [data-theme-image] {
+    transition: opacity 0.3s ease;
+    position: relative;
+  }
+  
+  /* Светлая версия изображения (по умолчанию) */
+  [data-theme-image]::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: var(--light-image);
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+  }
+  
+  /* Темная версия изображения */
+  [data-theme-image]::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: var(--dark-image);
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+  }
+  
+  /* При темной теме показываем темное изображение */
+  [data-theme="dark"] [data-theme-image]::before {
+    opacity: 0;
+  }
+  
+  [data-theme="dark"] [data-theme-image]::after {
+    opacity: 1;
+  }
+  
+  /* Скрываем оригинальный тег img */
+  [data-theme-image] img {
+    opacity: 0;
+    width: 100%;
+    height: auto;
+  }
+  
+
+  /*               section crumds             */
+  .crumds{
+    margin-top: 60px;
+  }
+  .crumbs_content a{
+    font-size: 15px;
+  }
+
+  /*               section crumds             */
+
+
+  /*               section blogs             */
+  .blogs {
+    margin: 150px 0;
+    width: 100%;
+  }
+  .blogs_title {
+    font-size: 2.6vw;
+    font-family: "Calypso";
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 60px;
+    margin-top: 0;
+  }
+
+  .blogs_cards{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    transition: all 0.5s ease;
+  }
+  .blogs_card{
+    max-width: 265px;
+    min-width: 240px; 
+    background-color: var(--card-bg);
+    /* flex: 1 0 calc(20% - 20px);  */
+    transition: all 0.5s ease;
+    box-sizing: border-box;
+    transform: scale(0.98);
+    transition: transform 0.3s ease;
+    animation: card-appear 0.5s ease forwards;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .blogs_card:hover {
+    transform: scale(1.01);
+    transition: transform 0.2s ease;
+  }
+
+  .blogs_card_image{
+    max-width: 280px;
+  }
+  .blogs_card_img{
+    width: 100%;
+  }
+  .blogs_card_infa{
+    padding: 15px;
+    margin: 0;
+    text-align: center;
+    /* max-width: 245px; */
+  }
+  .blogs_card_title {
+    font-size: 18px;
+    line-height: 1.4; 
+    height: calc(2em * 1.4); 
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; 
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  } 
+  .blogs_card_text{
+    font-size: 14px;
+    margin: 10px auto 0 auto;
+    padding-top: 15px;
+    border-top: 2px solid var(--border-color);
+    display: -webkit-box;
+    -webkit-line-clamp: 4; 
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  /*               section blogs             */
+
+  
+  /*                 адаптив             */
+
+  @media (max-width: 1200px) {
+    .blogs_cards {
+      gap: 15px;
+  }
+    .blogs_card_title {
+      font-size: 16px;
+    } 
+  }
+
+  @media (max-width: 900px) {
+    .blogs_title {
+      font-size: 4.2vw;
+    }
+    .blogs {
+      margin: 100px 0 150px 0;
+      width: 100%;
+  }
+  .blogs_card {
+    max-width: 210px;
+    /* min-width: 240px; */
+  }
+    .blogs_card_title {
+      font-size: 15px;
+    } 
+    .blogs_card_text {
+      font-size: 13px;
+    } 
+  }
+
+  @media (max-width: 810px) {
+    .blogs_card {
+      /* max-width: 200px; */
+    min-width: 220px;
+    }
+    .blogs_card_title {
+      font-size: 14px;
+    } 
+    .blogs_card_text {
+      font-size: 12px;
+    } 
+  }
+
+  @media (max-width: 745px) {
+    .blogs_card {
+      /* max-width: 200px; */
+    min-width: 250px;
+    }
+    .blogs_card_text{
+      -webkit-line-clamp: 3; 
+    }
+  }
+
+  @media (max-width: 570px) {
+    .blogs_title {
+      margin-bottom: 30px;
+  }
+    .blogs_title {
+      font-size: 5.8vw;
+    }
+    .blogs_card {
+      /* max-width: 200px; */
+    min-width: 230px;
+    }
+    .blogs_card_title {
+      font-size: 12px;
+    } 
+    .blogs_card_text {
+      font-size: 10px;
+    } 
+  }
+
+  @media (max-width: 533px) {
+    .blogs {
+      margin: 100px 0 ;
+  }
+  .crumbs_content a {
+    font-size: 12px;
+}
+    .blogs_card {
+      max-width: 230px;
+      flex: 1 0 calc(50% - 20px); 
+    min-width: 180px;
+    }
+  }
+
+  @media (max-width: 460px) {
+    .blogs_card {
+      max-width: 190px;
+    min-width: 160px;
+    }
+    .blogs_card_infa {
+      padding: 11px;
+  }
+    .blogs_card_text{
+      -webkit-line-clamp: 2; 
+    }
+  }
+
+  
+  @media (max-width: 400px) {
+    .blogs_card {
+      max-width: 150px;
+    min-width: 140px;
+    }
+  }
+
+

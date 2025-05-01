@@ -9,24 +9,24 @@
   }
   
   html {
-    color: #410e28;
+    color: var(--text-color);
     overflow-x: hidden;
   }
   body {
     max-width: 1440px;
     margin: 0 auto 0 auto;
-    background-color: #fff8f0;
+    /* background-color: var(--bg-color); */
     font-family: "Rounded Mplus 1c";
     position: relative;
     padding: 0 20px;
   }
   a {
-    color: #410e28;
+    color: var(--text-color);
     text-decoration: none;
   }
   hr{
     height: 1px;
-    background-color: #410e28;
+    background-color: var(--text-color);
   }
   input[type='checkbox'] {
     width: 30px;
@@ -35,61 +35,321 @@
   }
 
 
-
-  .modal-content{
-    margin: auto;
-    text-align: center;
-    justify-content: center;
-    max-width: 460px;
-    padding: 50px 40px;
-    border: 3px solid #410e28 ;
-  }
-
-
-
-  .approval{
-    display: flex;
-    text-align: center;
-    justify-content: center;
-    gap: 30px;
-    margin-top: 30px;
-  }
-  .approval_inp {
-    display: none; /* Скрываем стандартный чекбокс */
+  :root {
+    /* Светлая тема (по умолчанию) */
+    --bg-color: #fff8f0;
+    --text-color: #410e28;
+    --header-bg: #fff;
+    --card-bg: #fff;
+    --button-bg: #d587af;
+    --button-text: #fff;
+    --border-color: #410e28;
+    --chekbox: #EDC6D1;
   }
   
+  [data-theme="dark"] {
+    /* Тёмная тема */
+    --bg-color: #5D4A58;
+    --text-color: #FBF5F8;
+    --header-bg: #806868;
+    --card-bg: #806868;
+    --button-bg: #602E47;
+    --button-text: #FBF5F8;
+    --border-color: #FBF5F8;
+    --chekbox: #BEA4B2;
+  }
+  
+  
+  [data-theme-image] {
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Добавьте эти стили в ваш CSS файл */
+  
+  /* Общие стили для изображений с темой */
+  [data-theme-image] {
+    transition: opacity 0.3s ease;
+    position: relative;
+  }
+  
+  /* Светлая версия изображения (по умолчанию) */
+  [data-theme-image]::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: var(--light-image);
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+  }
+  
+  /* Темная версия изображения */
+  [data-theme-image]::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: var(--dark-image);
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+  }
+  
+  /* При темной теме показываем темное изображение */
+  [data-theme="dark"] [data-theme-image]::before {
+    opacity: 0;
+  }
+  
+  [data-theme="dark"] [data-theme-image]::after {
+    opacity: 1;
+  }
+  
+  /* Скрываем оригинальный тег img */
+  [data-theme-image] img {
+    opacity: 0;
+    width: 100%;
+    height: auto;
+  }
+
+
+/*                    modal      */
+  .modal{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .modal-content{
+    text-align: center;   
+    /* max-width: 460px; */
+    padding: 50px 40px;
+    border: 3px solid var(--border-color) ;
+    background-color: var(--bg-color);
+  }
+  .modal_form{
+    max-width: 360px;
+  }
+
+  .title{
+    font-size: 2.0vw;
+    /* font-family: "Calypso"; */
+    font-weight: 300;
+    margin: 0 auto 40px auto;
+  }
+  .input{
+    width: 100%;
+    max-width: 350px;
+    background-color: var(--bg-color);
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-size: 16px;
+    color: var(--text-color);
+    margin-bottom: 50px;
+  }
+  .input:focus{
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    outline: none;
+  }
+  .input:nth-child(5) {
+    margin-bottom: 30px;
+  }
+  .approval{
+    display: flex;
+    width: 350px;
+    gap: 15px;
+    margin: 0 auto 50px auto;
+  }
+  .approval_inp {
+    display: none; 
+  }
   .custom-checkbox {
-    width: 30px;
-    height: 30px;
-    background-color: #EDC6D1; /* Цвет фона по умолчанию */
-    border: 0px; /* Цвет бордюра */
+    flex-shrink: 0;
+    width: 27px;
+    height: 27px;
+    background-color: var(--chekbox); 
+    border: 0px; 
     border-radius: 10px;
     display: inline-block;
     position: relative;
-    margin: auto 0;
+    margin: 0;
     cursor: pointer;
   }
   /* .custom-checkbox.checked {
     background-color: #B0206B; 
   } */
   .approval_text{
-    font-size: 16px;
+    font-size: 12px;
+    margin: 0;
+    text-align: start;
   }
   .btn {
     text-align: center;
     font-size: 18px;
-    margin: 10px auto 0 auto;
+    margin: 0 auto;
     font-weight: 500;
     font-family: "Rounded Mplus 1c";
     height: 40px;
-    width: 330px;
-    background-color: #d587af;
+    width: 350px;
+    background-color: var(--button-bg);
     border: none;
     border-radius: 12px;
-    color: #fff;
+    color: var(--button-text);
     cursor: pointer;
     transition: background-color 0.3s; 
   }  
-  .btn:hover {
+  /* .btn:hover {
     background-color: #c17099; 
+  } */
+  .akk{
+    font-size: 15px;
+    margin: 20px auto 0 auto;
   }
+  .akk a{
+    text-decoration: underline;
+  }
+
+/*                                адаптив          */
+  @media (max-width: 900px) {
+    .modal-content{   
+      max-width: 420px;
+      padding: 40px 30px;
+    }
+    .title{
+      font-size: 3.0vw;
+    }
+    .input{
+      max-width: 330px;
+      font-size: 15px;
+    }
+    .approval {
+      width: 330px;
+      gap: 15px;
+    }
+    .btn {
+      font-size: 16px;
+      height: 37px;
+      width: 330px;
+      border-radius: 10px;
+    }
+    .akk {
+      font-size: 13px;
+    }
+  }
+
+@media (max-width: 700px) {
+  .modal-content{   
+    max-width: 390px;
+    padding: 30px 25px;
+  }
+  .title{
+    font-size: 3.6vw;
+  }
+  .input{
+    font-size: 14px;
+  }
+  .custom-checkbox {
+    border-radius: 8px;
+  }
+  .akk {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 550px) {
+  .modal-content{   
+    max-width: 340px;
+    padding: 28px 22px;
+  }
+  .title{
+    font-size: 4.3vw;
+  }
+  .input{
+    max-width: 300px;
+    font-size: 13px;
+    margin-bottom: 35px;
+  }
+  .approval {
+    width: 300px;
+    margin: 0 auto 40px auto;
+  }
+  .btn {
+    font-size: 14px;
+    height: 34px;
+    width: 300px;
+  }
+}
+
+@media (max-width: 450px) {
+  body {
+    background-color: var(--bg-color);
+  }
+  .modal-content{
+    border: none;
+    padding: 28px 30px;
+  }
+  .title{
+    font-size: 5.7vw;
+  }
+  .input{
+    max-width: 340px;
+    font-size: 13px;
+    margin-bottom: 45px;
+  }
+  .custom-checkbox {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+}
+  .approval {
+    width: 340px;
+    margin: 0 auto 40px auto;
+  }
+  .btn {
+    font-size: 14px;
+    height: 34px;
+    width: 270px;
+  }
+}
+
+@media (max-width: 400px) {
+  .title{
+    font-size: 6.0vw;
+  }
+  .input{
+    max-width: 300px;
+    font-size: 12px;
+    margin-bottom: 35px;
+  }
+  .custom-checkbox {
+    width: 22px;
+    height: 22px;
+}
+  .approval {
+    width: 300px;
+  }
+  .approval_text {
+    font-size: 9px;
+}
+  .btn {
+    font-size: 12px;
+    height: 32px;
+    width: 240px;
+  }
+  .akk {
+    font-size: 11px;
+}
+}
