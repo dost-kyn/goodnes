@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/admin_panel/css/recipes.css" />
+  <title>Пользователи</title>
+</head>
+
+<body>
+  <div class="container">
+    <section class="sidebar">
+      <a class="header_logo">
+        <img src="/image/лого.svg" class="header_logo_img" />
+      </a>
+
+      <div class="sidebar_nav">
+        <a href="/admin_panel/html/users.html" class="sidebar_nav_link users">Пользователи</a>
+        <a href="" class="sidebar_nav_link reviews">Отзывы</a>
+        <a href="" class="sidebar_nav_link recipes">Рецепты</a>
+        <a href="" class="sidebar_nav_link">Блоги</a>
+
+        <buttom class="nav_btn"><a href="new_recipes.html">Создать рецепт</a></buttom>
+      </div>
+    </section>
+
+    <section class="contant">
+      <section class="search">
+        <div class="find">
+          <input class="search_inp" type="text" placeholder="Поиск.." />
+          <button class="search_btn">Поиск</button>
+        </div>
+      </section>
+
+      <section class="container_review">
+        <div class="container_reviews_info">
+          <h1 class="container_title">Рецепты</h1>
+          <div class="review">
+            <p class="all_review">Общее кол-во: 3 240</p>
+            <p class="for_month_review">Кол-во добавленных за посл-ий месяц: 30</p>
+
+            <button class="filter-mobile-toggle">Фильтры</button>
+            <div class="catalog_filter">
+              <div class="catalog_filter_content">
+                      <button class="close-filters">×</button>
+                      <h1 class="catalog_filter_title">Фильтр</h1>
+                      
+                      <div class="catalog_filter_column"> <!-- ˅ -->
+                          <p class="calalog_fil_col_title">⮟ Категории</p>
+                              <div class="paragraph">
+                                  <label class="custom-checkbox">
+                                      <input type="checkbox" class="paragraph_inp" >
+                                    </label>
+                                  <p class="paragraph_text">Торты</p>
+                              </div>
+                              <div class="paragraph">
+                                  <label class="custom-checkbox">
+                                      <input type="checkbox" class="paragraph_inp" >
+                                    </label>
+                                  <p class="paragraph_text">Печенье</p>
+                              </div>
+                              <div class="paragraph">
+                                  <label class="custom-checkbox">
+                                      <input type="checkbox" class="paragraph_inp" >
+                                    </label>
+                                  <p class="paragraph_text">Пироги</p>
+                              </div>
+                              <div class="paragraph">
+                                  <label class="custom-checkbox">
+                                      <input type="checkbox" class="paragraph_inp" >
+                                    </label>
+                                  <p class="paragraph_text">Конфеты</p>
+                              </div>
+                              <div class="paragraph">
+                                  <label class="custom-checkbox">
+                                      <input type="checkbox" class="paragraph_inp" >
+                                    </label>
+                                  <p class="paragraph_text">Хлеб</p>
+                              </div>
+                              <div class="paragraph">
+                                  <label class="custom-checkbox">
+                                      <input type="checkbox" class="paragraph_inp" >
+                                    </label>
+                                  <p class="paragraph_text">Кексы</p>
+                              </div>           
+                      </div>
+
+                      <div class="catalog_filter_column">
+                          <p class="calalog_fil_col_title">⮟ По времени</p>
+                              <div class="paragraph">
+                                  <label class="custom-checkbox">
+                                      <input type="checkbox" class="paragraph_inp" >
+                                    </label>
+                                  <p class="paragraph_text">< 30 мин</p>
+                              </div>
+                              <div class="paragraph">
+                                  <label class="custom-checkbox">
+                                      <input type="checkbox" class="paragraph_inp" >
+                                    </label>
+                                  <p class="paragraph_text">30-60 мин</p>
+                              </div>
+                              <div class="paragraph">
+                                  <label class="custom-checkbox">
+                                      <input type="checkbox" class="paragraph_inp" >
+                                    </label>
+                                  <p class="paragraph_text">> 60 мин</p>
+                              </div>          
+                      </div>
+
+                      <div class="catalog_filter_column">
+                          <p class="calalog_fil_col_title">⮟ Калорийность</p>
+                              <div class="paragraph_number">
+                                  <p class="paragraph_text_number">От:</p>
+                                  <label class="custom-number">
+                                      <input type="number" class="paragraph_inp_num" >
+                                  </label>       
+                              </div>
+
+                              <div class="paragraph_number">
+                                  <p class="paragraph_text_number">До:</p>
+                                  <label class="custom-number">
+                                      <input type="number" class="paragraph_inp_num" >
+                                  </label>                           
+                              </div>          
+                      </div>
+              </div>
+          </div>
+
+          </div>
+        </div>
+
+        <table class="table_users">
+          <tr class="table_row_titles">
+            <th>№</th>
+            <th>Название</th>
+            <th>Время при-ия</th>
+            <th>Калор-ость</th>
+            <th>Кол-во порций</th>
+            <th>Категория</th>
+            <th>Фотография</th>
+            <th> </th>
+          </tr>
+
+          <tr class="table_row">
+            <td>1</td>
+            <td>Овсяное печенье</td>
+            <td>2:20 ч</td>
+            <td>451 ккал</td>
+            <td>4</td>
+            <td>Печенье</td>
+            <td>
+              <p>image 43</p>
+            </td>
+            <td class="more"><button class="more_btn"><a href="more.html">Подробнее</a></button></td>
+          </tr>
+
+
+
+          <tr class="table_row">
+            <td>2</td>
+            <td>Овсяное печенье</td>
+            <td>2:20 ч</td>
+            <td class="review-text">451 ккал</td>
+            <td>4</td>
+            <td>Печенье</td>
+            <td>
+              <p>image 43</p>
+            </td>
+            <td class="more"><button class="more_btn"><a href="more.html">Подробнее</a></button></td>
+          </tr>
+
+          <tr class="table_row">
+            <td>3</td>
+            <td>Овсяное печенье</td>
+            <td>2:20 ч</td>
+            <td class="review-text">451 ккал</td>
+            <td>4</td>
+            <td>Печенье</td>
+            <td>
+              <p>image 43</p>
+            </td>
+            <td class="more"><button class="more_btn"><a href="more.html">Подробнее</a></button></td>
+            </td>
+          </tr>
+          <tr class="table_row">
+            <td>4</td>
+            <td>Овсяное печенье</td>
+            <td>2:20 ч</td>
+            <td class="review-text">451 ккал</td>
+            <td>4</td>
+            <td>Печенье</td>
+            <td>
+              <p>image 43</p>
+            </td>
+            <td class="more"><button class="more_btn"><a href="more.html">Подробнее</a></button></td>
+          </tr>
+          <tr class="table_row">
+            <td>5</td>
+            <td>Овсяное печенье</td>
+            <td>2:20 ч</td>
+            <td class="review-text">451 ккал</td>
+            <td>4</td>
+            <td>Печенье</td>
+            <td>
+              <p>image 43</p>
+            </td>
+            <td class="more"><button class="more_btn"><a href="more.html">Подробнее</a></button></td>
+          </tr>
+          <!-- Другие строки таблицы -->
+        </table>
+
+
+      </section>
+    </section>
+  </div>
+  <script src="/js/catalog.js"></script>
+</body>
+
+</html>
