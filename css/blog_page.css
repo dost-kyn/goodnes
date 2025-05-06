@@ -136,7 +136,11 @@
   .crumbs_content a{
     font-size: 15px;
   }
-
+  .back_content{
+    margin: 50px 0 0 0;
+    font-size: 26px;
+    cursor: pointer;
+  }
   /*               section crumds             */
 
 
@@ -146,12 +150,151 @@
     width: 100%;
     margin: 150px auto;
   }
+  
 .main_name{
     font-size: 2.6vw;
-    /* font-family: "Calypso"; */
     font-weight: 300;
     text-align: center;
-    margin-bottom: 60px;
+    margin: 0 0 60px 0;
 }
 
+.main_image{
+  max-width: 800px;
+  align-items: center;
+  margin: 0 auto 30px auto;
+  transition: all 0.5s ease;
+}
+.main_img{
+  width: 100%;
+}
+.main_title{
+  font-size: 32px;
+  margin: 0 0 30px 0;
+  text-align: center;
+}
+.desc{
+  font-size: 22px; 
+  margin: 0 0 90px 0;
+}
+.desc p{
+margin: 0 0 14px 0;
+}
   /*               section main             */
+
+/*               адаптив             */
+@media (max-width: 1200px) {
+.desc {
+  font-size: 20px;
+}
+}
+
+@media (max-width: 1000px) {
+  .back_content{
+    margin: 40px 0 0 0;
+    font-size: 24px;
+  }
+.main_name{
+  font-size: 3.5vw;
+}
+.main_image{
+  max-width: 700px;
+  padding: 0 20px;
+}
+}
+
+@media (max-width: 900px) {
+.main_name{
+   font-size: 3.8vw;
+}
+.desc {
+  font-size: 18px;
+}
+.main_title{
+  font-size: 28px;
+}
+}
+
+@media (max-width: 700px) {
+  .back_content{
+    font-size: 22px;
+  }
+  .main {
+    margin: 130px auto 150px auto;
+  }
+  .main_name {
+    margin-bottom: 40px;
+}
+  .main_image {
+    margin: 0 auto 20px auto;
+}
+.desc {
+  font-size: 16px;
+  margin: 0 0 70px 0;
+}
+.main_title{
+  font-size: 25px;
+}
+}
+
+@media (max-width: 600px) {
+  .back_content{
+    font-size: 20px;
+  }
+  .crumbs_content a{
+    font-size: 13px;
+  }
+  .main_name {
+    max-width: 280px;
+    margin: 0 auto 40px auto;
+}
+  }
+
+  @media (max-width: 500px) {
+    .crumds {
+      max-width: 300px;
+      margin-top: 40px;
+  }
+    .main_name {
+      font-size: 4.8vw;
+      margin: 0 auto 30px auto;
+  }
+  .desc {
+    font-size: 14px;
+}
+  .main_title {
+    font-size: 23px;
+    max-width: 300px;
+    margin: 0 auto 30px auto;
+
+}
+    }
+
+@media (max-width: 450px) {
+  .back_content {
+    margin-top: 20px;
+    font-size: 18px;
+}
+.main {
+  margin: 90px auto 110px auto;
+}
+.main_name {
+  font-size: 5.3vw;
+  margin: 0 auto 15px auto;
+}
+.main_image {
+  margin: 0 auto 15px auto;
+}
+.desc {
+  font-size: 12px;
+  margin: 0 0 50px 0;
+}
+.desc p {
+  margin: 0 0 10px 0;
+}
+.main_title {
+  font-size: 18px;
+  margin: 0 0 15px 0;
+}
+}
+
+/*               адаптив            */
