@@ -515,13 +515,13 @@ input[type='checkbox'] {
 
 
 
-  /*                         адаптив             */
+  /*        адаптив       */
   @media (max-width: 1100px) {
-    body {
-      padding: 0 30px;
-    }
-    .main_info_mini {
-      margin-top: 130px;
+  body {
+    padding: 0 30px;
+  }
+  .main_info_mini {
+    margin-top: 130px;
   }
   .desc_text {
     font-size: 22px;
@@ -542,27 +542,21 @@ input[type='checkbox'] {
 
 
 @media (max-width: 1000px){
-
   /* menu */
   .menu_btn {
     width: 100px;
     margin-bottom: 20px;
   }
-
   .menu_btn_icon {
     width: 70px;
     top: -40px;
     left: 15.5%;
   }
-
   .menu_btn_name {
     margin-top: 40px;
     font-size: 18px;
   }
-
   /* menu */
-
-
 
 .main_info_mini {
   font-size: 14px;
@@ -953,3 +947,4 @@ input[type='checkbox'] {
   width: 140px;
 }
 }
+/*     адаптив      */

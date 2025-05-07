@@ -221,7 +221,7 @@ input[type="checkbox"] {
   background-color: var(--button-bg);
   border: none;
   border-radius: 12px;
-  color: #fff;
+  color: var(--button-text);
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -249,7 +249,7 @@ input[type="checkbox"] {
   background-color: var(--button-bg);
   border: none;
   border-radius: 12px;
-  color: #fff;
+  color: var(--button-text);
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -341,14 +341,14 @@ input[type="checkbox"] {
 } */
 
 .recipes_more{
-  margin: 0 auto o auto;
+  margin: 0 auto 0 auto;
   justify-content: center;
   text-align: center;
 }
 .recipes_more_btn {
   text-align: center;
   font-size: 18px;
-  margin: 10px auto 0 auto;
+  margin: 0 auto;
   font-weight: 500;
   font-family: "Rounded Mplus 1c";
   height: 40px;
@@ -356,7 +356,7 @@ input[type="checkbox"] {
   background-color: var(--button-bg);
   border: none;
   border-radius: 12px;
-  color: #fff;
+  color: var(--button-text);
   cursor: pointer;
   transition: background-color 0.3s; 
 }  
@@ -410,7 +410,7 @@ input[type="checkbox"] {
 @media (max-width: 900px) {
   /*               section banner             */
   .banner_text {
-    top: 10%;
+    top: 8%;
     font-size: 3.5vw;
     font-family: "Calypso";
     max-width: 700px;
@@ -431,6 +431,15 @@ input[type="checkbox"] {
     max-width: 200px;
   }
   /*               section search             */
+
+  /*     section catalog   */
+  .recipes_more_btn {
+    font-size: 15px;
+    height: 38px;
+    width: 200px;
+    border-radius: 10px;
+  } 
+  /*     section catalog   */
 }
 
 @media (max-width: 700px) {
@@ -456,24 +465,24 @@ input[type="checkbox"] {
   }
   .blog_btn {
     flex: 0 0 auto;
-    text-align: center;
     font-size: 16px;
-    font-weight: 500;
-    font-family: "Rounded Mplus 1c";
     height: 30px;
     width: 100%;
     width: 100px;
-    background-color: var(--button-bg);
-    border: none;
-    border-radius: 10px;
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.3s;
   }
   .search_inp {
     font-size: 16px;
   }
   /*               section search             */
+
+ /*     section catalog   */
+  .recipes_card {
+    width: 250px;
+    min-width: 190px;
+    padding: 18px 17px;
+    flex: 1 0 calc(50% - 20px);
+}
+ /*     section catalog   */
 }
 
 /* Обновленный медиазапрос для мобильных */
@@ -489,15 +498,52 @@ input[type="checkbox"] {
   }
 
   .banner_text {
-    top: 14%;
+    top: 8%;
     font-size: 3.5vw;
-    font-family: "Calypso";
     max-width: 700px;
     line-height: 1.7;
     padding-left: 10px;
-    z-index: 10;
   }
   /*               section banner             */
+}
+
+@media (max-width: 500px) {
+/*     section search        */
+  .search {
+    margin-bottom: 50px;
+}
+/*      section search     */
+
+ /*     section catalog   */
+ .catalog {
+  margin: 50px 0 130px 0;
+  width: 100%;
+}
+ .recipes_card {
+  width: 220px;
+  min-width: 150px;
+  flex: 1 0 calc(50% - 20px);
+}
+.recipes_title {
+  font-size: 22px;
+}
+.recipes_info{
+margin-top: 5px;
+}
+.recipes_info p {
+  font-size: 11px;
+}
+.recipes_btn {
+  font-size: 12px;
+  height: 26px;
+  width: 60px;
+  margin-top: 6px;
+}
+.recipes_cards {
+  margin-bottom: 40px;
+  gap: 10px;
+}
+/*     section catalog   */
 }
 
 @media (max-width: 450px) {
@@ -515,13 +561,11 @@ input[type="checkbox"] {
   }
 
   .banner_text {
-    top: 10%;
-    font-size: 4.2vw;
-    font-family: "Calypso";
+    top: 8%;
+    font-size: 3.8vw;
     max-width: 700px;
     line-height: 1.7;
     padding-left: 0px;
-    z-index: 10;
   }
   /*               section banner             */
 
@@ -557,6 +601,40 @@ input[type="checkbox"] {
     width: 50px;
     border-radius: 9px;
 }
+
+/*     section catalog   */
+.search {
+  margin-bottom: 30px;
+}
+.catalog {
+  margin: 30px 0 90px 0;
+}
+.recipes_card {
+  width: 180px;
+  min-width: 120px;
+  padding: 14px 14px;
+  flex: 1 0 calc(50% - 20px);
+}
+.recipes_title {
+  font-size: 18px;
+}
+.recipes_info p {
+  font-size: 9px;
+}
+.recipes_image {
+  max-width: 130px;
+}
+.recipes_btn {
+  font-size: 10px;
+  height: 24px;
+}
+.recipes_more_btn {
+  font-size: 10px;
+  height: 30px;
+  width: 150px;
+  border-radius: 8px;
+}
+/*     section catalog   */
 }
 
 /*                    Адаптив            */

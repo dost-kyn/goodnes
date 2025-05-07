@@ -1043,7 +1043,7 @@ input[type='checkbox'] {
     font-weight: 500;
     font-family: "Rounded Mplus 1c";
     height: 30px;
-    width: 180px;
+    width: 120px;
     background-color: var(--button-bg);
     color: var(--button-text);
     border: none;
@@ -1080,8 +1080,8 @@ input[type='checkbox'] {
     font-size: 12px;
     font-weight: 500;
     font-family: "Rounded Mplus 1c";
-    height: 30px;
-    width: 180px;
+    height: 26px;
+    width: 120px;
     background-color: var(--button-bg);
     color: var(--button-text);
     border: none;

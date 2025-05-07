@@ -298,7 +298,7 @@
   max-width: 250px;
   padding: 10px;
   background: var(--button-bg);
-  color: white;
+  color: var(--button-text);
   border: none;
   border-radius: 12px;
   margin: 0 auto;
@@ -381,7 +381,7 @@
     background-color: var(--button-bg);
     border: none;
     border-radius: 12px;
-    color: #fff;
+    color: var(--button-text);
     cursor: pointer;
     transition: background-color 0.3s; 
   }  
@@ -405,7 +405,7 @@
     background-color: var(--button-bg);
     border: none;
     border-radius: 12px;
-    color: #fff;
+    color: var(--button-text);
     cursor: pointer;
     transition: background-color 0.3s; 
   }  
@@ -460,7 +460,7 @@
     width: 80%;
     max-width: 300px;
     height: 100vh;
-    background: white;
+    background: var(--bg-color);
     z-index: 1000;
     padding: 30px;
     overflow-y: auto;
@@ -486,7 +486,7 @@
     border: none;
     font-size: 50px;
     cursor: pointer;
-    color: #333;
+    color: var(--border-color);
   }
   .catalog_main_content {
     width: 100%;
