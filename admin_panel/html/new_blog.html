@@ -17,9 +17,9 @@
 
             <div class="sidebar_nav">
                 <a href="/admin_panel/html/users.html" class="sidebar_nav_link users">Пользователи</a>
-                <a href="" class="sidebar_nav_link reviews">Отзывы</a>
-                <a href="" class="sidebar_nav_link recipes">Рецепты</a>
-                <a href="" class="sidebar_nav_link">Блоги</a>
+                <a href="" class="sidebar_nav_link">Отзывы</a>
+                <a href="" class="sidebar_nav_link">Рецепты</a>
+                <a href="" class="sidebar_nav_link" style="text-decoration-line: underline;">Блоги</a>
             </div>
         </section>
 
@@ -38,45 +38,13 @@
                         <th class="table_column_1">Название</th>
                         <th><input type="text" class="table_inp"></th>
                     </tr>
+                    
+
+
                     <tr class="table_row">
-                        <th class="table_column_1">Время при-ия</th>
-                        <th><input type="text" class="table_inp"></th>
-                    </tr>
-                    <tr class="table_row">
-                        <th class="table_column_1">Калор-ость</th>
-                        <th><input type="text" class="table_inp"></th>
-                    </tr>
-                    <tr class="table_row">
-                        <th class="table_column_1">Кол-во порций</th>
-                        <th><input type="text" class="table_inp"></th>
-                    </tr>
-                    <tr class="table_row">
-                        <th class="table_column_1">Категория</th>
+                        <th class="table_column_1" style="vertical-align: top;">Основа</th>
                         <th class="table_column_2">
-                            <select name="" id="">
-                                <option for="1">Торты</option>
-                                <option for="2">Печенья</option>
-                                <option for="2">Пироги</option>
-                                <option for="2">Кексы</option>
-                                <option for="2">Конфеты</option>
-                                <option for="2">Хлеб</option>
-                            </select>
-                        </th>
-                    </tr>
-                    <tr class="table_row">
-                        <th class="table_column_1">Главная фотография</th>
-                        <th class="table_column_2"><input type="file"></th>
-                    </tr>
-                    <tr class="table_row">
-                        <th class="table_column_1">Описание</th>
-                        <th><input type="text" class="table_inp"></th>
-                    </tr>
-                    <tr class="table_row">
-                        <th class="table_column_1">Ингридиенты</th>
-                        <th><input type="text" class="table_inp"></th>
-                    <tr class="table_row">
-                        <th class="table_column_1">Инструкция</th>
-                        <th class="table_column_2">
+                            <p>Заголовок 1: <input type="text" class="table_inp"></p>
                             <p>Фото 1: <input type="file"></p>
                             <p>Описание 1: <input type="text" class="table_inp"></p>
                         </th>
@@ -89,15 +57,11 @@
                             <button class="btn" id="moreButton">Добавить ещё</button>
                         </th>
                     </tr>
-                    <tr class="table_row">
-                        <th class="table_column_1">Кол-во отзывов</th>
-                        <th><input type="text" class="table_inp"></th>
-                    </tr>
                 </table>
 
-                <p class="error">xdvv</p>
+                <p class="error"></p>
                 <div class="container_review_buttons">
-                    <button class="btn"><a href="recipes.html">Вернуться</a></button>
+                    <button class="btn"><a href="blog.html">Вернуться</a></button>
                     <button class="btn" id="saveButton">Сохранить</button>
                     <button class="btn" id="editButton" style="display: none;">Изменить</button>
                 </div>
@@ -122,6 +86,7 @@
             newTh.className = 'table_column_2';
 
             newTh.innerHTML = `
+            <p>Заголовок ${counter} : <input type="text" class="table_inp"></p>
             <p>Фото ${counter} : <input type="file"></p>
             <p>Описание ${counter} : <input type="text" class="table_inp"></p>`;
 
@@ -133,7 +98,7 @@
         });
 
 
-        saveButton.addEventListener('click', () => {
+    saveButton.addEventListener('click', () => {
     // Проверяем, все ли обязательные поля заполнены
     let allFilled = true;
     const textInputs = document.querySelectorAll('.table_inp');
@@ -165,6 +130,7 @@
             });
         });
 
+        moreButton.style.display = 'none';
         saveButton.style.display = 'none';
         editButton.style.display = "block";
         alert('Данные успешно сохранены!');
@@ -207,6 +173,7 @@
                 }
             });
 
+            moreButton.style.display = 'block';
             saveButton.style.display = "block";
             editButton.style.display = "none";
         })

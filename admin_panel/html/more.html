@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/admin_panel/css/recipes.css" />
-  <title>Рецепты</title>
+  <link rel="stylesheet" href="/admin_panel/css/new_recipes.css" />
+  <title>Овсяное печенье</title>
 </head>
 
 <body>
@@ -18,7 +18,7 @@
       <div class="sidebar_nav">
         <a href="/admin_panel/html/users.html" class="sidebar_nav_link users">Пользователи</a>
         <a href="" class="sidebar_nav_link reviews">Отзывы</a>
-        <a href="" class="sidebar_nav_link recipes">Рецепты</a>
+        <a href="" class="sidebar_nav_link" style="text-decoration-line: underline;">Рецепты</a>
         <a href="" class="sidebar_nav_link">Блоги</a>
       </div>
     </section>
@@ -36,17 +36,150 @@
           <h1 class="container_title">Овсяное печенье</h1>
         </div>
 
-        <div class="container_recipes">
+        <table class="table_users">
+          <tr class="table_row">
+            <th class="table_column_1">№</th>
+            <th class="table_column_2">1</th>
+          </tr>
+          <tr class="table_row">
+            <th class="table_column_1">Название</th>
+            <th class="table_column_2">Овсяное печенье</th>
+          </tr>
+          <tr class="table_row">
+            <th class="table_column_1">Время при-ия</th>
+            <th class="table_column_2">2:20 ч</th>
+          </tr>
+          <tr class="table_row">
+            <th class="table_column_1">Калор-ость</th>
+            <th class="table_column_2">451 ккал</th>
+          </tr>
+          <tr class="table_row">
+            <th class="table_column_1">Кол-во порций</th>
+            <th class="table_column_2">12</th>
+          </tr>
+          <tr class="table_row">
+            <th class="table_column_1">Категория</th>
+            <th class="table_column_2">Печенье</th>
+          </tr>
+          <tr class="table_row">
+            <th class="table_column_1">Главная фотография</th>
+            <th class="table_column_2">image 43</th>
+          </tr>
+          <tr class="table_row">
+            <th class="table_column_1">Описание</th>
+            <th class="table_column_2">Овсяное печенье – это полезное и вкусное лакомство, приготовленное на
+              основе овсяных хлопьев. Оно обладает приятной рассыпчатой или мягкой текстурой (в
+              зависимости от рецепта) и характерным душистым ароматом с нотками меда, корицы или ванили.
+            </th>
+          </tr>
+          <tr class="table_row">
+            <th class="table_column_1">Ингридиенты</th>
+            <th class="table_column_2">Хлопья овсяные – 180 г долгой варки. Сахар – 160 г. Мука
+              пшеничная – 140 г. Мука пшеничная – 140 г. Яйцо куриное – 1 шт. категории С1. </th>
+          </tr>
+          <tr class="table_row">
+            <th class="table_column_1" style="vertical-align: top;">Инструкция</th>
+            <th class="table_column_2">
+              <p>Фото 1: image 43</p>
+              <p>Описание 1: Соединить тщательно сливочное масло комнатной температуры, сахар и соль
+                силиконовой лопаткой.</p>
+            </th>
+          </tr>
 
+          <tr class="table_row">
+            <th class="table_column_1"> </th>
+            <th class="table_column_2">
+              <p>Фото 2: image 43</p>
+              <p>Описание 2: Соединить тщательно сливочное масло комнатной температуры, сахар и соль
+                силиконовой лопаткой.</p>
+            </th>
+          </tr>
+
+          <tr class="table_row">
+            <th class="table_column_1">Кол-во отзывов</th>
+            <th class="table_column_2">34</th>
+          </tr>
+        </table>
+
+        <div class="container_review_buttons">
+          <button class="btn"><a href="recipes.html">Вернуться</a></button>
+          <button class="btn" id="editButton">Изменить</button>
+          <button class="btn" id="saveButton" style="display: none;">Сохранить</button>
+          <button class="btn">Удалить</button>
         </div>
-
-
       </section>
     </section>
   </div>
+  <script src="/js/catalog.js"></script>
   <script>
+    const editButton = document.querySelector('#editButton');
+    const saveButton = document.querySelector('#saveButton');
+    const editableCells = document.querySelectorAll('.table_column_2');
 
 
+    function extractTextFromHTML(html) {
+      const temp = document.createElement('div');
+      temp.innerHTML = html;
+      return temp.textContent || temp.innerText || '';
+    }
+
+    editButton.addEventListener('click', function () {
+      editableCells.forEach(cell => {
+        const content = cell.innerHTML;
+
+        // Извлекаем только текст без HTML-тегов
+        const textContent = extractTextFromHTML(content);
+
+        if (content.includes('<p>') || content.includes('<br>') || textContent.length > 50) {
+          const textarea = document.createElement('textarea');
+          textarea.className = 'editable editable-textarea';
+          textarea.value = textContent; 
+          cell.innerHTML = '';
+          cell.appendChild(textarea);
+        }
+        else {
+          const input = document.createElement('input');
+          input.className = 'editable';
+          input.type = 'text';
+          input.value = textContent;  
+          cell.innerHTML = '';
+          cell.appendChild(input);
+        }
+      });
+
+      saveButton.style.display = "block";
+      editButton.style.display = "none";
+    })
+
+    saveButton.addEventListener('click', function () {
+      editableCells.forEach(cell => {
+        const input = cell.querySelector('input, textarea');
+        if (input) {
+          // Для ячеек, которые изначально содержали абзацы, сохраняем с тегами <p>
+          if (cell.dataset.hasParagraphs) {
+            const paragraphs = input.value.split('\n').filter(p => p.trim() !== '');
+            let newContent = '';
+            paragraphs.forEach(p => {
+              newContent += `<p>${p}</p>`;
+            });
+            cell.innerHTML = newContent;
+          } else {
+            cell.innerHTML = input.value;
+          }
+        }
+      });
+
+      saveButton.style.display = 'none';
+      editButton.style.display = 'block';
+      alert('Изменения сохранены!');
+    });
+
+    // При загрузке страницы отмечаем ячейки, которые содержат абзацы
+    editableCells.forEach(cell => {
+      if (cell.innerHTML.includes('<p>')) {
+        cell.dataset.hasParagraphs = 'true';
+      }
+    });
   </script>
 </body>
 
