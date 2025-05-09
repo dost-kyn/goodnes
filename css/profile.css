@@ -147,7 +147,7 @@ input[type="checkbox"] {
 .banner_text {
   color: #410e28;
   position: absolute;
-  top: 13%;
+  top: 10%;
   font-size: 2.8vw;
   font-family: "Calypso";
   max-width: 700px;
@@ -367,6 +367,103 @@ input[type="checkbox"] {
 /*                   section catalog            */
 
 
+ /*               section review             */
+ .review{
+  margin: 0 0 150px  ;
+}
+.review_info{
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  margin: 0 auto 30px auto;
+}
+.review_quantity{
+  font-size: 30px;
+}
+.review_title{
+  margin:0;
+}
+.catalog_title{
+  font-size: 2.6vw;
+  font-family: "Calypso";
+  font-weight: 300;
+  margin: 0;
+}
+.review_content{
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+.review_box{
+  max-width: 650px;
+  background-color: var(--card-bg);
+  padding: 20px 25px 30px 20px;
+  transition: all 0.5s ease;
+  box-sizing: border-box;
+  transform: scale(0.98);
+  transition: transform 0.3s ease;
+  flex: 1 0 calc(50% - 20px);
+}
+.review_box_info{
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+.review_recipe{
+  cursor: pointer;
+  text-decoration: underline;
+}
+.review_box_text{
+  font-size: 22px;
+}
+.review_box_text_ban{
+  font-size: 22px;
+  margin: 0 0 15px 0;
+  color: #fc9393;
+}
+.review_btn {
+  margin-left: auto;
+  display: block;
+  font-size: 16px;
+  text-decoration: underline;
+  margin: 0 0 0 auto;
+  font-weight: 500;
+  font-family: "Rounded Mplus 1c";
+  background-color: var(--card-bg);
+  border: none;
+  color: var(--button-text);
+  cursor: pointer;
+  transition: background-color 0.3s; 
+}
+.review_more{
+  margin: 60px auto 0 auto;
+  text-align: center;
+}
+.review_more_btn {
+  font-size: 18px;
+  margin: 0 auto 0 auto;
+  font-weight: 500;
+  font-family: "Rounded Mplus 1c";
+  height: 45px;
+  width: 220px;
+  background-color: var(--button-bg);
+  border: none;
+  border-radius: 12px;
+  color: var(--button-text);
+  cursor: pointer;
+} 
+
+/*               section review             */
+
+
+
+
 /*                    Адаптив            */
 @media (max-width: 1300px) {
   body {
@@ -404,13 +501,36 @@ input[type="checkbox"] {
   width: 80px;
 }
 /*     section catalog   */
+
+/*     section review    */
+.catalog_title {
+  font-size: 3.4vw;
+}
+.review_quantity {
+  font-size: 27px;
+} 
+.review_box_info {
+  font-size: 16px;
+}
+.review_box_text {
+  font-size: 18px;
+}
+.review_box_text_ban {
+  font-size: 18px;
+}
+.review_more_btn {
+  font-size: 16px;
+  height: 40px;
+  width: 200px;
+}
+/*     section review    */
 }
 
 /* Обновленный медиазапрос для 900px */
 @media (max-width: 900px) {
   /*               section banner             */
   .banner_text {
-    top: 8%;
+    top: 6%;
     font-size: 3.5vw;
     font-family: "Calypso";
     max-width: 700px;
@@ -440,6 +560,35 @@ input[type="checkbox"] {
     border-radius: 10px;
   } 
   /*     section catalog   */
+
+  /*     section review    */
+  .review{
+    margin: 0 0 100px  0;
+  }
+  .catalog_title{
+    font-size: 3.7vw;
+}
+.review_quantity {
+  font-size: 24px;
+}
+.review_box_info {
+  font-size: 13px;
+}
+.review_box_text {
+  font-size: 15px;
+}
+.review_box_text_ban {
+  font-size: 15px;
+}
+.review_more_btn {
+  font-size: 14px;
+  height: 37px;
+  width: 170px;
+}
+.review_more {
+  margin: 40px auto 0 auto;
+}
+/*     section review    */
 }
 
 @media (max-width: 700px) {
@@ -482,10 +631,42 @@ input[type="checkbox"] {
     padding: 18px 17px;
     flex: 1 0 calc(50% - 20px);
 }
+.recipes_more_btn {
+  font-size: 12px;
+  height: 34px;
+  width: 140px;
+}
  /*     section catalog   */
+
+/*     section review    */
+.review_box {
+  max-width: 570px;
+  padding: 20px;
+}
+.catalog_title {
+  font-size: 4.2vw;
+}
+ .review_quantity {
+  font-size: 20px;
+}
+.review_content {
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.review_btn {
+  font-size: 14px;
+}
+.review_more_btn {
+  font-size: 12px;
+  height: 34px;
+  width: 140px;
+}
+/*     section review    */
 }
 
-/* Обновленный медиазапрос для мобильных */
+
 @media (max-width: 600px) {
   /*               section banner             */
   .banner_image_img {
@@ -498,14 +679,21 @@ input[type="checkbox"] {
   }
 
   .banner_text {
-    top: 8%;
+    top: 6%;
     font-size: 3.5vw;
     max-width: 700px;
     line-height: 1.7;
     padding-left: 10px;
   }
   /*               section banner             */
+
+  /*     section review    */
+  .review_more {
+    margin: 30px auto 0 auto;
+  }
+  /*     section review    */
 }
+
 
 @media (max-width: 500px) {
 /*     section search        */
@@ -544,6 +732,30 @@ margin-top: 5px;
   gap: 10px;
 }
 /*     section catalog   */
+
+  /*     section review    */
+  .catalog_title {
+    font-size: 5.4vw;
+}
+.review_quantity {
+  font-size: 18px;
+}
+.review_info {
+  margin: 0 auto 20px auto;
+}
+.review_box_info {
+  font-size: 12px;
+}
+.review_box_text {
+  font-size: 13px;
+}
+.review_box_text_ban {
+  font-size: 13px;
+}
+.review_btn {
+  font-size: 13px;
+}
+  /*     section review    */
 }
 
 @media (max-width: 450px) {
@@ -561,7 +773,7 @@ margin-top: 5px;
   }
 
   .banner_text {
-    top: 8%;
+    top: 6%;
     font-size: 3.8vw;
     max-width: 700px;
     line-height: 1.7;
@@ -631,10 +843,37 @@ margin-top: 5px;
 .recipes_more_btn {
   font-size: 10px;
   height: 30px;
-  width: 150px;
+  width: 130px;
   border-radius: 8px;
 }
 /*     section catalog   */
+
+  /*     section review    */
+  .review_box {
+    padding: 10px;
+}
+.review_quantity {
+  font-size: 15px;
+}
+.review_box_info {
+  font-size: 11px;
+}
+.review_box_text {
+  font-size: 12px;
+}
+.review_box_text {
+  font-size: 12px;
+}
+.review_box_text_ban {
+  font-size: 12px;
+}
+.review_more_btn {
+  font-size: 10px;
+  height: 30px;
+  width: 130px;
+  border-radius: 8px;
+}
+  /*     section review    */
 }
 
 /*                    Адаптив            */

@@ -187,10 +187,20 @@
         gap: 15px;
         margin-top: 0;
       }
-      .paragraph_inp {
-        display: none; 
+      .paragraph input[type="checkbox"] {
+        position: absolute;
+        z-index: -1;
+        opacity: 0;
       }
-      .custom-checkbox {
+      /* вертикальное центрирование флажка и надписи к нему */
+      .paragraph input[type="checkbox"]+label {
+        display: inline-flex;
+        align-items: center;
+        user-select: none;
+      }
+      /* создаем поддельный чекбокс */
+      .paragraph input[type="checkbox"]+label::before {
+        content: '';
         width: 27px;
         height: 27px;
         background-color: var(--chekbox); 
@@ -201,9 +211,11 @@
         margin: auto 0;
         cursor: pointer;
       }
-      
-      .custom-checkbox.checked {
-        background-color: #B0206B; 
+      .paragraph input[type="checkbox"]:checked+label::before {
+        background-image: url(../image/галочка.svg);
+        background-size: 80% 80%;
+        background-repeat: no-repeat;
+        background-position: center center;
       }
       .paragraph_text{
         font-size: 18px;
@@ -634,7 +646,7 @@ font-size: 18px;
 .paragraph_text {
 font-size: 13px;
 }
-.custom-checkbox {
+.paragraph input[type="checkbox"]+label::before {
   width: 23px;
   height: 23px;
   border-radius: 6px;
@@ -742,7 +754,7 @@ font-size: 24px;
 .paragraph_text {
 font-size: 18px;
 }
-.custom-checkbox {
+.paragraph input[type="checkbox"]+label::before {
   width: 30px;
   height: 30px;
   border-radius: 10px;

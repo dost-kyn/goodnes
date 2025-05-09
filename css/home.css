@@ -472,7 +472,7 @@ input[type='checkbox'] {
   border-radius: 12px;
   cursor: pointer;
 }
-
+/* 
 .subscription_approval {
   display: flex;
   text-align: center;
@@ -483,16 +483,13 @@ input[type='checkbox'] {
 
 .subscription_approval_inp {
   display: none;
-  /* Скрываем стандартный чекбокс */
 }
 
 .custom-checkbox {
   width: 30px;
   height: 30px;
   background-color: var(--chekbox);
-  /* Цвет фона по умолчанию */
   border: 0px;
-  /* Цвет бордюра */
   border-radius: 10px;
   display: inline-block;
   position: relative;
@@ -500,12 +497,53 @@ input[type='checkbox'] {
   cursor: pointer;
 }
 
-.custom-checkbox.checked {
-  background-color: #B0206B;
-  /* Цвет фона при выборе */
-}
-
 .subscription_approval_text {
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+} */
+
+
+.subscription_approval{
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 30px;
+}
+.subscription_approval input[type="checkbox"] {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+  
+}
+/* вертикальное центрирование флажка и надписи к нему */
+.subscription_approval input[type="checkbox"]+label {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+}
+/* создаем поддельный чекбокс */
+.subscription_approval input[type="checkbox"]+label::before {
+  content: '';
+  width: 30px;
+  height: 30px;
+  background-color: var(--chekbox);
+  border: 0px;
+  border-radius: 10px;
+  display: inline-block;
+  position: relative;
+  margin: auto 0;
+  cursor: pointer;
+}
+.subscription_approval input[type="checkbox"]:checked+label::before {
+  background-image: url(../image/галочка.svg);
+  background-size: 80% 80%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.subscription_approval_text{
   font-size: 16px;
   display: flex;
   flex-direction: column;
@@ -769,16 +807,10 @@ input[type='checkbox'] {
     font-size: 10px;
   }
 
-  .custom-checkbox {
-    width: 20px;
-    height: 20px;
-    background-color: var(--chekbox);
-    border: 0px;
-    border-radius: 5px;
-    display: inline-block;
-    position: relative;
-    margin: auto 0;
-    cursor: pointer;
+  .subscription_approval input[type="checkbox"]+label::before {
+    width: 25px;
+    height: 25px;
+    border-radius: 7px;
   }
 }
 
@@ -1087,6 +1119,15 @@ input[type='checkbox'] {
     border: none;
     border-radius: 8px;
     cursor: pointer;
+  }
+  .subscription_approval {
+    margin-top: 15px;
+    gap: 10px;
+}
+  .subscription_approval input[type="checkbox"]+label::before {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
   }
   /*               section subscription            */
 }

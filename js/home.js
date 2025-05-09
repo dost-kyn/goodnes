@@ -43,3 +43,44 @@ toggleTheme.addEventListener('click', () => {
 
 // Запуск при загрузке
 document.addEventListener('DOMContentLoaded', initTheme);
+
+
+
+
+
+// // Галочка. При загрузке страницы проверяем сохраненное состояние
+// document.addEventListener('DOMContentLoaded', function() {
+//   // Находим чекбокс
+//   const checkbox = document.querySelector('.wr-checkbox');
+//   const uniqueKey = `checkboxState_${checkbox.id}`; // Используем id чекбокса
+// localStorage.setItem(uniqueKey, this.checked ? 'checked' : 'unchecked');
+  
+//   // Проверяем сохранённое состояние в localStorage
+//   const savedState = localStorage.getItem('checkboxState');
+//   if (savedState === 'checked') {
+//     checkbox.checked = true; // Восстанавливаем галочку
+//   }
+  
+//   // Обработчик клика
+//   checkbox.addEventListener('change', function() {
+//     // Сохраняем состояние в localStorage
+//     localStorage.setItem('checkboxState', this.checked ? 'checked' : 'unchecked');
+//   });
+// });
+
+// Пример хранения всех состояний в одном объекте
+document.addEventListener('DOMContentLoaded', function() {
+  const checkboxes = document.querySelectorAll('input[type="checkbox"][class^="wr-checkbox"]');
+  const savedStates = JSON.parse(localStorage.getItem('checkboxStates') || '{}');
+
+  checkboxes.forEach(checkbox => {
+    if (savedStates[checkbox.id]) {
+      checkbox.checked = true;
+    }
+
+    checkbox.addEventListener('change', function() {
+      savedStates[checkbox.id] = this.checked;
+      localStorage.setItem('checkboxStates', JSON.stringify(savedStates));
+    });
+  });
+});
