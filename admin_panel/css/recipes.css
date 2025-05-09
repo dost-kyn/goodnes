@@ -66,9 +66,9 @@
     font-size: 18px;
     margin: 0;
   }
-  .recipes {
+  /* .recipes {
     text-decoration-line: underline;
-  }
+  } */
 .nav_btn{
     margin-top: 60px;
     background-color: #f5f5f5;
@@ -209,17 +209,29 @@
   padding: 0;
   margin: 0 0 15px 0;
 }
-.paragraph {
-  display: flex
-;
+.paragraph{
+  display: flex;
   height: 40px;
   gap: 15px;
   margin-top: 0;
 }
-.custom-checkbox {
+.paragraph input[type="checkbox"] {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+/* вертикальное центрирование флажка и надписи к нему */
+.paragraph input[type="checkbox"]+label {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+}
+/* создаем поддельный чекбокс */
+.paragraph input[type="checkbox"]+label::before {
+  content: '';
   width: 27px;
   height: 27px;
-  background-color: var(--chekbox);
+  background-color: #edc6d1; 
   border: 0px;
   border-radius: 10px;
   display: inline-block;
@@ -227,25 +239,40 @@
   margin: auto 0;
   cursor: pointer;
 }
-.custom-checkbox {
-  width: 27px;
-  height: 27px;
-  background-color: var(--chekbox);
-  border: 0px;
-  border-radius: 10px;
-  display: inline-block;
-  position: relative;
-  margin: auto 0;
-  cursor: pointer;
+.paragraph input[type="checkbox"]:checked+label::before {
+  background-image: url(/image/галочка.svg);
+  background-size: 80% 80%;
+  background-repeat: no-repeat;
+  background-position: center center;
 }
-input[type='checkbox'] {
-    width: 30px;
-    background-color: #B0206B;
-    border: none;
-}
-.paragraph_text {
+.paragraph_text{
   font-size: 18px;
   margin: auto 0;
+}
+
+.paragraph_number{
+  display: flex;
+  height: 40px;
+  gap: 15px;
+  margin-top: 0px;
+}
+.paragraph_inp_num {
+  width: 100px;
+  height: 24px;
+  padding: 3px 0 3px 8px;
+  font-size: 18px;
+  color: var(--text-color);
+  background-color: var(--chekbox); 
+  border: 0px; 
+  border-radius: 7px;    
+  position: relative;
+  margin: auto 0;
+  cursor: pointer;
+}
+.custom-number input:focus {
+  /* background-color: #B0206B; Цвет фона при выборе */
+  border: 0px;
+  outline: none;
 }
   
   /*               div search             */
