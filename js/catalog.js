@@ -30,24 +30,6 @@ document.querySelector('.filter-mobile-toggle').addEventListener('click', functi
   document.querySelector('.close-filters').addEventListener('click', closeFilters);
   document.querySelector('.filters-overlay').addEventListener('click', closeFilters);
 
-  
-//   // Обработчик для кнопки-лупы
-// document.querySelector('.mobile-search-toggle').addEventListener('click', function() {
-//   const searchInput = document.querySelector('.search_inp');
-//   const searchBtn = document.querySelector('.search_btn');
-  
-//   searchInput.classList.toggle('active');
-//   searchBtn.classList.toggle('active');
-  
-//   if (searchInput.classList.contains('active')) {
-//     searchInput.focus();
-//   }
-// });
 
-// // Закрытие поиска при клике вне области
-// document.addEventListener('click', function(e) {
-//   if (!e.target.closest('.search') && window.innerWidth <= 800) {
-//     document.querySelector('.search_inp').classList.remove('active');
-//     document.querySelector('.search_btn').classList.remove('active');
-//   }
-// });
+
+

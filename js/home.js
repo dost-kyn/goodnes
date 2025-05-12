@@ -48,39 +48,49 @@ document.addEventListener('DOMContentLoaded', initTheme);
 
 
 
-// // Галочка. При загрузке страницы проверяем сохраненное состояние
+// Галочка. При загрузке страницы проверяем сохраненное состояние
 // document.addEventListener('DOMContentLoaded', function() {
-//   // Находим чекбокс
-//   const checkbox = document.querySelector('.wr-checkbox');
-//   const uniqueKey = `checkboxState_${checkbox.id}`; // Используем id чекбокса
-// localStorage.setItem(uniqueKey, this.checked ? 'checked' : 'unchecked');
-  
-//   // Проверяем сохранённое состояние в localStorage
-//   const savedState = localStorage.getItem('checkboxState');
-//   if (savedState === 'checked') {
-//     checkbox.checked = true; // Восстанавливаем галочку
-//   }
-  
-//   // Обработчик клика
-//   checkbox.addEventListener('change', function() {
-//     // Сохраняем состояние в localStorage
-//     localStorage.setItem('checkboxState', this.checked ? 'checked' : 'unchecked');
+//   const checkboxes = document.querySelectorAll('input[type="checkbox"][class^="wr-checkbox"]');
+//   const savedStates = JSON.parse(localStorage.getItem('checkboxStates') || '{}');
+
+//   checkboxes.forEach(checkbox => {
+//     if (savedStates[checkbox.id]) {
+//       checkbox.checked = true;
+//     }
+
+//     checkbox.addEventListener('change', function() {
+//       savedStates[checkbox.id] = this.checked;
+//       localStorage.setItem('checkboxStates', JSON.stringify(savedStates));
+//     });
 //   });
 // });
 
-// Пример хранения всех состояний в одном объекте
-document.addEventListener('DOMContentLoaded', function() {
-  const checkboxes = document.querySelectorAll('input[type="checkbox"][class^="wr-checkbox"]');
-  const savedStates = JSON.parse(localStorage.getItem('checkboxStates') || '{}');
 
+document.addEventListener('DOMContentLoaded', function() {
+  // Получаем все чекбоксы с классами, начинающимися на "wr-checkbox"
+  const checkboxes = document.querySelectorAll('input[type="checkbox"][class^="wr-checkbox"]');
+  
+  // Загружаем сохраненные состояния или создаем новый объект
+  const savedStates = JSON.parse(localStorage.getItem('checkboxStates')) || {};
+
+  // Применяем сохраненные состояния
   checkboxes.forEach(checkbox => {
-    if (savedStates[checkbox.id]) {
-      checkbox.checked = true;
+    // Используем комбинацию class + id как уникальный ключ
+    const storageKey = `${checkbox.className}_${checkbox.id}`;
+    
+    if (savedStates[storageKey] !== undefined) {
+      checkbox.checked = savedStates[storageKey];
     }
 
+    // Добавляем обработчик изменений
     checkbox.addEventListener('change', function() {
-      savedStates[checkbox.id] = this.checked;
+      // Обновляем состояние для этого конкретного чекбокса
+      savedStates[storageKey] = this.checked;
+      
+      // Сохраняем обновленные состояния
       localStorage.setItem('checkboxStates', JSON.stringify(savedStates));
+      
+      console.log(`Сохранено состояние для ${storageKey}:`, this.checked);
     });
   });
 });
