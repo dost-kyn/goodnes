@@ -137,6 +137,7 @@
   
   .footer_social {
     display: flex;
+    margin-top: 10px;
   }
   
   .footer_social_img {

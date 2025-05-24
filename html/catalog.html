@@ -124,14 +124,14 @@
                                 <div class="paragraph_number">
                                     <p class="paragraph_text_number">От:</p>
                                     <label class="custom-number">
-                                        <input type="number" class="paragraph_inp_num" >
+                                        <input type="number" class="paragraph_inp_num" value="0" >
                                     </label>       
                                 </div>
 
                                 <div class="paragraph_number">
                                     <p class="paragraph_text_number">До:</p>
                                     <label class="custom-number">
-                                        <input type="number" class="paragraph_inp_num" >
+                                        <input type="number" class="paragraph_inp_num" value="0">
                                     </label>                           
                                 </div>          
                         </div>
@@ -145,8 +145,57 @@
                     <button class="search_btn">Найти</button>
                     <button class="filter-mobile-toggle">Фильтры ☰</button>
                 </div>
-
+                <!-- 1 -->
                 <div class="recipes_cards">
+                    <div class="recipes_card" data-id="1">
+                        <h1 class="recipes_title">Клубничый пирог</h1>
+                        <div class="recipes_image">
+                            <img src="/image/home/Клубничый пирог.png" alt="" class="recipes_image_img">
+                        </div>
+                        <div class="recipes_info">
+                            <p class="recipes_calory">Калорийность: 189,6 ккал</p>
+                            <p class="recipes_category">Категория: пироги</p>
+                        </div>
+                        <button class="recipes_btn">Cохранить</button>
+                    </div>
+
+                    <div class="recipes_card" data-id="2">
+                        <h1 class="recipes_title">Батон</h1>
+                        <div class="recipes_image">
+                            <img src="/image/home/Батон.png" alt="" class="recipes_image_img">
+                        </div>
+                        <div class="recipes_info">
+                            <p class="recipes_calory">Калорийность: 266 ккал</p>
+                            <p class="recipes_category">Категория: хлеб</p>
+                        </div>
+                        <button class="recipes_btn">Cохранить</button>
+                    </div>
+
+                    <div class="recipes_card">
+                        <h1 class="recipes_title">Кокосовые конфеты</h1>
+                        <div class="recipes_image">
+                            <img src="/image/home/Кокосовые конфеты.png" alt="" class="recipes_image_img">
+                        </div>
+                        <div class="recipes_info">
+                            <p class="recipes_calory">Калорийность: 369 ккал</p>
+                            <p class="recipes_category">Категория: Конфеты</p>
+                        </div>
+                        <button class="recipes_btn">Cохранить</button>
+                    </div>
+
+                    <div class="recipes_card">
+                        <h1 class="recipes_title">Трюфели</h1>
+                        <div class="recipes_image">
+                            <img src="/image/home/Трюфели.png" alt="" class="recipes_image_img">
+                        </div>
+                        <div class="recipes_info">
+                            <p class="recipes_calory">Калорийность: 433 ккал</p>
+                            <p class="recipes_category">Категория: конфеты</p>
+                        </div>
+                        <button class="recipes_btn">Cохранить</button>
+                    </div>
+
+                    <!-- 2 -->
                     <div class="recipes_card">
                         <h1 class="recipes_title">Клубничый пирог</h1>
                         <div class="recipes_image">
@@ -194,6 +243,8 @@
                         </div>
                         <button class="recipes_btn">Cохранить</button>
                     </div>
+
+                    <!-- 3 -->
                     <div class="recipes_card">
                         <h1 class="recipes_title">Клубничый пирог</h1>
                         <div class="recipes_image">
@@ -241,6 +292,8 @@
                         </div>
                         <button class="recipes_btn">Cохранить</button>
                     </div>
+
+                    <!-- 4 -->
                     <div class="recipes_card">
                         <h1 class="recipes_title">Клубничый пирог</h1>
                         <div class="recipes_image">
@@ -277,7 +330,7 @@
                         <button class="recipes_btn">Cохранить</button>
                     </div>
 
-                    <!-- <div class="recipes_card">
+                    <div class="recipes_card">
                         <h1 class="recipes_title">Трюфели</h1>
                         <div class="recipes_image">
                             <img src="/image/home/Трюфели.png" alt="" class="recipes_image_img">
@@ -287,16 +340,29 @@
                             <p class="recipes_category">Категория: конфеты</p>
                         </div>
                         <button class="recipes_btn">Cохранить</button>
-                    </div> -->
+                    </div>
+                    <!-- 5 -->
+                    <div class="recipes_card">
+                        <h1 class="recipes_title">Трюфели</h1>
+                        <div class="recipes_image">
+                            <img src="/image/home/Трюфели.png" alt="" class="recipes_image_img">
+                        </div>
+                        <div class="recipes_info">
+                            <p class="recipes_calory">Калорийность: 433 ккал</p>
+                            <p class="recipes_category">Категория: конфеты</p>
+                        </div>
+                        <button class="recipes_btn">Cохранить</button>
+                    </div>
+                    
                 </div>
-                
+                <div class="recipes_more">
+                    <button class="recipes_more_btn">Показать ещё+</button>
+                </div>
             </div>
 
         </div>
         
-        <div class="recipes_more">
-            <button class="recipes_more_btn">Показать ещё+</button>
-        </div>
+        
     </section>
 
     <footer class="footer">
@@ -317,12 +383,12 @@
                 <p class="footer_phone">+8 999 035 6471</p>
                 <p class="footer_email">Ovenly_Goodness@gmail</p>
                 <div class="footer_social">
-                    <img src="/image/footer_social_tg.svg" data-theme-image  data-light="/image/footer_social_tg.svg" 
-                    data-dark="/image/footer_social_tg-dark.svg" class="footer_social_img">
-                    <img src="/image/footer_social_ok.svg" data-theme-image  data-light="/image/footer_social_ok.svg" 
-                    data-dark="/image/footer_social_ok-dark.svg" class="footer_social_img">
-                    <img src="/image/footer_social_vk.svg" data-theme-image  data-light="/image/footer_social_vk.svg" 
-                    data-dark="/image/footer_social_vk-dark.svg" class="footer_social_img">
+                    <a href=""><img src="/image/footer_social_tg.svg" data-theme-image  data-light="/image/footer_social_tg.svg" 
+                    data-dark="/image/footer_social_tg-dark.svg" class="footer_social_img"></a>
+                    <a href=""><img src="/image/footer_social_ok.svg" data-theme-image  data-light="/image/footer_social_ok.svg" 
+                    data-dark="/image/footer_social_ok-dark.svg" class="footer_social_img"></a>
+                    <a href=""><img src="/image/footer_social_vk.svg" data-theme-image  data-light="/image/footer_social_vk.svg" 
+                    data-dark="/image/footer_social_vk-dark.svg" class="footer_social_img"></a>
                 </div>
             </div>
         </div>
@@ -333,7 +399,7 @@
 
 
 
-    <script src="/js/home.js"></script>
+    <script src="/js/tema.js"></script>
     <script src="/js/catalog.js"></script>
 </body>
 </html>

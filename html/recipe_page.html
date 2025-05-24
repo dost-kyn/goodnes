@@ -106,7 +106,7 @@
     </section>
 
     <section class="main_info">
-        <div class="main_info_content">
+        <div class="main_info_content" data-id="10">
             <!-- <div class="main_info_image">
                 <img src="/image/recipe/main_image.jpg" class="main_info_img" alt="">
             </div> -->
@@ -296,13 +296,24 @@
         </p>
         <p class="save_auto_akk">Нет аккаунта? <a href="">Зарегистрируйтесь</a></p>
         <div class="save_auto_content">
-            <input class="save_auto_inp" type="text" placeholder="Email">
+            <input class="save_auto_inp" type="text" placeholder="Email"><!--  Email -->
             <input class="save_auto_inp" type="text" placeholder="Имя">
         </div>
         <div class="save_auto_auto">
             <button class="save_auto_btn">Войти</button>
         </div>
     </section>
+    <div class="notification-container">
+        <div class="notification notification-success" id="login-success">
+            Вы успешно вошли в систему!
+        </div>
+        <div class="notification notification-info" id="already-logged-in">
+            Вы уже вошли в систему.
+        </div>
+        <div class="notification notification-error" id="login-error">
+            Неверные данные для входа. Пожалуйста, попробуйте снова.
+        </div>
+    </div>
 
     <section class="review">
         <div class="review_info">
@@ -331,12 +342,39 @@
                 <p class="review_box_text">Вымесить тесто силиконовой лопаткой очень тщательно. Все ингредиенты должны
                     хорошо соединиться друг с другом. Тесто становится очень послушным и не слишком липким.</p>
             </div>
+            <div class="review_box">
+                <div class="review_box_info">
+                    <span class="review_name">Федор Достоевский</span>
+                    <span class="review_date">09.03.2025</span>
+                </div>
+                <p class="review_box_text">Вымесить тесто силиконовой лопаткой очень тщательно. Все ингредиенты должны
+                    хорошо соединиться друг с другом. Тесто становится очень послушным и не слишком липким.</p>
+            </div>
+            <div class="review_box">
+                <div class="review_box_info">
+                    <span class="review_name">Иосиф Сталин</span>
+                    <span class="review_date">09.03.2025</span>
+                </div>
+                <p class="review_box_text">Вымесить тесто силиконовой лопаткой очень тщательно. Все ингредиенты должны
+                    хорошо соединиться друг с другом. Тесто становится очень послушным и не слишком липким.</p>
+            </div>
         </div>
 
         <div class="review_more">
             <button class="review_more_btn">Показать ещё+</button>
         </div>
     </section>
+
+    <div class="modal-new_review">
+        <div class="new_review_box">
+            <h1 class="new_review_title">Создать отзыв</h1>
+            <textarea class="new_review_inp" type="text" placeholder="Начните отзыв..."></textarea>
+            <div class="new_review_button">
+                <button class="new_review_btn back">Отмена</button>
+                <button class="new_review_btn start">Опубликовать</button>
+            </div>
+        </div>
+    </div>
     
     <footer class="footer">
         <div class="footer_content">
@@ -356,12 +394,12 @@
                 <p class="footer_phone">+8 999 035 6471</p>
                 <p class="footer_email">Ovenly_Goodness@gmail</p>
                 <div class="footer_social">
-                    <img src="/image/footer_social_tg.svg" data-theme-image  data-light="/image/footer_social_tg.svg" 
-                    data-dark="/image/footer_social_tg-dark.svg" class="footer_social_img">
-                    <img src="/image/footer_social_ok.svg" data-theme-image  data-light="/image/footer_social_ok.svg" 
-                    data-dark="/image/footer_social_ok-dark.svg" class="footer_social_img">
-                    <img src="/image/footer_social_vk.svg" data-theme-image  data-light="/image/footer_social_vk.svg" 
-                    data-dark="/image/footer_social_vk-dark.svg" class="footer_social_img">
+                    <a href=""><img src="/image/footer_social_tg.svg" data-theme-image  data-light="/image/footer_social_tg.svg" 
+                    data-dark="/image/footer_social_tg-dark.svg" class="footer_social_img"></a>
+                    <a href=""><img src="/image/footer_social_ok.svg" data-theme-image  data-light="/image/footer_social_ok.svg" 
+                    data-dark="/image/footer_social_ok-dark.svg" class="footer_social_img"></a>
+                    <a href=""><img src="/image/footer_social_vk.svg" data-theme-image  data-light="/image/footer_social_vk.svg" 
+                    data-dark="/image/footer_social_vk-dark.svg" class="footer_social_img"></a>
                 </div>
             </div>
         </div>
@@ -370,7 +408,8 @@
         </div>
     </footer>
 
-    <script src="/js/home.js"></script>
+    <script src="/js/tema.js"></script>
+    <script src="/js/recipe_page.js"></script>
 </body>
 
 </html>

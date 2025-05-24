@@ -407,6 +407,14 @@ input[type="checkbox"] {
   transform: scale(0.98);
   transition: transform 0.3s ease;
   flex: 1 0 calc(50% - 20px);
+  opacity: 1;
+}
+.review_box.hidden {
+  opacity: 0;
+  transform: scale(0.98);
+}
+.review_box.ban {
+  order: -1; /* Перемещаем в начало */
 }
 .review_box_info{
   display: flex;
@@ -425,7 +433,7 @@ input[type="checkbox"] {
 .review_box_text_ban{
   font-size: 22px;
   margin: 0 0 15px 0;
-  color: #fc9393;
+  color: #e25858;
 }
 .review_btn {
   margin-left: auto;
@@ -437,7 +445,7 @@ input[type="checkbox"] {
   font-family: "Rounded Mplus 1c";
   background-color: var(--card-bg);
   border: none;
-  color: var(--button-text);
+  color: var(--text-color);
   cursor: pointer;
   transition: background-color 0.3s; 
 }
@@ -461,10 +469,61 @@ input[type="checkbox"] {
 
 /*               section review             */
 
+/*               section confirm-modal             */
+.confirm-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.confirm-modal-content {
+  background-color: var(--bg-color);
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+.confirm-modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+.confirm-modal-buttons button {
+  padding: 5px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--button-text);
+}
+.confirm-cancel {
+  background-color: var(--button-bg);
+}
+.confirm-delete {
+  background-color: #e25858;
+  
+}
+
+/*               section confirm-modal             */
+
 
 
 
 /*                    Адаптив            */
+@media (max-width: 1500px) {
+.banner_text {
+    top: 7%;
+    padding-left: 20px;
+}
+}
+
 @media (max-width: 1300px) {
   body {
     padding: 0 30px;
@@ -479,6 +538,12 @@ input[type="checkbox"] {
   min-width: 260px;
 }
 /*     section catalog   */
+}
+
+@media (max-width: 1100px) {
+  .banner_text {
+    top: 5%;
+}
 }
 
 @media (max-width: 1000px) {
@@ -530,13 +595,8 @@ input[type="checkbox"] {
 @media (max-width: 900px) {
   /*               section banner             */
   .banner_text {
-    top: 6%;
+    top: 4%;
     font-size: 3.5vw;
-    font-family: "Calypso";
-    max-width: 700px;
-    line-height: 1.7;
-    padding-left: 10px;
-    z-index: 10;
   }
   /*               section banner             */
 
@@ -592,6 +652,11 @@ input[type="checkbox"] {
 }
 
 @media (max-width: 700px) {
+  .banner_text {
+    top: 3%;
+    font-size: 3.9vw;
+  }
+
   /*               section name_user             */
   .name_user {
     margin: 0 0 40px;
@@ -664,6 +729,22 @@ input[type="checkbox"] {
   width: 140px;
 }
 /*     section review    */
+
+/*      section confirm-modal         */
+.confirm-modal-content {
+  padding: 15px;
+  max-width: 280px;
+}
+.confirm-modal-content p{
+  font-size: 14px;
+}
+.confirm-modal-buttons {
+  gap: 20px;
+}
+.confirm-modal-buttons button {
+  font-size: 12px;
+}
+/*      section confirm-modal        */
 }
 
 
@@ -676,14 +757,6 @@ input[type="checkbox"] {
 
   .banner_image {
     left: 20%;
-  }
-
-  .banner_text {
-    top: 6%;
-    font-size: 3.5vw;
-    max-width: 700px;
-    line-height: 1.7;
-    padding-left: 10px;
   }
   /*               section banner             */
 
@@ -708,6 +781,7 @@ input[type="checkbox"] {
   width: 100%;
 }
  .recipes_card {
+  max-width: 201px;
   width: 220px;
   min-width: 150px;
   flex: 1 0 calc(50% - 20px);
@@ -773,9 +847,8 @@ margin-top: 5px;
   }
 
   .banner_text {
-    top: 6%;
-    font-size: 3.8vw;
-    max-width: 700px;
+    top: 3%;
+    font-size: 4.2vw;
     line-height: 1.7;
     padding-left: 0px;
   }
@@ -822,6 +895,7 @@ margin-top: 5px;
   margin: 30px 0 90px 0;
 }
 .recipes_card {
+  max-width: 145px;
   width: 180px;
   min-width: 120px;
   padding: 14px 14px;
@@ -874,6 +948,20 @@ margin-top: 5px;
   border-radius: 8px;
 }
   /*     section review    */
+
+  
+/*      section confirm-modal         */
+.confirm-modal-content {
+  padding: 15px;
+  max-width: 250px;
+}
+.confirm-modal-content p{
+  font-size: 12px;
+}
+.confirm-modal-buttons button {
+  font-size: 11px;
+}
+/*      section confirm-modal        */
 }
 
 /*                    Адаптив            */

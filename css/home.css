@@ -234,19 +234,33 @@ input[type='checkbox'] {
   max-width: 1440px;
   justify-content: space-between;
   align-items: center;
-  /* Центрируем по вертикали */
+  position: relative;
+  overflow: hidden;
 }
 
 .recipes_cards {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  column-gap: 45px;
-  justify-content: space-between;
+  display: flex;
+  gap: 30px;
+  padding: 0;
+  scroll-behavior: smooth; /* Плавная прокрутка */
+  overflow-x: auto; /* Разрешаем горизонтальную прокрутку */
+  scroll-snap-type: x mandatory; /* Привязка к карточкам */
+  width: calc(100% - 100px); /* Оставляем место для кнопок */
+  margin: 0 60px; /* Отступы для кнопок */
+  -ms-overflow-style: none; /* Скрываем scrollbar для IE/Edge */
+  scrollbar-width: none; /* Скрываем scrollbar для Firefox */
+}
+
+.recipes_cards::-webkit-scrollbar {
+  display: none; /* Скрываем scrollbar для Chrome/Safari */
 }
 
 .pre,
 .next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
   border: none;
   height: 80px;
   width: 50px;
@@ -254,27 +268,32 @@ input[type='checkbox'] {
   font-size: 40px;
   color: #FBF5F8;
   font-family: "Rounded Mplus 1c";
-  border-radius: 1000%;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .pre {
-  border-radius: 1000% 0 0 1000%;/
+  border-radius: 1000% 0 0 1000%;
+  left: 0;
 }
 
 .next {
   border-radius: 0 1000% 1000% 0;
+  right: 0;
 }
 
 .recipes_card {
+  /* max-width: 270px; */
+  flex: 0 0 270px; /* Фиксированная ширина без растягивания */
+  scroll-snap-align: start; /* Привязка к началу карточки */
   background-color: var(--card-bg);
-  max-width: 270px;
   padding: 32px 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  /* Центрирование по горизонтали */
 }
 
 .recipes_image {
@@ -472,38 +491,6 @@ input[type='checkbox'] {
   border-radius: 12px;
   cursor: pointer;
 }
-/* 
-.subscription_approval {
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  gap: 30px;
-  margin-top: 30px;
-}
-
-.subscription_approval_inp {
-  display: none;
-}
-
-.custom-checkbox {
-  width: 30px;
-  height: 30px;
-  background-color: var(--chekbox);
-  border: 0px;
-  border-radius: 10px;
-  display: inline-block;
-  position: relative;
-  margin: auto 0;
-  cursor: pointer;
-}
-
-.subscription_approval_text {
-  font-size: 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-} */
-
 
 .subscription_approval{
   display: flex;
@@ -549,6 +536,9 @@ input[type='checkbox'] {
   flex-direction: column;
   justify-content: center;
 }
+.subscription_approval_text:hover{
+  text-decoration: underline;
+}
 
 /*               section subscription             */
 
@@ -565,21 +555,13 @@ input[type='checkbox'] {
   }
 
   /* recipes_cards */
-  .recipes_cards {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .recipes_card:nth-child(4) {
-    display: none;
-  }
-
   .container_card {
     padding: 0 30px;
   }
 
   .recipes_card {
-    max-width: 100%;
     padding: 20px 20px;
+    flex: 0 0 240px;
   }
 
   .recipes_title {
@@ -688,12 +670,14 @@ input[type='checkbox'] {
   }
 
   .recipes_cards {
-    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin: 0 20px;
+    width: calc(100% - 30px);
   }
 
-  /* Скрываем 4-ю карточку */
-  .recipes_card:nth-child(3) {
-    display: none;
+  .recipes_card {
+    padding: 15px 15px;
+    flex: 0 0 220px;
   }
 
   /* Корректируем отступы */
@@ -846,13 +830,8 @@ input[type='checkbox'] {
     margin-bottom: 40px;
   }
 
-  .recipes_cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  /* Скрываем 4-ю карточку */
-  .recipes_card:nth-child(3) {
-    display: none;
+  .recipes_card {
+    flex: 0 0 160px;
   }
 
   /* Корректируем отступы */
@@ -960,8 +939,7 @@ input[type='checkbox'] {
   }
 
   .recipes_card {
-    max-width: 230px;
-    padding: 20px 20px;
+    flex: 0 0 130px;
     margin: 0 auto;
   }
 
@@ -1089,6 +1067,23 @@ input[type='checkbox'] {
 
 
 @media (max-width: 450px) {
+/*               section popular_recipes             */
+  .recipes_card {
+    flex: 0 0 120px;
+  }
+
+  .recipes_title {
+    font-size: 18px;
+  }
+
+  .recipes_btn {
+    font-size: 11px;
+    margin: 10px auto 0 auto;
+    height: 24px;
+    width: 110px;
+    border-radius: 7px;
+  }
+  /*               section popular_recipes             */
 
   /*               section baking_for             */
   .baking_for_card:nth-child(2) {
