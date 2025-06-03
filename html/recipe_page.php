@@ -1,3 +1,55 @@
+<?php
+
+session_start();
+
+require_once '../connect/connect.php';
+// Получаем ID рецепта из URL
+$recipe_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+// Защита от SQL-инъекций
+if ($recipe_id <= 0) {
+    die("Неверный ID рецепта");
+}
+
+
+$sql = "SELECT r.*, rs.step_number, rs.description as step_description, rs.image_path 
+        FROM recipes r
+        LEFT JOIN recipe_steps rs ON r.id = rs.recipe_id
+        WHERE r.id = ?
+        ORDER BY rs.step_number";
+
+
+$stmt = mysqli_prepare($connect, $sql);
+mysqli_stmt_bind_param($stmt, "i", $recipe_id);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+
+
+// Получаем данные
+$recipe = mysqli_fetch_assoc($result);
+$steps = [];
+
+if ($recipe) {
+    do {
+        if (!empty($recipe['step_number'])) {
+            $steps[] = [
+                'number' => $recipe['step_number'],
+                'description' => $recipe['step_description'],
+                'image_path' => $recipe['image_path']
+            ];
+        }
+    } while ($recipe = mysqli_fetch_assoc($result));
+
+    // Возвращаем указатель на первую строку
+    mysqli_data_seek($result, 0);
+    $recipe = mysqli_fetch_assoc($result);
+}
+
+if (!$recipe) {
+    die("Рецепт не найден");
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,25 +59,41 @@
     <link rel="stylesheet" href="/css/header_footer.css">
     <link rel="stylesheet" href="/css/recipe_page.css">
     <title>*название рецепта*</title>
+    <style>
+   .main_info_image {
+    max-width: 60vw;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 150px; /* Отступы от краев */
+    box-sizing: border-box;
+}
+.main_info_img {
+    min-width: 145%;
+    object-fit: contain; /* Сохраняет пропорции */
+    display: block; /* Убираем лишнее пространство под изображением */
+}
+    </style>
 </head>
 
 <body>
     <header class="header">
         <div class="header_content">
             <a class="header_logo" href="home.html">
-                <img src="/image/лого.svg" data-theme-image  data-light="/image/лого.svg" 
-                data-dark="/image/лого-dark.svg" class="header_logo_img">
+                <img src="/image/лого.svg" data-theme-image data-light="/image/лого.svg"
+                    data-dark="/image/лого-dark.svg" class="header_logo_img">
             </a>
 
             <div class="header_nav">
                 <button class="header_nav_tema">
-                    <img src="/image/tema.svg" data-theme-image  data-light="/image/tema.svg" 
-                    data-dark="/image/tema-dark.svg" class="header_nav_tema_img">
+                    <img src="/image/tema.svg" data-theme-image data-light="/image/tema.svg"
+                        data-dark="/image/tema-dark.svg" class="header_nav_tema_img">
                 </button>
                 <a href="" class="header_nav_catalog">Каталог</a>
                 <a href="" class="header_nav_blog">Блог</a>
                 <a href="" class="header_nav_exit">Вход</a>
-                
+
                 <button class="header_nav_btn">
                     <div class="header_nav_span">
                         <span></span>
@@ -44,54 +112,48 @@
 
             <button class="menu_btn">
                 <div class="menu_btn_icon">
-                    <img src="/image/cake_icon.svg" alt="Торты" class="menu_btn_icon_img" 
-                    data-theme-image  data-light="/image/cake_icon.svg" 
-                    data-dark="/image/cake_icon-dark.svg"> 
+                    <img src="/image/cake_icon.svg" alt="Торты" class="menu_btn_icon_img" data-theme-image
+                        data-light="/image/cake_icon.svg" data-dark="/image/cake_icon-dark.svg">
                 </div>
                 <p class="menu_btn_name one_or_hour">торты</p>
             </button>
 
             <button class="menu_btn">
                 <div class="menu_btn_icon">
-                    <img src="/image/cookie_icon.svg" alt="Торты" class="menu_btn_icon_img" 
-                    data-theme-image  data-light="/image/cookie_icon.svg" 
-                    data-dark="/image/cookie_icon-dark.svg">
+                    <img src="/image/cookie_icon.svg" alt="Торты" class="menu_btn_icon_img" data-theme-image
+                        data-light="/image/cookie_icon.svg" data-dark="/image/cookie_icon-dark.svg">
                 </div>
                 <p class="menu_btn_name two_or_five">печенье</p>
             </button>
 
             <button class="menu_btn">
                 <div class="menu_btn_icon">
-                    <img src="/image/pie_icon.svg" alt="Торты" class="menu_btn_icon_img"
-                    data-theme-image  data-light="/image/pie_icon.svg" 
-                    data-dark="/image/pie_icon-dark.svg">
+                    <img src="/image/pie_icon.svg" alt="Торты" class="menu_btn_icon_img" data-theme-image
+                        data-light="/image/pie_icon.svg" data-dark="/image/pie_icon-dark.svg">
                 </div>
                 <p class="menu_btn_name three_or_six">пироги</p>
             </button>
 
             <button class="menu_btn">
                 <div class="menu_btn_icon">
-                    <img src="/image/cupcakes_icon.svg" alt="Торты" class="menu_btn_icon_img"
-                    data-theme-image  data-light="/image/cupcakes_icon.svg" 
-                    data-dark="/image/cupcakes_icon-dark.svg">
+                    <img src="/image/cupcakes_icon.svg" alt="Торты" class="menu_btn_icon_img" data-theme-image
+                        data-light="/image/cupcakes_icon.svg" data-dark="/image/cupcakes_icon-dark.svg">
                 </div>
                 <p class="menu_btn_name one_or_hour">кексы</p>
             </button>
 
             <button class="menu_btn">
                 <div class="menu_btn_icon">
-                    <img src="/image/candy_icon.svg" alt="Торты" class="menu_btn_icon_img"
-                    data-theme-image  data-light="/image/candy_icon.svg" 
-                    data-dark="/image/candy_icon-dark.svg">
+                    <img src="/image/candy_icon.svg" alt="Торты" class="menu_btn_icon_img" data-theme-image
+                        data-light="/image/candy_icon.svg" data-dark="/image/candy_icon-dark.svg">
                 </div>
                 <p class="menu_btn_name two_or_five">конфеты</p>
             </button>
 
             <button class="menu_btn">
                 <div class="menu_btn_icon">
-                    <img src="/image/bread_icon.svg" alt="Торты" class="menu_btn_icon_img"
-                    data-theme-image  data-light="/image/bread_icon.svg" 
-                    data-dark="/image/bread_icon-dark.svg">
+                    <img src="/image/bread_icon.svg" alt="Торты" class="menu_btn_icon_img" data-theme-image
+                        data-light="/image/bread_icon.svg" data-dark="/image/bread_icon-dark.svg">
                 </div>
                 <p class="menu_btn_name three_or_six">хлеб</p>
             </button>
@@ -100,37 +162,35 @@
 
     <section class="crumds">
         <div class="crumbs_content">
-            <a href="">Главная страница -> </a><a href="">Каталог -> </a><a href="">Печенье -> </a><a href="">Печенье
-                овсяное</a>
+            <a href="home.php">Главная страница -> </a><a href="catalog.php">Каталог -> </a><a href="">Печенье -> </a>
+            <a href="#"><?= htmlspecialchars($recipe['name']) ?></a>
         </div>
     </section>
 
     <section class="main_info">
-        <div class="main_info_content" data-id="10">
-            <!-- <div class="main_info_image">
-                <img src="/image/recipe/main_image.jpg" class="main_info_img" alt="">
-            </div> -->
-            <div class="main_info_image">
-                <img src="/image/recipe/main_image.jpg" alt="" class="main_info_img">
-            </div>
+        <div class="main_info_content" data-id="<?= htmlspecialchars($recipe['id']) ?>">
+                <div class="main_info_image">
+                    <img src="<?= htmlspecialchars($recipe['maun_image']) ?>" alt="" class="main_info_img">
+                </div>
+       
             <div class="main_info_conteiner">
-                <h1 class="main_info_name">Печенье овсяное</h1>
+                <h1 class="main_info_name"><?= htmlspecialchars($recipe['name']) ?></h1>
                 <div class="main_info_mini">
                     <div class="main_info_m">
                         <span>Время приготовления: </span>
-                        <span class="time">40 мин</span>
+                        <span class="time"><?= htmlspecialchars($recipe['cooking_time']) ?> мин</span>
                     </div>
                     <div class="main_info_m">
                         <span>Всего порций: </span>
-                        <span class="portion">5</span>
+                        <span class="portion"><?= htmlspecialchars($recipe['portions']) ?></span>
                     </div>
                     <div class="main_info_m">
                         <span>Калорийность: </span>
-                        <span class="calories">433 Ккал</span>
+                        <span class="calories"><?= htmlspecialchars($recipe['calorie']) ?> Ккал</span>
                     </div>
                     <div class="main_info_m">
                         <span>Категория: </span>
-                        <span class="category">Печенье</span>
+                        <span class="category"><?= htmlspecialchars($recipe['caregories']) ?></span>
                     </div>
                 </div>
 
@@ -143,81 +203,35 @@
 
     <section class="description">
         <h1 class="description_title">Описание</h1>
-        <p class="desc_text">Овсяное печенье – это полезное и вкусное лакомство, приготовленное на основе овсяных
-            хлопьев. Оно обладает приятной рассыпчатой или мягкой текстурой (в зависимости от рецепта) и характерным
-            душистым ароматом с нотками меда, корицы или ванили.</p>
+        <p class="desc_text"><?= htmlspecialchars($recipe['description']) ?></p>
     </section>
 
     <section class="ingredients">
-        <h1 class="ingre_title">Ингредиенты</h1>
-        <div class="ingre_content">
-            <div class="ingre_box">
-                <input type="checkbox" class="wr-checkbox" id="wr" name="wr">
-                <label for="wr"></label>
-                <p  class="ingre_text">Хлопья овсяные – 180 г долгой варки</p>
-            </div>
-            <div class="ingre_box">
+    <h1 class="ingre_title">Ингредиенты</h1>
+    <div class="ingre_content">
+        <?php 
+        // Разбиваем строку ингредиентов по точке
+        $ingredients = explode('.', $recipe['ingredients']);
+        
+        // Удаляем пустые элементы (если есть)
+        $ingredients = array_filter(array_map('trim', $ingredients));
+        
+        // Для каждого ингредиента создаем отдельный блок
+        foreach ($ingredients as $index => $ingredient): 
+            if (!empty($ingredient)): ?>
+                <div class="ingre_box">
+                    <input type="checkbox" class="wr-checkbox" id="ingredient_<?= $index ?>" name="ingredient_<?= $index ?>">
+                    <label for="ingredient_<?= $index ?>"></label>
+                    <p class="ingre_text"><?= htmlspecialchars($ingredient) ?></p>
+                </div>
+            <?php endif;
+        endforeach; ?>
+
+            <!-- <div class="ingre_box">
                 <input type="checkbox" class="wr-checkbox1" id="wr1" name="wr">
                 <label for="wr1"></label>
-                <p  class="ingre_text">Масло сливочное – 110 г</p>
-            </div>
-            <div class="ingre_box">
-                <input type="checkbox" class="wr-checkbox2" id="wr2" name="wr">
-                <label for="wr2"></label>
-                <p  class="ingre_text">Масло сливочное – 110 г</p>
-            </div>
-            <div class="ingre_box">
-                <input type="checkbox" class="wr-checkbox3" id="wr3" name="wr">
-                <label for="wr3"></label>
-                <p  class="ingre_text">Сахар – 160 г</p>
-            </div>
-            <div class="ingre_box">
-                <input type="checkbox" class="wr-checkbox4" id="wr4" name="wr">
-                <label for="wr4"></label>
-                <p  class="ingre_text">Разрыхлитель теста – 5 г</p>
-            </div>
-            <div class="ingre_box">
-                <input type="checkbox" class="wr-checkbox5" id="wr5" name="wr">
-                <label for="wr5"></label>
-                <p  class="ingre_text">Разрыхлитель теста – 5 г</p>
-            </div>
-            <div class="ingre_box">
-                <input type="checkbox" class="wr-checkbox6" id="wr6" name="wr">
-                <label for="wr6"></label>
-                <p  class="ingre_text">Мука пшеничная – 140 г</p>
-            </div>
-            <div class="ingre_box">
-                <input type="checkbox" class="wr-checkbox7" id="wr7" name="wr">
-                <label for="wr7"></label>
-                <p  class="ingre_text">Соль – 0.25 ч.л.</p>
-            </div>
-            <div class="ingre_box">
-                <input type="checkbox" class="wr-checkbox8" id="wr8" name="wr">
-                <label for="wr8"></label>
-                <p  class="ingre_text">Соль – 0.25 ч.л.</p>
-            </div>
-            <div class="ingre_box">
-                <input type="checkbox" class="wr-checkbox9" id="wr9" name="wr">
-                <label for="wr9"></label>
-                <p  class="ingre_text">Яйцо куриное – 1 шт. категории С1</p>
-            </div>
-            <div class="ingre_box">
-                <input type="checkbox" class="wr-checkbox10" id="wr10" name="wr">
-                <label for="wr10"></label>
-                <p  class="ingre_text">Шоколад темный – 50 г шоколадные капли</p>
-            </div>
-            <div class="ingre_box">
-                <input type="checkbox" class="wr-checkbox11" id="wr11" name="wr">
-                <label for="wr11"></label>
-                <p  class="ingre_text">Шоколад темный – 50 г шоколадные капли</p>
-            </div>
-            <!-- <div class="ingre_box">
-                <label class="custom-checkbox">
-                    <input type="checkbox" class="ingre_inp">
-                </label>
-                <p class="ingre_text">Хлопья овсяные – 180 г долгой варки</p>
+                <p class="ingre_text">Масло сливочное – 110 г</p>
             </div> -->
-        
         </div>
     </section>
 
@@ -375,12 +389,12 @@
             </div>
         </div>
     </div>
-    
+
     <footer class="footer">
         <div class="footer_content">
             <div class="footer_logo">
-                <img src="/image/лого.svg" data-theme-image  data-light="/image/лого.svg" 
-                data-dark="/image/лого-dark.svg" class="footer_logo_img">
+                <img src="/image/лого.svg" data-theme-image data-light="/image/лого.svg"
+                    data-dark="/image/лого-dark.svg" class="footer_logo_img">
             </div>
             <div class="footer_cataloge">
                 <a href="" class="footer_cataloge_link">Кексы</a>
@@ -394,12 +408,15 @@
                 <p class="footer_phone">+8 999 035 6471</p>
                 <p class="footer_email">Ovenly_Goodness@gmail</p>
                 <div class="footer_social">
-                    <a href=""><img src="/image/footer_social_tg.svg" data-theme-image  data-light="/image/footer_social_tg.svg" 
-                    data-dark="/image/footer_social_tg-dark.svg" class="footer_social_img"></a>
-                    <a href=""><img src="/image/footer_social_ok.svg" data-theme-image  data-light="/image/footer_social_ok.svg" 
-                    data-dark="/image/footer_social_ok-dark.svg" class="footer_social_img"></a>
-                    <a href=""><img src="/image/footer_social_vk.svg" data-theme-image  data-light="/image/footer_social_vk.svg" 
-                    data-dark="/image/footer_social_vk-dark.svg" class="footer_social_img"></a>
+                    <a href=""><img src="/image/footer_social_tg.svg" data-theme-image
+                            data-light="/image/footer_social_tg.svg" data-dark="/image/footer_social_tg-dark.svg"
+                            class="footer_social_img"></a>
+                    <a href=""><img src="/image/footer_social_ok.svg" data-theme-image
+                            data-light="/image/footer_social_ok.svg" data-dark="/image/footer_social_ok-dark.svg"
+                            class="footer_social_img"></a>
+                    <a href=""><img src="/image/footer_social_vk.svg" data-theme-image
+                            data-light="/image/footer_social_vk.svg" data-dark="/image/footer_social_vk-dark.svg"
+                            class="footer_social_img"></a>
                 </div>
             </div>
         </div>

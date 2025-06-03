@@ -1,3 +1,62 @@
+<?php
+
+session_start();
+
+require_once __DIR__ . '/../../connect/connect.php';
+// Получаем ID рецепта из URL
+$recipe_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+// Защита от SQL-инъекций
+if ($recipe_id <= 0) {
+    die("Неверный ID рецепта");
+}
+
+
+$sql = "SELECT r.*, rs.step_number, rs.description as step_description, rs.image_path 
+        FROM recipes r
+        LEFT JOIN recipe_steps rs ON r.id = rs.recipe_id
+        WHERE r.id = ?
+        ORDER BY rs.step_number";
+
+
+
+
+$stmt = mysqli_prepare($connect, $sql);
+mysqli_stmt_bind_param($stmt, "i", $recipe_id);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+
+
+
+
+// Получаем данные
+$recipe = mysqli_fetch_assoc($result);
+$steps = [];
+
+if ($recipe) {
+    do {
+        if (!empty($recipe['step_number'])) {
+            $steps[] = [
+                'number' => $recipe['step_number'],
+                'description' => $recipe['step_description'],
+                'image_path' => $recipe['image_path']
+            ];
+        }
+    } while ($recipe = mysqli_fetch_assoc($result));
+    
+    // Возвращаем указатель на первую строку
+    mysqli_data_seek($result, 0);
+    $recipe = mysqli_fetch_assoc($result);
+}
+
+if (!$recipe) {
+    die("Рецепт не найден");
+}
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,71 +92,75 @@
 
       <section class="container_review">
         <div class="container_reviews_info">
-          <h1 class="container_title">Овсяное печенье</h1>
+          <h1 class="container_title"><?= htmlspecialchars($recipe['name']) ?></h1>
         </div>
 
         <table class="table_users">
           <tr class="table_row">
-            <th class="table_column_1">№</th>
-            <th class="table_column_2">1</th>
+            <th class="table_column_1">id</th>
+            <th class="table_column_2"><?= htmlspecialchars($recipe['id']) ?></th>
           </tr>
           <tr class="table_row">
             <th class="table_column_1">Название</th>
-            <th class="table_column_2">Овсяное печенье</th>
+            <th class="table_column_2"><?= htmlspecialchars($recipe['name']) ?></th>
           </tr>
           <tr class="table_row">
             <th class="table_column_1">Время при-ия</th>
-            <th class="table_column_2">2:20 ч</th>
+            <th class="table_column_2"><?= htmlspecialchars($recipe['cooking_time']) ?></th>
           </tr>
           <tr class="table_row">
             <th class="table_column_1">Калор-ость</th>
-            <th class="table_column_2">451 ккал</th>
+            <th class="table_column_2"><?= htmlspecialchars($recipe['calorie']) ?></th>
           </tr>
           <tr class="table_row">
             <th class="table_column_1">Кол-во порций</th>
-            <th class="table_column_2">12</th>
+            <th class="table_column_2"><?= htmlspecialchars($recipe['portions']) ?></th>
           </tr>
           <tr class="table_row">
             <th class="table_column_1">Категория</th>
-            <th class="table_column_2">Печенье</th>
+            <th class="table_column_2"><?= htmlspecialchars($recipe['caregories']) ?></th>
           </tr>
           <tr class="table_row">
             <th class="table_column_1">Главная фотография</th>
-            <th class="table_column_2">image 43</th>
+            <th class="table_column_2"><?= htmlspecialchars($recipe['maun_image']) ?></th>
           </tr>
           <tr class="table_row">
             <th class="table_column_1">Описание</th>
-            <th class="table_column_2">Овсяное печенье – это полезное и вкусное лакомство, приготовленное на
-              основе овсяных хлопьев. Оно обладает приятной рассыпчатой или мягкой текстурой (в
-              зависимости от рецепта) и характерным душистым ароматом с нотками меда, корицы или ванили.
-            </th>
+            <th class="table_column_2"><?= htmlspecialchars($recipe['description']) ?></th>
           </tr>
           <tr class="table_row">
             <th class="table_column_1">Ингридиенты</th>
-            <th class="table_column_2">Хлопья овсяные – 180 г долгой варки. Сахар – 160 г. Мука
-              пшеничная – 140 г. Мука пшеничная – 140 г. Яйцо куриное – 1 шт. категории С1. </th>
+            <th class="table_column_2"><?= htmlspecialchars($recipe['ingredients']) ?></th>
           </tr>
+          <?php if (!empty($steps)): ?>
           <tr class="table_row">
             <th class="table_column_1" style="vertical-align: top;">Инструкция</th>
+            <?php foreach ($steps as $step): ?>
             <th class="table_column_2">
-              <p>Фото 1: image 43</p>
-              <p>Описание 1: Соединить тщательно сливочное масло комнатной температуры, сахар и соль
-                силиконовой лопаткой.</p>
+              <p>Фото <?= htmlspecialchars($step['number']) ?>: <?= htmlspecialchars($step['image_path']) ?></p>
+              <p><?= htmlspecialchars($step['description']) ?></p>
             </th>
+            <?php endforeach; ?>
           </tr>
+          <?php endif; ?>
 
-          <tr class="table_row">
+          <!-- <tr class="table_row">
             <th class="table_column_1"> </th>
             <th class="table_column_2">
               <p>Фото 2: image 43</p>
               <p>Описание 2: Соединить тщательно сливочное масло комнатной температуры, сахар и соль
                 силиконовой лопаткой.</p>
             </th>
-          </tr>
+          </tr> -->
 
           <tr class="table_row">
             <th class="table_column_1">Кол-во отзывов</th>
-            <th class="table_column_2">34</th>
+            <th class="table_column_2"><?= htmlspecialchars($recipe['number_review']) ?></th>
+          </tr>
+
+          <tr class="table_row">
+            <th class="table_column_1">Дата создания</th>
+            <th class="table_column_2"><?= htmlspecialchars($recipe['created_at']) ?></th>
           </tr>
         </table>
 

@@ -209,12 +209,12 @@ input[type='checkbox'] {
     transition: all 0.3s ease;
   } */
 
-  .main_info_image{
+  /* .main_info_image{
     max-width: 560px;
-  }
-  .main_info_img{
+  } */
+  /* .main_info_img{
     width: 100%;
-  } 
+  }  */
   .main_info_conteiner{
     max-width: 560px;
   }

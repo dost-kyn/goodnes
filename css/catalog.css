@@ -344,6 +344,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    cursor: pointer;
     
     flex: 1 0 calc(25% - 20px); /* 4 карточки в ряд с учетом gap */
     /* min-width: 240px;
