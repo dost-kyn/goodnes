@@ -1,7 +1,5 @@
 <?php
 
-
-
 session_start();
 
 ?>
@@ -20,7 +18,7 @@ session_start();
 <body>
     <header class="header">
         <div class="header_content">
-            <a class="header_logo" href="home.html">
+            <a class="header_logo" href="home.php">
                 <img src="/image/лого.svg" data-theme-image data-light="/image/лого.svg"
                     data-dark="/image/лого-dark.svg" class="header_logo_img">
             </a>
@@ -30,8 +28,8 @@ session_start();
                     <img src="/image/tema.svg" data-theme-image data-light="/image/tema.svg"
                         data-dark="/image/tema-dark.svg" class="header_nav_tema_img">
                 </button>
-                <a href="/html/catalog.html" class="header_nav_catalog">Каталог</a>
-                <a href="" class="header_nav_blog">Блог</a>
+                <a href="catalog.php" class="header_nav_catalog">Каталог</a>
+                <a href="blog.php" class="header_nav_blog">Блог</a>
 
                 <?php if (isset($_SESSION['user'])): ?>
                     <a href="/connect/logout.php" class="header_nav_exit">Выйти</a>

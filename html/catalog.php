@@ -26,14 +26,19 @@ $result = mysqli_query($connect, $sql);
     <link rel="stylesheet" href="/css/header_footer.css">
     <link rel="stylesheet" href="/css/catalog.css">
     <title>Каталог</title>
-
+<!-- <style>
+    .recipes_card {
+    transition: opacity 0.3s ease, transform 0.3s ease !important;
+    will-change: opacity, transform;
+}
+</style> -->
 </head>
 
 <body>
 
     <header class="header">
         <div class="header_content">
-            <a class="header_logo" href="home.html">
+            <a class="header_logo" href="home.php">
                 <img src="/image/лого.svg" data-theme-image data-light="/image/лого.svg"
                     data-dark="/image/лого-dark.svg" class="header_logo_img">
             </a>
@@ -43,9 +48,14 @@ $result = mysqli_query($connect, $sql);
                     <img src="/image/tema.svg" data-theme-image data-light="/image/tema.svg"
                         data-dark="/image/tema-dark.svg" class="header_nav_tema_img">
                 </button>
-                <a href="" class="header_nav_catalog">Каталог</a>
-                <a href="" class="header_nav_blog">Блог</a>
-                <a href="" class="header_nav_exit">Вход</a>
+                <a href="catalog.php" class="header_nav_catalog">Каталог</a>
+                <a href="blog.php" class="header_nav_blog">Блог</a>
+
+                <?php if (isset($_SESSION['user'])): ?>
+                    <a href="/connect/logout.php" class="header_nav_exit">Выйти</a>
+                <?php else: ?>
+                    <a href="/components/modal_auth.php" class="header_nav_exit">Войти</a>
+                <?php endif; ?>
 
                 <button class="header_nav_btn">
                     <div class="header_nav_span">
@@ -61,7 +71,7 @@ $result = mysqli_query($connect, $sql);
 
     <section class="crumds">
         <div class="crumbs_content">
-            <a href="">Главная страница -> </a><a href="">Каталог</a>
+            <a href="home.php">Главная страница -> </a><a href="#">Каталог</a>
         </div>
     </section>
 
@@ -169,15 +179,12 @@ $result = mysqli_query($connect, $sql);
                     <button class="filter-mobile-toggle">Фильтры ☰</button>
                 </div>
 
-
-
                 <!-- 1 -->
                 <div class="recipes_cards">
 
-
                         <?php while ($card = mysqli_fetch_assoc($result)): ?>
                             <a href="recipe_page.php?id=<?= htmlspecialchars($card['id']) ?>" class="recipes_card" data-id="<?= htmlspecialchars($card['id']) ?>" 
-                            id="<?= htmlspecialchars($card['cooking_time']) ?>">
+                            data-cooking-time="<?= htmlspecialchars($card['cooking_time']) ?>">
                                 <h1 class="recipes_title"><?= htmlspecialchars($card['name']) ?></h1>
                                 <div class="recipes_image">
                                     <?php if (!empty($card['maun_image'])): ?>
@@ -195,12 +202,8 @@ $result = mysqli_query($connect, $sql);
                                 <button class="recipes_btn">Сохранить</button>
                             </a>
                         <?php endwhile; ?>
-                                        
 
-
-
-<!-- 
-                    <div class="recipes_card" data-id="2">
+                    <!--<div class="recipes_card" data-id="2">
                         <h1 class="recipes_title">Батон</h1>
                         <div class="recipes_image">
                             <img src="/image/home/Батон.png" alt="" class="recipes_image_img">
@@ -211,8 +214,6 @@ $result = mysqli_query($connect, $sql);
                         </div>
                         <button class="recipes_btn">Cохранить</button>
                     </div> -->
-
-
                 </div>
                 <div class="recipes_more">
                     <button class="recipes_more_btn">Показать ещё+</button>

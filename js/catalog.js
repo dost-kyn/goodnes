@@ -198,23 +198,16 @@ document.addEventListener('DOMContentLoaded', function() {
   // Настройки пагинации
   const cardsPerRow = 2;
   const rowsPerLoad = 4;
-  const cardsPerLoad = cardsPerRow * rowsPerLoad; // 8 карточки
-  let visibleCardsCount = cardsPerLoad; // Начальное количество
+  const cardsPerLoad = cardsPerRow * rowsPerLoad;
+  let visibleCardsCount = cardsPerLoad;
 
-
-  
   // Функция проверки активных фильтров
   function hasActiveFilters() {
-    // Проверяем выбранные категории
     const checkedCategoryBoxes = document.querySelectorAll('.catalog_filter_column:nth-of-type(1) input[type="checkbox"]:checked');
-    
-    // Проверяем выбранное время
     const checkedTimeBoxes = document.querySelectorAll('.catalog_filter_column:nth-of-type(2) input[type="checkbox"]:checked');
-    
-    // Проверяем диапазон калорий
     const minCalories = parseInt(calorieMinInput.value) || 0;
     const maxCalories = parseInt(calorieMaxInput.value) || 0;
-    const caloriesFilterActive = minCalories > 0 || maxCalories > 0;
+    const caloriesFilterActive = maxCalories > 0; // Фильтр активен только если указано "до"
     
     return checkedCategoryBoxes.length > 0 || checkedTimeBoxes.length > 0 || caloriesFilterActive;
   }
@@ -225,16 +218,31 @@ document.addEventListener('DOMContentLoaded', function() {
     return match ? parseFloat(match[0]) : 0;
   }
 
+  // Функция для проверки соответствия времени приготовления
+  function matchesTimeFilter(cookingTime, selectedTimes) {
+    if (selectedTimes.length === 0) return true;
+    
+    const time = parseInt(cookingTime);
+    if (isNaN(time)) return false;
+
+    return selectedTimes.some(timeRange => {
+      if (timeRange === '< 30 мин') return time < 30;
+      if (timeRange === '30-60 мин') return time >= 30 && time <= 60;
+      if (timeRange === '> 60 мин') return time > 60;
+      return false;
+    });
+  }
+
   // Основная функция фильтрации
   function applyFilters() {
     const isFilterActive = hasActiveFilters();
     
-    // 1. Получаем выбранные категории (в нижнем регистре)
-  const selectedCategories = Array.from(
-    document.querySelectorAll('.catalog_filter_column:nth-of-type(1) input[type="checkbox"]:checked')
-  ).map(checkbox => {
-    return checkbox.nextElementSibling.nextElementSibling.textContent.trim().toLowerCase();
-  });
+    // 1. Получаем выбранные категории
+    const selectedCategories = Array.from(
+      document.querySelectorAll('.catalog_filter_column:nth-of-type(1) input[type="checkbox"]:checked')
+    ).map(checkbox => {
+      return checkbox.nextElementSibling.nextElementSibling.textContent.trim().toLowerCase();
+    });
 
     // 2. Получаем выбранное время
     const selectedTimes = Array.from(
@@ -243,31 +251,31 @@ document.addEventListener('DOMContentLoaded', function() {
       return checkbox.nextElementSibling.nextElementSibling.textContent.trim();
     });
 
-    // 3. Получаем диапазон калорий
+    // 3. Получаем диапазон калорий (от всегда 0, если не указано иное)
     const minCalories = parseInt(calorieMinInput.value) || 0;
     const maxCalories = parseInt(calorieMaxInput.value) || Infinity;
     let visibleCards = 0;
 
- 
-
-   // Фильтруем карточки
-  recipesCards.forEach((card, index) => {
-    // Получаем данные из карточки (категорию в нижнем регистре)
-    const categoryFromCard = card.querySelector('.recipes_category').textContent
-      .replace('Категория:', '')
-      .trim()
-      .toLowerCase();
+    // Фильтруем карточки
+    recipesCards.forEach((card, index) => {
+      // Получаем данные из карточки
+      const categoryFromCard = card.querySelector('.recipes_category').textContent
+        .replace('Категория:', '')
+        .trim()
+        .toLowerCase();
       
-    const caloriesText = card.querySelector('.recipes_calory').textContent;
-    const calories = getCaloriesValue(caloriesText);
-    
-    // Проверяем соответствие фильтрам
-    const matchesCategory = selectedCategories.length === 0 || 
-      selectedCategories.includes(categoryFromCard);
-    const matchesCalories = calories >= minCalories && calories <= maxCalories;
+      const caloriesText = card.querySelector('.recipes_calory').textContent;
+      const calories = getCaloriesValue(caloriesText);
+      const cookingTime = card.dataset.cookingTime;
+      
+      // Проверяем соответствие всем фильтрам
+      const matchesCategory = selectedCategories.length === 0 || 
+        selectedCategories.includes(categoryFromCard);
+      const matchesCalories = calories >= minCalories && calories <= maxCalories;
+      const matchesTime = matchesTimeFilter(cookingTime, selectedTimes);
       
       // Показываем/скрываем карточку
-      if (matchesCategory && matchesCalories) {
+      if (matchesCategory && matchesCalories && matchesTime) {
         if (isFilterActive) {
           // При активном фильтре показываем все подходящие карточки
           card.style.display = 'flex';
@@ -300,10 +308,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Управление кнопкой "Показать ещё"
     if (showMoreBtn) {
       if (isFilterActive) {
-        // При активных фильтрах скрываем кнопку
         showMoreBtn.style.display = 'none';
       } else {
-        // Без фильтров - показываем кнопку если есть скрытые карточки
         showMoreBtn.style.display = visibleCardsCount >= visibleCards ? 'none' : 'block';
       }
     }
@@ -312,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Функция для показа дополнительных карточек
   function showMoreCards() {
     visibleCardsCount += cardsPerLoad;
-    applyFilters(); // Перерисовываем карточки с новым visibleCardsCount
+    applyFilters();
   }
 
   // Обработчики событий
@@ -320,8 +326,16 @@ document.addEventListener('DOMContentLoaded', function() {
     checkbox.addEventListener('change', applyFilters);
   });
 
-  [calorieMinInput, calorieMaxInput].forEach(input => {
-    input.addEventListener('input', applyFilters);
+  // Обработчики для полей калорий
+  calorieMinInput.addEventListener('input', function() {
+    // Если ввели значение "от", но не ввели "до" - не фильтруем
+    if (!calorieMaxInput.value) return;
+    applyFilters();
+  });
+
+  calorieMaxInput.addEventListener('input', function() {
+    // При изменении "до" всегда фильтруем
+    applyFilters();
   });
 
   if (showMoreBtn) {
@@ -331,17 +345,18 @@ document.addEventListener('DOMContentLoaded', function() {
   // Инициализация
   function init() {
     recipesCards.forEach(card => {
-      card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        void card.offsetWidth; // Перезапуск анимации
     });
     
-    // Первоначальное отображение карточек
+    // Устанавливаем значение по умолчанию для "от"
+    calorieMinInput.value = '0';
+    
     applyFilters();
   }
 
   init();
 });
-
-
 
 
 
