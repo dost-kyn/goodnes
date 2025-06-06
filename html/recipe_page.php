@@ -48,6 +48,21 @@ if ($recipe) {
 if (!$recipe) {
     die("Рецепт не найден");
 }
+
+
+// Создаем соответствие между значениями caregories и ID чекбоксов
+$categoryMapping = [
+    'торты' => 'wr1',
+    'печенье' => 'wr2',
+    'пироги' => 'wr3',
+    'кексы' => 'wr4',
+    'конфеты' => 'wr5',
+    'хлеб' => 'wr6'
+];
+
+// Получаем ID чекбокса для текущей категории
+$checkboxId = $categoryMapping[strtolower($recipe['caregories'])] ?? '';
+$categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) : '#';
 ?>
 
 <!DOCTYPE html>
@@ -58,7 +73,7 @@ if (!$recipe) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/header_footer.css">
     <link rel="stylesheet" href="/css/recipe_page.css">
-    <title>*название рецепта*</title>
+    <title><?= htmlspecialchars($recipe['name']) ?></title>
     <style>
 
 .main_info_image {
@@ -247,7 +262,9 @@ if (!$recipe) {
     <section class="crumds">
         <div class="crumbs_content">
             <a href="home.php">Главная страница -> </a><a href="catalog.php">Каталог -> </a>
-            <a href="">Печенье -> </a>
+            <a href="<?= htmlspecialchars($categoryLink) ?>" class="category-link">
+    <?= htmlspecialchars($recipe['caregories']) ?> ->
+</a>
             <a href="#"><?= htmlspecialchars($recipe['name']) ?></a>
         </div>
     </section>

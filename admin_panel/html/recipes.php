@@ -40,7 +40,7 @@ $result = mysqli_query($connect, $sql);
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/admin_panel/css/recipes.css" />
-  <title>Пользователи</title>
+  <title>Рецепты</title>
 </head>
 
 <body>

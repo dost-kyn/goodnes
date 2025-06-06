@@ -330,10 +330,6 @@
       overflow: hidden;         /* скрывать выходящий за рамки текст */
       text-overflow: ellipsis;  /* показывать многоточие в конце */
     }
-    .table_users {
-      width: 100%;
-      border-spacing: 0;
-  }
   
   .table_row_titles {
       background-color: #d587af;

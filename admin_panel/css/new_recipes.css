@@ -151,6 +151,7 @@
   }
   .manual{
     display: flex;
+    
   }
 .manual_p{
   margin: 0;
@@ -170,7 +171,7 @@
 th{
 width: 100px;
     text-align: left;
-    font-style: 16px;
+    font-size: 16px;
     font-family: "Rounded Mplus 1c";
 }
 .table_column_1{

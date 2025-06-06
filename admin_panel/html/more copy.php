@@ -85,19 +85,6 @@ $enum_values = explode("','", $matches[1]);
     white-space: normal;
     line-height: 1.4;
 }
-.editable-textarea-step {
-    width: 100%;
-  min-height: 100px;
-  padding: 5; /* Убираем внутренние отступы */
-  margin: 0; /* Убираем внешние отступы */
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  resize: vertical;
-  text-align: left; /* Выравнивание текста слева */
-  line-height: 1.4; /* Межстрочный интервал */
-  font-family: inherit; /* Наследуем шрифт */
-  box-sizing: border-box; /* Чтобы padding не влиял на ширину */
-}
   </style>
 </head>
 
@@ -266,11 +253,6 @@ $enum_values = explode("','", $matches[1]);
         const textContent = extractTextFromHTML(content);
         const fieldName = cell.dataset.field;
 
-        // Пропускаем обработку, если это контейнер для шагов
-        if (fieldName === 'steps_images' || fieldName === 'steps_descriptions') {
-            return;
-        }
-
         // Для поля "Категория" создаем select с ENUM значениями
         if (fieldName === 'caregories') {
           const select = document.createElement('select');
@@ -418,25 +400,6 @@ $enum_values = explode("','", $matches[1]);
         container.appendChild(fileWrapper);
     });
 
-
-
-    // Добавляем обработку описаний шагов
-    document.querySelectorAll('.step-description-container').forEach(container => {
-        const textContent = extractTextFromHTML(container.innerHTML);
-        const textarea = document.createElement('textarea');
-        textarea.style.textAlign = 'left'; // Явное выравнивание
-        textarea.style.direction = 'ltr'; // Направление текста слева-направо
-        textarea.className = 'editable editable-textarea-step';
-        textarea.value = textContent;
-        
-        // Сохраняем оригинальное значение для возможного отката
-        textarea.dataset.originalValue = textContent;
-        textarea.dataset.field = container.dataset.field;
-        
-        container.innerHTML = '';
-        container.appendChild(textarea);
-    });
-
     saveButton.style.display = "block";
     editButton.style.display = "none";
 });
@@ -445,13 +408,6 @@ saveButton.addEventListener('click', function() {
 
     const formData = new FormData();
     formData.append('id', <?= $recipe_id ?>);
-
-// Добавляем описания шагов (новый код)
-    document.querySelectorAll('.editable-textarea-step').forEach(textarea => {
-        const fieldName = textarea.dataset.field;
-        formData.append(fieldName, textarea.value);
-    });
-
 
     // Добавляем главное изображение, если выбрано
     const mainImageInput = document.querySelector('input[name="maun_image"]');
