@@ -60,19 +60,98 @@ if (!$recipe) {
     <link rel="stylesheet" href="/css/recipe_page.css">
     <title>*название рецепта*</title>
     <style>
-   .main_info_image {
+
+.main_info_image {
     max-width: 60vw;
     background-color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px 150px; /* Отступы от краев */
+    padding: 20px 150px;
     box-sizing: border-box;
 }
 .main_info_img {
     min-width: 145%;
     object-fit: contain; /* Сохраняет пропорции */
-    display: block; /* Убираем лишнее пространство под изображением */
+    display: block;
+}
+@media (max-width: 1000px){
+    .main_info_image {
+    padding: 20px 130px;
+}
+.main_info_img {
+    min-width: 125%;
+}
+}
+
+@media (max-width: 900px){
+    .main_info_image {
+    max-width: 80vw;
+}
+.main_info_img {
+    min-width: 115%;
+}
+}
+
+@media (max-width: 800px){
+    .main_info_image {
+    padding: 30px 160px;
+    width: 65vw;
+}
+.main_info_img {
+    min-width: 130%;
+}
+}
+
+@media (max-width: 700px){
+    .main_info_image {
+    width: 70vw;
+}
+.main_info_img {
+    min-width: 130%;
+}
+}
+
+@media (max-width: 600px){
+.main_info_img {
+    min-width: 170%;
+}
+}
+
+@media (max-width: 550px){
+    .main_info_image {
+    padding: 25px 140px;
+}
+.main_info_img {
+    min-width: 180%;
+}
+}
+
+@media (max-width: 500px){
+.main_info_img {
+    min-width: 210%;
+}
+}
+
+@media (max-width: 460px){
+    .main_info_image {
+    padding: 15px 110px;
+}
+.main_info_img {
+    min-width: 130%;
+}
+}
+
+@media (max-width: 410px){
+.main_info_img {
+    min-width: 180%;
+}
+}
+
+@media (max-width: 370px){
+.main_info_img {
+    min-width: 260%;
+}
 }
     </style>
 </head>
@@ -80,7 +159,7 @@ if (!$recipe) {
 <body>
     <header class="header">
         <div class="header_content">
-            <a class="header_logo" href="home.html">
+            <a class="header_logo" href="home.php">
                 <img src="/image/лого.svg" data-theme-image data-light="/image/лого.svg"
                     data-dark="/image/лого-dark.svg" class="header_logo_img">
             </a>
@@ -90,9 +169,14 @@ if (!$recipe) {
                     <img src="/image/tema.svg" data-theme-image data-light="/image/tema.svg"
                         data-dark="/image/tema-dark.svg" class="header_nav_tema_img">
                 </button>
-                <a href="" class="header_nav_catalog">Каталог</a>
-                <a href="" class="header_nav_blog">Блог</a>
-                <a href="" class="header_nav_exit">Вход</a>
+                <a href="catalog.php" class="header_nav_catalog">Каталог</a>
+                <a href="home.php" class="header_nav_blog">Блог</a>
+
+                <?php if (isset($_SESSION['user'])): ?>
+                    <a href="/connect/logout.php" class="header_nav_exit">Выйти</a>
+                <?php else: ?>
+                    <a href="/components/modal_auth.php" class="header_nav_exit">Войти</a>
+                <?php endif; ?>
 
                 <button class="header_nav_btn">
                     <div class="header_nav_span">
@@ -162,7 +246,8 @@ if (!$recipe) {
 
     <section class="crumds">
         <div class="crumbs_content">
-            <a href="home.php">Главная страница -> </a><a href="catalog.php">Каталог -> </a><a href="">Печенье -> </a>
+            <a href="home.php">Главная страница -> </a><a href="catalog.php">Каталог -> </a>
+            <a href="">Печенье -> </a>
             <a href="#"><?= htmlspecialchars($recipe['name']) ?></a>
         </div>
     </section>

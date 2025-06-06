@@ -34,7 +34,7 @@ document.querySelector('.filter-mobile-toggle').addEventListener('click', functi
 
 
 
-// перенаправление из главной страницы, фильтр
+// // перенаправление из главной страницы, фильтр
 // document.addEventListener('DOMContentLoaded', function() {
 //   // Проверяем URL на наличие параметра категории
 //   const urlParams = new URLSearchParams(window.location.search);

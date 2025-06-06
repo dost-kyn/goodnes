@@ -38,18 +38,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-// Код для главной страницы (index.html)
+// Код для главной страницы
 document.addEventListener('DOMContentLoaded', function() {
   const menuButtons = document.querySelectorAll('.menu_btn');
   
   // Создаем соответствие между названиями кнопок и ID чекбоксов
   const categoryMapping = {
-    'торты': 'wr6',
-    'печенье': 'wr1',
-    'пироги': 'wr2',
-    'кексы': 'wr5',
-    'конфеты': 'wr3',
-    'хлеб': 'wr4'
+    'торты': 'wr1',
+    'печенье': 'wr2',
+    'пироги': 'wr3',
+    'кексы': 'wr4',
+    'конфеты': 'wr5',
+    'хлеб': 'wr6'
   };
 
   // Добавляем обработчики для кнопок меню
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const checkboxId = categoryMapping[categoryName];
       
       // Перенаправляем на страницу каталога с параметром категории
-      window.location.href = `catalog.html?category=${checkboxId}`;
+      window.location.href = `catalog.php?category=${checkboxId}`;
     });
   });
 });

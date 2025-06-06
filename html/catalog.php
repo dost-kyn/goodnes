@@ -26,12 +26,9 @@ $result = mysqli_query($connect, $sql);
     <link rel="stylesheet" href="/css/header_footer.css">
     <link rel="stylesheet" href="/css/catalog.css">
     <title>Каталог</title>
-<!-- <style>
-    .recipes_card {
-    transition: opacity 0.3s ease, transform 0.3s ease !important;
-    will-change: opacity, transform;
-}
-</style> -->
+<style>
+
+</style>
 </head>
 
 <body>
@@ -88,34 +85,37 @@ $result = mysqli_query($connect, $sql);
                     <div class="catalog_filter_column"> <!-- ˅ -->
                         <p class="calalog_fil_col_title">⮟ Категории</p>
                         <div class="paragraph">
-                            <input type="checkbox" class="wr-checkbox6" id="wr6" name="wr">
-                            <label for="wr6"></label>
-                            <p class="paragraph_text">Торты</p>
-                        </div>
-                        <div class="paragraph">
                             <input type="checkbox" class="wr-checkbox1" id="wr1" name="wr">
                             <label for="wr1"></label>
-                            <p class="paragraph_text">Печенье</p>
+                            <p class="paragraph_text">Торты</p>
                         </div>
                         <div class="paragraph">
                             <input type="checkbox" class="wr-checkbox2" id="wr2" name="wr">
                             <label for="wr2"></label>
-                            <p class="paragraph_text">Пироги</p>
+                            <p class="paragraph_text">Печенье</p>
                         </div>
                         <div class="paragraph">
                             <input type="checkbox" class="wr-checkbox3" id="wr3" name="wr">
                             <label for="wr3"></label>
-                            <p class="paragraph_text">Конфеты</p>
+                            <p class="paragraph_text">Пироги</p>
                         </div>
                         <div class="paragraph">
                             <input type="checkbox" class="wr-checkbox4" id="wr4" name="wr">
                             <label for="wr4"></label>
-                            <p class="paragraph_text">Хлеб</p>
+                            <p class="paragraph_text">Кексы</p>
+                            <!-- Конфеты -->
                         </div>
                         <div class="paragraph">
                             <input type="checkbox" class="wr-checkbox5" id="wr5" name="wr">
                             <label for="wr5"></label>
-                            <p class="paragraph_text">Кексы</p>
+                            <p class="paragraph_text">Конфеты</p>
+                            <!-- Хлеб -->
+                        </div>
+                        <div class="paragraph">
+                            <input type="checkbox" class="wr-checkbox6" id="wr6" name="wr">
+                            <label for="wr6"></label>
+                            <p class="paragraph_text">Хлеб</p>
+                            <!-- Кексы -->
                         </div>
 
                         <!-- <div class="paragraph">
@@ -260,7 +260,40 @@ $result = mysqli_query($connect, $sql);
         </div>
     </footer>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+  // Получаем параметр ?category= из URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const categoryId = urlParams.get('category'); 
 
+  // Если параметр есть, находим чекбокс и отмечаем его
+  if (categoryId) {
+    const checkbox = document.getElementById(categoryId);
+    if (checkbox) {
+      checkbox.checked = true; // Отмечаем галочку
+      
+      // Прокручиваем к этому чекбоксу (опционально)
+      setTimeout(() => {
+        checkbox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+  }
+
+  // Убираем параметр ?category=... из URL после загрузки
+    if (window.location.search.includes('category=')) {
+    const newUrl = window.location.pathname; // Получаем URL без параметров
+    window.history.replaceState(null, null, newUrl); // Заменяем URL без перезагрузки
+    }
+    // Сброс всех чекбоксов категорий
+    if (categoryParam) {
+    document.querySelectorAll('.catalog_filter_column input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    }
+});
+
+
+</script>
 
     <script src="/js/tema.js"></script>
     <script src="/js/catalog.js"></script>
