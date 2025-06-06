@@ -26,7 +26,8 @@ $sql = "SELECT
            calorie,
            portions,
            caregories,
-           maun_image
+           maun_image,
+           created_at
         FROM recipes";
 $result = mysqli_query($connect, $sql);
 ?>
@@ -50,12 +51,12 @@ $result = mysqli_query($connect, $sql);
       </a>
 
       <div class="sidebar_nav">
-        <a href="/admin_panel/html/users.html" class="sidebar_nav_link users">Пользователи</a>
-        <a href="" class="sidebar_nav_link reviews">Отзывы</a>
-        <a href="" class="sidebar_nav_link" style="text-decoration-line: underline;">Рецепты</a>
+        <a href="users.php" class="sidebar_nav_link users">Пользователи</a>
+        <a href="reviews.php" class="sidebar_nav_link reviews">Отзывы</a>
+        <a href="recipes.php" class="sidebar_nav_link" style="text-decoration-line: underline;">Рецепты</a>
         <a href="" class="sidebar_nav_link">Блоги</a>
 
-        <buttom class="nav_btn"><a href="new_recipes.html">Создать рецепт</a></buttom>
+        <buttom class="nav_btn"><a href="new_recipes.php">Создать рецепт</a></buttom>
       </div>
     </section>
 
@@ -119,7 +120,7 @@ $result = mysqli_query($connect, $sql);
                   <div class="paragraph">
                     <input type="checkbox" class="wr-checkbox16" id="wr16" name="wr">
                     <label for="wr16"></label>
-                    <p class="paragraph_text">Недание</p>
+                    <p class="paragraph_text">Недавние</p>
                   </div>
                   <div class="paragraph">
                     <input type="checkbox" class="wr-checkbox17" id="wr17" name="wr">
@@ -146,14 +147,14 @@ $result = mysqli_query($connect, $sql);
           </tr>
 
           <?php while ($row = mysqli_fetch_assoc($result)): ?>
-            <tr class="table_row">
+            <tr class="table_row" date-time="<?= $row['created_at'] ?>">
 
               <td><?= $row['row_num'] ?></td>
               <td><?= $row['name'] ?></td>
               <td><?= $row['cooking_time'] ?></td>
               <td><?= $row['calorie'] ?></td>
               <td><?= $row['portions'] ?></td>
-              <td><?= $row['caregories'] ?></td>
+              <td class="row_categories"><?= $row['caregories'] ?></td>
               <td><?= basename($row['maun_image']) ?></td>
               <td class="more"><button class="more_btn"><a href="more.php?id=<?= $row['id'] ?>">Подробнее</a></button></td>
             </tr>
@@ -210,8 +211,158 @@ $result = mysqli_query($connect, $sql);
         });
       });
     });
+
+
+
+// открытие и закрытие фильтра
+document.querySelector('.filter-mobile-toggle').addEventListener('click', function() {
+    document.querySelector('.catalog_filter_content').classList.toggle('active');
+});
+  
+// Закрытие при клике вне фильтра (опционально)
+document.addEventListener('click', function(e) {
+    const filter = document.querySelector('.catalog_filter_content');
+    const toggleBtn = document.querySelector('.filter-mobile-toggle');
+    
+    if (!filter.contains(e.target) && e.target !== toggleBtn) {
+        filter.classList.remove('active');
+    }
+});
+
+// Открытие фильтров
+document.querySelector('.filter-mobile-toggle').addEventListener('click', function() {
+    document.querySelector('.catalog_filter_content').classList.add('active');
+    document.body.classList.add('menu-open');
+});
+  
+// Закрытие фильтров
+function closeFilters() {
+    document.querySelector('.catalog_filter_content').classList.remove('active');
+    document.body.classList.remove('menu-open');
+}
+  
+document.querySelector('.close-filters').addEventListener('click', closeFilters);
+
+// работа фильтра
+document.addEventListener('DOMContentLoaded', function() {
+    // Элементы DOM
+    const recipeRows = document.querySelectorAll('.table_row');
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    const searchInput = document.querySelector('.search_inp');
+    const searchBtn = document.querySelector('.search_btn');
+
+    // Функция для проверки, была ли дата в последний месяц
+    function isWithinLastMonth(dateString) {
+        try {
+            const recipeDate = new Date(dateString);
+            const now = new Date();
+            const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+            return recipeDate >= oneMonthAgo;
+        } catch (e) {
+            console.error("Ошибка при обработке даты:", dateString, e);
+            return false;
+        }
+    }
+
+    // Функция для проверки, является ли дата старой (более месяца)
+    function isOldDate(dateString) {
+        return !isWithinLastMonth(dateString);
+    }
+
+    // Функция проверки активных фильтров
+    function hasActiveFilters() {
+        const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        return checkedBoxes.length > 0 || searchInput.value.trim() !== '';
+    }
+
+    // Функция фильтрации по категориям
+    function filterByCategory(row, selectedCategories) {
+        if (selectedCategories.length === 0) return true;
+        
+        const categoryElement = row.querySelector('.row_categories');
+        if (!categoryElement) return false;
+        
+        const rowCategory = categoryElement.textContent.trim().toLowerCase();
+        return selectedCategories.some(cat => rowCategory.includes(cat));
+    }
+
+    // Функция фильтрации по времени (неделя/старые)
+    function filterByTime(row, selectedTimes) {
+        if (selectedTimes.length === 0) return true;
+        
+        const dateTime = row.getAttribute('date-time');
+        if (!dateTime) return false;
+        
+        return selectedTimes.some(timeFilter => {
+            if (timeFilter === 'недавние') {
+                return isWithinLastMonth(dateTime); // Используем месяц вместо недели
+            } else if (timeFilter === 'старые') {
+                return isOldDate(dateTime);
+            }
+            return false;
+        });
+    }
+
+    // Функция фильтрации по поисковому запросу
+    function filterBySearch(row, searchText) {
+        if (!searchText) return true;
+        
+        const name = row.querySelector('td:nth-child(2)').textContent.trim().toLowerCase();
+        return name.includes(searchText.toLowerCase());
+    }
+
+    // Основная функция фильтрации
+    function applyFilters() {
+        // 1. Получаем выбранные категории (в нижнем регистре)
+        const selectedCategories = Array.from(
+            document.querySelectorAll('.catalog_filter_column:nth-of-type(1) input[type="checkbox"]:checked')
+        ).map(checkbox => {
+            return checkbox.nextElementSibling.nextElementSibling.textContent.trim().toLowerCase();
+        });
+
+        // 2. Получаем выбранное время
+        const selectedTimes = Array.from(
+            document.querySelectorAll('.catalog_filter_column:nth-of-type(2) input[type="checkbox"]:checked')
+        ).map(checkbox => {
+            return checkbox.nextElementSibling.nextElementSibling.textContent.trim().toLowerCase();
+        });
+
+        // 3. Получаем поисковый запрос
+        const searchText = searchInput.value.trim();
+
+        // Фильтруем строки таблицы
+        recipeRows.forEach(row => {
+            const matchesCategory = filterByCategory(row, selectedCategories);
+            const matchesTime = filterByTime(row, selectedTimes);
+            const matchesSearch = filterBySearch(row, searchText);
+
+            if (matchesCategory && matchesTime && matchesSearch) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    // Обработчики событий
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', applyFilters);
+    });
+
+    searchBtn.addEventListener('click', applyFilters);
+    searchInput.addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+            applyFilters();
+        }
+    });
+
+    // Инициализация
+    applyFilters();
+});
+
+
   </script>
-  <script src="/js/catalog.js"></script>
+  
 </body>
 
 </html>

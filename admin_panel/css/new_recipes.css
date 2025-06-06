@@ -168,13 +168,13 @@
 }
 
 th{
-
+width: 100px;
     text-align: left;
     font-style: 16px;
     font-family: "Rounded Mplus 1c";
 }
 .table_column_1{
-    width: 200px;
+    width: 100px;
 }
   
 .container_review_buttons{
