@@ -1,65 +1,174 @@
 <?php
-session_start();
+header('Content-Type: text/plain');
 require_once __DIR__ . '/../../connect/connect.php';
 
-header('Content-Type: application/json');
+$reviewId = (int)($_POST['review_id'] ?? 0);
+$newStatus = (int)($_POST['status'] ?? 0);
 
-// Настройка отображения ошибок
-ini_set('display_errors', 0);
-error_reporting(E_ALL);
-function log_error($message) {
-    file_put_contents(__DIR__ . '/review_errors.log', date('[Y-m-d H:i:s] ') . $message . PHP_EOL, FILE_APPEND);
+// Проверка данных
+if ($reviewId <= 0 || !in_array($newStatus, [1, 2, 3])) {
+    die('error: Неверные параметры');
 }
 
-try {
-    // Проверка метода запроса
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        throw new Exception('Разрешены только POST-запросы');
-    }
+// Получаем текущий статус из БД
+$stmt = $connect->prepare("SELECT status FROM reviews WHERE id = ?");
+$stmt->bind_param("i", $reviewId);
+$stmt->execute();
+$currentStatus = $stmt->get_result()->fetch_assoc()['status'];
 
-    // Валидация параметров
-    $reviewId = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-    $status = filter_input(INPUT_POST, 'status', FILTER_VALIDATE_INT);
+// Если уже approved - запрещаем изменения
+if ($currentStatus == 2 && $newStatus != 2) {
+    die('error: Отзыв уже одобрен');
+}
 
-    if (!$reviewId || !$status || $status < 1 || $status > 3) {
-        throw new Exception('Неверные параметры запроса');
-    }
+// Обновляем статус
+$update = $connect->prepare("UPDATE reviews SET status = ? WHERE id = ?");
+$update->bind_param("ii", $newStatus, $reviewId);
 
-    // Проверка существования отзыва
-    $check = mysqli_query($connect, "SELECT id FROM reviews WHERE id = $reviewId");
-    if (mysqli_num_rows($check) === 0) {
-        throw new Exception('Отзыв не найден');
-    }
+if ($update->execute()) {
+    echo "success";
+} else {
+    echo "error: Ошибка базы данных";
+}
 
-    // Обновление статуса
-    $result = mysqli_query($connect, "UPDATE reviews SET status = $status WHERE id = $reviewId");
+
+
+
+
+// header('Content-Type: application/json; charset=utf-8');
+
+// // Отключаем вывод ошибок PHP на экран
+// ini_set('display_errors', 0);
+// ini_set('log_errors', 1);
+
+// // Подключаемся к БД
+// require_once '/../../connect/connect.php';
+
+// try {
+//     // Получаем и проверяем входные данные
+//     $input = json_decode(file_get_contents('php://input'), true);
     
-    if (!$result) {
-        throw new Exception('Ошибка базы данных: ' . mysqli_error($connect));
-    }
+//     if (!$input) {
+//         throw new Exception('Неверный формат данных');
+//     }
+    
+//     if (empty($input['review_id']) || empty($input['status'])) {
+//         throw new Exception('Отсутствуют обязательные параметры');
+//     }
+    
+//     // Проверяем текущий статус
+//     $stmt = $conn->prepare("SELECT status FROM reviews WHERE id = ?");
+//     $stmt->bind_param("i", $input['review_id']);
+//     $stmt->execute();
+//     $result = $stmt->get_result();
+    
+//     if ($result->num_rows === 0) {
+//         throw new Exception('Отзыв не найден');
+//     }
+    
+//     $currentStatus = $result->fetch_assoc()['status'];
+//     if ($currentStatus === 'approved') {
+//         throw new Exception('Отзыв уже одобрен');
+//     }
+    
+//     // Обновляем статус
+//     $stmt = $conn->prepare("UPDATE reviews SET status = ? WHERE id = ?");
+//     $stmt->bind_param("si", $input['status'], $input['review_id']);
+//     $stmt->execute();
+    
+//     // Успешный ответ
+//     echo json_encode([
+//         'success' => true,
+//         'message' => 'Статус обновлен'
+//     ]);
+    
+// } catch (Exception $e) {
+//     // Обработка ошибок
+//     http_response_code(400);
+//     echo json_encode([
+//         'success' => false,
+//         'message' => $e->getMessage()
+//     ]);
+// }
 
-    // Проверка, что запись действительно обновилась
-    if (mysqli_affected_rows($connect) === 0) {
-        throw new Exception('Статус не был изменен');
-    }
+// exit; // Завершаем выполнение
 
-    // Получаем обновленные данные
-    $updated = mysqli_query($connect, "SELECT status FROM reviews WHERE id = $reviewId");
-    $statusData = mysqli_fetch_assoc($updated);
 
-    // Успешный ответ
-    echo json_encode([
-        'success' => true,
-        'new_status' => $statusData['status'],
-        'affected_rows' => mysqli_affected_rows($connect)
-    ]);
 
-} catch (Exception $e) {
-    log_error($e->getMessage());
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Произошла ошибка при обновлении статуса',
-        'error' => $e->getMessage()
-    ]);
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// header('Content-Type: application/json');
+
+// // Настройка отображения ошибок
+// ini_set('display_errors', 0);
+// error_reporting(E_ALL);
+// function log_error($message) {
+//     file_put_contents(__DIR__ . '/review_errors.log', date('[Y-m-d H:i:s] ') . $message . PHP_EOL, FILE_APPEND);
+// }
+
+// try {
+//     // Проверка метода запроса
+//     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+//         throw new Exception('Разрешены только POST-запросы');
+//     }
+
+//     // Валидация параметров
+//     $reviewId = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+//     $status = filter_input(INPUT_POST, 'status', FILTER_VALIDATE_INT);
+
+//     if (!$reviewId || !$status || $status < 1 || $status > 3) {
+//         throw new Exception('Неверные параметры запроса');
+//     }
+
+//     // Проверка существования отзыва
+//     $check = mysqli_query($connect, "SELECT id FROM reviews WHERE id = $reviewId");
+//     if (mysqli_num_rows($check) === 0) {
+//         throw new Exception('Отзыв не найден');
+//     }
+
+//     // Обновление статуса
+//     $result = mysqli_query($connect, "UPDATE reviews SET status = $status WHERE id = $reviewId");
+    
+//     if (!$result) {
+//         throw new Exception('Ошибка базы данных: ' . mysqli_error($connect));
+//     }
+
+//     // Проверка, что запись действительно обновилась
+//     if (mysqli_affected_rows($connect) === 0) {
+//         throw new Exception('Статус не был изменен');
+//     }
+
+//     // Получаем обновленные данные
+//     $updated = mysqli_query($connect, "SELECT status FROM reviews WHERE id = $reviewId");
+//     $statusData = mysqli_fetch_assoc($updated);
+
+//     // Успешный ответ
+//     echo json_encode([
+//         'success' => true,
+//         'new_status' => $statusData['status'],
+//         'affected_rows' => mysqli_affected_rows($connect)
+//     ]);
+
+// } catch (Exception $e) {
+//     log_error($e->getMessage());
+//     http_response_code(500);
+//     echo json_encode([
+//         'success' => false,
+//         'message' => 'Произошла ошибка при обновлении статуса',
+//         'error' => $e->getMessage()
+//     ]);
+// }
