@@ -78,7 +78,7 @@ $enum_values = explode("','", $matches[1]);
   <style>
 
 .step-container-description {
-    width: 700px; 
+    width: 500px; 
     height: 290px;
     margin-bottom: 40px;
     word-wrap: break-word; 
@@ -442,16 +442,24 @@ $enum_values = explode("','", $matches[1]);
 });
 
 saveButton.addEventListener('click', function() {
-
     const formData = new FormData();
     formData.append('id', <?= $recipe_id ?>);
 
-// Добавляем описания шагов (новый код)
+    // Добавляем основные поля рецепта
+    document.querySelectorAll('.editable').forEach(input => {
+        if (input.classList.contains('editable-textarea') || 
+            input.classList.contains('editable-select') ||
+            input.classList.contains('editable')) {
+            const fieldName = input.closest('[data-field]').dataset.field;
+            formData.append(fieldName, input.value);
+        }
+    });
+
+    // Добавляем описания шагов
     document.querySelectorAll('.editable-textarea-step').forEach(textarea => {
         const fieldName = textarea.dataset.field;
         formData.append(fieldName, textarea.value);
     });
-
 
     // Добавляем главное изображение, если выбрано
     const mainImageInput = document.querySelector('input[name="maun_image"]');
@@ -466,16 +474,10 @@ saveButton.addEventListener('click', function() {
         }
     });
 
-    // Добавляем описания шагов
-    document.querySelectorAll('.editable-textarea-step').forEach(textarea => {
-        const stepNum = textarea.closest('[data-field]').dataset.field.replace('step_description_', '');
-        formData.append(`step_description_${stepNum}`, textarea.value);
-    });
-
     // Отправка данных
     fetch('more_edit.php', {
         method: 'POST',
-        body: formData, // Не устанавливайте Content-Type вручную!
+        body: formData,
     })
     .then(response => {
         if (!response.ok) {
@@ -496,6 +498,8 @@ saveButton.addEventListener('click', function() {
         alert('Ошибка соединения: ' + error.message);
     });
 });
+
+
     deleteButton.addEventListener('click', function () {
       if (confirm('Вы точно хотите удалить этот рецепт? Это действие нельзя отменить.')) {
         fetch('more_delete.php', {

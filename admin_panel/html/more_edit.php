@@ -37,7 +37,35 @@ try {
 
     mysqli_begin_transaction($connect);
 
-    // 1. Обработка главного изображения
+    // 1. Обновление основных полей рецепта
+    $fields = [
+        'name', 'cooking_time', 'calorie', 'portions', 
+        'caregories', 'description', 'ingredients'
+    ];
+    
+    $updates = [];
+    $params = [];
+    $types = '';
+    
+    foreach ($fields as $field) {
+        if (isset($_POST[$field])) {
+            $updates[] = "$field = ?";
+            $params[] = $_POST[$field];
+            $types .= 's';
+        }
+    }
+    
+    if (!empty($updates)) {
+        $sql = "UPDATE recipes SET " . implode(', ', $updates) . " WHERE id = ?";
+        $params[] = $recipe_id;
+        $types .= 'i';
+        
+        $stmt = $connect->prepare($sql);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+    }
+
+    // 2. Обработка главного изображения
     if (!empty($_FILES['maun_image']['tmp_name'])) {
         $uploadDir = __DIR__ . '/../../image/recipe/';
         $imagePath = uploadFile($_FILES['maun_image'], $uploadDir);
@@ -51,7 +79,7 @@ try {
         }
     }
 
-    // 2. Обработка шагов рецепта
+    // 3. Обработка шагов рецепта
     foreach ($_FILES as $key => $file) {
         if (strpos($key, 'step_image_') === 0 && !empty($file['tmp_name'])) {
             $step_number = str_replace('step_image_', '', $key);
@@ -76,7 +104,7 @@ try {
         }
     }
 
-    // 3. Обновление описаний шагов
+    // 4. Обновление описаний шагов
     foreach ($_POST as $key => $value) {
         if (strpos($key, 'step_description_') === 0) {
             $step_number = str_replace('step_description_', '', $key);

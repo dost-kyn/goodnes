@@ -342,6 +342,7 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
         <div class="instru_content">
             <div class="instru_item">
                 <div class="instru_item_image">
+                    
                     <img src="/image/recipe/item1.jpg" class="instru_item_img" alt="">
                 </div>
                 <div class="instru_item_text">
