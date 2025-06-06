@@ -1,3 +1,8 @@
+
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -70,7 +75,7 @@
     </div>
 
 
-    <script src="../js/catalog.js"></script>
+
     <script>
         const moreButton = document.querySelector('#moreButton');
         const saveButton = document.querySelector('#saveButton');
