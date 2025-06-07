@@ -290,6 +290,24 @@ $result = mysqli_query($connect, $sql);
         checkbox.checked = false;
     });
     }
+
+
+
+
+     // Обработка ссылок категорий в хлебных крошках
+    document.querySelectorAll('.category-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            if (this.getAttribute('href') !== '#') {
+                // Сброс всех чекбоксов перед переходом (если нужно)
+                document.querySelectorAll('.catalog_filter_column input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                // Переход произойдет автоматически по ссылке
+            } else {
+                e.preventDefault(); // Отменяем переход для неопределенных категорий
+            }
+        });
+    });
 });
 
 
