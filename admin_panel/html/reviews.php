@@ -51,6 +51,8 @@ $sql = "SELECT
        IFNULL(rec.name, 'Рецепт удалён') AS recipe_name,
        r.text,
        r.created_at,
+       r.reason_deletion,
+       r.deletion_time,
        CASE 
          WHEN r.status = 1 THEN 'pending'
          WHEN r.status = 2 THEN 'approved' 
@@ -85,6 +87,10 @@ $result = mysqli_query($connect, $sql);
       opacity: 1;
       /* Сохраняем видимость при блокировке */
     }
+
+    .deletion-info {
+      font-size: 13px;
+    }
   </style>
 </head>
 
@@ -99,7 +105,7 @@ $result = mysqli_query($connect, $sql);
         <a href="users.php" class="sidebar_nav_link users">Пользователи</a>
         <a href="reviews.php" class="sidebar_nav_link reviews">Отзывы</a>
         <a href="recipes.php" class="sidebar_nav_link">Рецепты</a>
-        <a href="" class="sidebar_nav_link">Блоги</a>
+        <a href="blog.php" class="sidebar_nav_link">Блоги</a>
       </div>
     </section>
 
@@ -133,7 +139,43 @@ $result = mysqli_query($connect, $sql);
             <th>Статус</th>
           </tr>
 
+
+
           <?php while ($row = mysqli_fetch_assoc($result)): ?>
+            <tr class="table_row">
+              <td><?= $row['row_num'] ?></td>
+              <td><?= htmlspecialchars($row['user_name']) ?></td>
+              <td><?= htmlspecialchars($row['recipe_name']) ?></td>
+              <td class="review-text"><?= htmlspecialchars($row['text']) ?></td>
+              <td><?= date('d.m.Y', strtotime($row['created_at'])) ?></td>
+              <td class="select_status">
+                <select name="status" class="status-select" data-review-id="<?= $row['id'] ?>"
+                  <?= $row['status'] == 'approved' || $row['status'] == 'rejected' ? 'disabled' : '' ?>>
+                  <option value="1" <?= $row['status'] == 'pending' ? 'selected' : '' ?>>В ожидании</option>
+                  <option value="2" <?= $row['status'] == 'approved' ? 'selected' : '' ?>>Одобрено</option>
+                  <option value="3" <?= $row['status'] == 'rejected' ? 'selected' : '' ?>>Удалить</option>
+                </select>
+                <?php if ($row['status'] == 'rejected'): ?>
+                  <div class="deletion-info">
+                    Удаление через: <span class="deletion-timer" data-deletion-time="<?= $row['deletion_time'] ?>">
+                      <?= date('H:i:s', strtotime($row['deletion_time']) - time()) ?>
+                    </span>
+                  </div>
+                <?php endif; ?>
+              </td>
+            </tr>
+          <?php endwhile; ?>
+
+
+
+
+
+
+
+
+
+
+          <!-- <?php while ($row = mysqli_fetch_assoc($result)): ?>
             <tr class="table_row">
               <td><?= $row['row_num'] ?></td>
               <td><?= htmlspecialchars($row['user_name']) ?></td>
@@ -144,17 +186,21 @@ $result = mysqli_query($connect, $sql);
               <td><?= date('d.m.Y', strtotime($row['created_at'])) ?></td>
               <td class="select_status">
                 <select name="status" class="status-select" data-review-id="<?= $row['id'] ?>"
-                    <?= $row['status'] == 'approved' ? 'disabled' : '' ?>>
-                    <option value="1" <?= $row['status'] == 'pending' ? 'selected' : '' ?>>В ожидании</option>
-                    <option value="2" <?= $row['status'] == 'approved' ? 'selected' : '' ?>>Одобрено</option>
-                    <option value="3" <?= $row['status'] == 'rejected' ? 'selected' : '' ?>>Удалить</option>
+                  <?= $row['status'] == 'approved' ? 'disabled' : '' ?>>
+                  <option value="1" <?= $row['status'] == 'pending' ? 'selected' : '' ?>>В ожидании</option>
+                  <option value="2" <?= $row['status'] == 'approved' ? 'selected' : '' ?>>Одобрено</option>
+                  <option value="3" <?= $row['status'] == 'rejected' ? 'selected' : '' ?>>Удалить</option>
                 </select>
                 <?php if ($row['status'] == 'approved'): ?>
-                    <input type="hidden" name="status" value="2">
+                  <input type="hidden" name="status" value="2">
                 <?php endif; ?>
-            </td>
+              </td>
             </tr>
-          <?php endwhile; ?>
+          <?php endwhile; ?> -->
+
+
+
+
 
 
 
@@ -201,7 +247,35 @@ $result = mysqli_query($connect, $sql);
 
         </table>
 
-        <div class="modal_overlay" id="deleteModal">
+        <div class="modal_overlay" id="deleteModal" style="display:none;">
+          <div class="content">
+            <h3 class="modal_title">Вы действительно хотите удалить этот отзыв?</h3>
+            <p>Выберите причину отказа:</p>
+            <div class="modal_items">
+              <div class="item">
+                <input type="radio" id="reason1" name="reason" value="Ненормативная лексика" required>
+                <label for="reason1">Ненормативная лексика</label>
+              </div>
+              <div class="item">
+                <input type="radio" id="reason2" name="reason" value="Спам" required>
+                <label for="reason2">Спам</label>
+              </div>
+              <div class="item">
+                <input type="radio" id="reason3" name="reason" value="Клевета" required>
+                <label for="reason3">Клевета</label>
+              </div>
+            </div>
+            <p class="error-message" style="font-size: 15px; margin: 5px; display: none;"></p>
+            <div class="modal_buttons">
+              <button type="button" class="modal_btn modal-btn-no" id="cancelDelete">Нет</button>
+              <button type="button" class="modal_btn modal-btn-yes" id="confirmDelete">Да</button>
+            </div>
+          </div>
+        </div>
+
+
+
+        <!-- <div class="modal_overlay" id="deleteModal">
           <div class="content">
             <h3 class="modal_title">
               Вы действительно хотите удалить этот отзыв?
@@ -236,7 +310,9 @@ $result = mysqli_query($connect, $sql);
               </button>
             </div>
           </div>
-        </div>
+        </div> -->
+      
+      
       </section>
     </section>
   </div>
@@ -301,35 +377,35 @@ $result = mysqli_query($connect, $sql);
 
 
 
-      // 4. Функция показа модального окна для удаления
-      function showDeleteModal(reviewId, selectElement) {
-        const modal = document.getElementById('deleteModal');
-        modal.style.display = 'flex';
+      // // 4. Функция показа модального окна для удаления
+      // function showDeleteModal(reviewId, selectElement) {
+      //   const modal = document.getElementById('deleteModal');
+      //   modal.style.display = 'flex';
 
-        // Сбрасываем выбор причины
-        document.querySelectorAll('input[name="reason"]').forEach(radio => {
-          radio.checked = false;
-        });
-        document.querySelector('.answer').style.display = 'none';
+      //   // Сбрасываем выбор причины
+      //   document.querySelectorAll('input[name="reason"]').forEach(radio => {
+      //     radio.checked = false;
+      //   });
+      //   document.querySelector('.answer').style.display = 'none';
 
-        // Обработка отмены
-        document.getElementById('cancelDelete').onclick = function () {
-          modal.style.display = 'none';
-          selectElement.value = selectElement.getAttribute('data-previous-value');
-        };
+      //   // Обработка отмены
+      //   document.getElementById('cancelDelete').onclick = function () {
+      //     modal.style.display = 'none';
+      //     selectElement.value = selectElement.getAttribute('data-previous-value');
+      //   };
 
-        // Обработка подтверждения
-        document.getElementById('confirmDelete').onclick = function () {
-          const reason = document.querySelector('input[name="reason"]:checked');
-          if (!reason) {
-            document.querySelector('.answer').style.display = 'block';
-            return;
-          }
+      //   // Обработка подтверждения
+      //   document.getElementById('confirmDelete').onclick = function () {
+      //     const reason = document.querySelector('input[name="reason"]:checked');
+      //     if (!reason) {
+      //       document.querySelector('.answer').style.display = 'block';
+      //       return;
+      //     }
 
-          updateReviewStatus(reviewId, 3, selectElement);
-          modal.style.display = 'none';
-        };
-      }
+      //     updateReviewStatus(reviewId, 3, selectElement);
+      //     modal.style.display = 'none';
+      //   };
+      // }
 
       // 6. Функция показа уведомлений
       function showToast(message, type = 'info') {
@@ -343,14 +419,14 @@ $result = mysqli_query($connect, $sql);
           setTimeout(() => toast.remove(), 300);
         }, 3000);
       }
-    });    
-    
-    
-    
-    
+    });
 
 
-    
+
+
+
+
+
     document.querySelectorAll('.status-select').forEach(select => {
       select.addEventListener('change', async function () {
         const reviewId = this.dataset.reviewId;
@@ -377,8 +453,9 @@ $result = mysqli_query($connect, $sql);
             if (newStatus === '2') { // Если статус "approved"
               this.disabled = true;
               this.dataset.originalStatus = newStatus;
+              alert("Статус успешно обновлен!"); // Сообщение ТОЛЬКО для статуса 2
             }
-            alert("Статус успешно обновлен!");
+            // Для статуса 3 и других - ничего не делаем (нет alert)
           } else {
             throw new Error(text.startsWith("error:") ?
               text.substring(6).trim() :
@@ -386,13 +463,180 @@ $result = mysqli_query($connect, $sql);
           }
         } catch (error) {
           console.error("Update failed:", error);
-          alert("Ошибка: " + error.message);
+          // alert("Ошибка: " + error.message);
           this.value = originalValue;
         } finally {
           this.classList.remove('loading');
         }
       });
     });
+
+
+
+
+
+
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Обработчик изменения статуса
+      document.querySelectorAll('.status-select').forEach(select => {
+        select.addEventListener('change', function () {
+          const reviewId = this.dataset.reviewId;
+          const newStatus = this.value;
+
+          // Для статуса "Удалить" показываем модальное окно
+          if (newStatus === '3') {
+            showDeleteModal(reviewId, this);
+            this.value = this.querySelector('option[selected]').value;
+            return;
+          }
+
+          // Для других статусов отправляем сразу
+          const formData = new FormData();
+          formData.append('review_id', reviewId);
+          formData.append('status', newStatus);
+
+          sendStatusUpdate(formData, this);
+        });
+      });
+
+      // Инициализация таймеров удаления
+      initDeletionTimers();
+    });
+
+    function showDeleteModal(reviewId, selectElement) {
+      const modal = document.getElementById('deleteModal');
+      const confirmBtn = document.getElementById('confirmDelete');
+      const cancelBtn = document.getElementById('cancelDelete');
+      const errorMessage = modal.querySelector('.error-message');
+
+      modal.style.display = 'flex';
+      errorMessage.style.display = 'none';
+
+      // Обработчик подтверждения удаления
+      confirmBtn.onclick = function () {
+        const reason = modal.querySelector('input[name="reason"]:checked');
+
+        if (!reason) {
+          errorMessage.textContent = 'Пожалуйста, выберите причину удаления';
+          errorMessage.style.display = 'block';
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('review_id', reviewId);
+        formData.append('status', '3');
+        formData.append('reason', reason.value);
+
+        sendStatusUpdate(formData, selectElement, function (success) {
+          if (success) {
+            modal.style.display = 'none';
+
+            // Обновляем интерфейс
+            selectElement.value = '3';
+            selectElement.disabled = true;
+
+            // Добавляем таймер удаления
+            const deletionTime = new Date();
+            deletionTime.setHours(deletionTime.getHours() + 24);
+
+            const deletionInfo = document.createElement('div');
+            deletionInfo.className = 'deletion-info';
+            deletionInfo.innerHTML = `
+                    Удаление через: <span class="deletion-timer" 
+                    data-deletion-time="${deletionTime.toISOString()}">
+                        ${formatTimeRemaining(deletionTime)}
+                    </span>
+                `;
+
+            selectElement.parentNode.appendChild(deletionInfo);
+            startDeletionTimer(deletionTime, deletionInfo.querySelector('.deletion-timer'));
+          }
+        });
+      };
+
+      // Обработчик отмены
+      cancelBtn.onclick = function () {
+        modal.style.display = 'none';
+      };
+
+      // Закрытие при клике вне модального окна
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    }
+
+    function sendStatusUpdate(formData, selectElement, callback) {
+      fetch('review_status.php', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.text())
+        .then(result => {
+          if (result === 'success') {
+            if (formData.get('status') === '2') {
+              selectElement.disabled = true;
+            }
+            if (typeof callback === 'function') callback(true);
+          } else if (result === 'reason_required') {
+            showDeleteModal(formData.get('review_id'), selectElement);
+            if (typeof callback === 'function') callback(false);
+          } else {
+            throw new Error(result || 'Неизвестная ошибка сервера');
+          }
+        })
+        .catch(error => {
+          console.error('Ошибка:', error);
+          selectElement.value = selectElement.querySelector('option[selected]').value;
+          alert('Ошибка при обновлении статуса: ' + error.message);
+          if (typeof callback === 'function') callback(false);
+        });
+    }
+
+    function formatTimeRemaining(endTime) {
+      const now = new Date();
+      const diff = Math.floor((endTime - now) / 1000);
+
+      if (diff <= 0) return '00:00:00';
+
+      const hours = Math.floor(diff / 3600);
+      const minutes = Math.floor((diff % 3600) / 60);
+      const seconds = diff % 60;
+
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function startDeletionTimer(endTime, timerElement) {
+      const timer = setInterval(() => {
+        const now = new Date();
+        const diff = Math.floor((endTime - now) / 1000);
+
+        if (diff <= 0) {
+          clearInterval(timer);
+          timerElement.textContent = '00:00:00';
+          // Здесь можно обновить страницу или удалить строку через AJAX
+          location.reload();
+          return;
+        }
+
+        timerElement.textContent = formatTimeRemaining(endTime);
+      }, 1000);
+    }
+
+    function initDeletionTimers() {
+      document.querySelectorAll('.deletion-timer').forEach(timer => {
+        const deletionTime = new Date(timer.dataset.deletionTime);
+        startDeletionTimer(deletionTime, timer);
+      });
+    }
+
+
+
+
+
   </script>
 </body>
 

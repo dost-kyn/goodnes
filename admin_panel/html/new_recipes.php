@@ -20,10 +20,10 @@ session_start();
             </a>
 
             <div class="sidebar_nav">
-                <a href="/admin_panel/html/users.html" class="sidebar_nav_link users">Пользователи</a>
-                <a href="" class="sidebar_nav_link reviews">Отзывы</a>
-                <a href="" class="sidebar_nav_link recipes" style="text-decoration-line: underline;">Рецепты</a>
-                <a href="" class="sidebar_nav_link">Блоги</a>
+                <a href="users.html" class="sidebar_nav_link users">Пользователи</a>
+                <a href="reviews.php" class="sidebar_nav_link reviews">Отзывы</a>
+                <a href="recipes.php" class="sidebar_nav_link recipes" style="text-decoration-line: underline;">Рецепты</a>
+                <a href="blog.php" class="sidebar_nav_link">Блоги</a>
             </div>
         </section>
 

@@ -2,34 +2,115 @@
 header('Content-Type: text/plain');
 require_once __DIR__ . '/../../connect/connect.php';
 
-$reviewId = (int)($_POST['review_id'] ?? 0);
-$newStatus = (int)($_POST['status'] ?? 0);
-
-// Проверка данных
-if ($reviewId <= 0 || !in_array($newStatus, [1, 2, 3])) {
-    die('error: Неверные параметры');
+// Проверка соединения
+if (!$connect) {
+    die("Ошибка подключения к базе данных");
 }
 
-// Получаем текущий статус из БД
-$stmt = $connect->prepare("SELECT status FROM reviews WHERE id = ?");
-$stmt->bind_param("i", $reviewId);
-$stmt->execute();
-$currentStatus = $stmt->get_result()->fetch_assoc()['status'];
+try {
+    $reviewId = (int)($_POST['review_id'] ?? 0);
+    $newStatus = (int)($_POST['status'] ?? 0);
+    $reason = $_POST['reason'] ?? null;
 
-// Если уже approved - запрещаем изменения
-if ($currentStatus == 2 && $newStatus != 2) {
-    die('error: Отзыв уже одобрен');
-}
+    // Валидация
+    if ($reviewId <= 0 || !in_array($newStatus, [1, 2, 3])) {
+        throw new Exception("Неверные параметры запроса");
+    }
 
-// Обновляем статус
-$update = $connect->prepare("UPDATE reviews SET status = ? WHERE id = ?");
-$update->bind_param("ii", $newStatus, $reviewId);
+    // Для статуса "Удалить" требуется причина
+    if ($newStatus === 3) {
+        if (empty($reason)) {
+            die("reason_required");
+        }
+        
+        if (strlen(trim($reason)) < 5) {
+            // throw new Exception("Причина должна содержать минимум 5 символов");
+        }
+    }
 
-if ($update->execute()) {
+    // Определяем текстовый статус
+    $statusText = match($newStatus) {
+        1 => 'pending',
+        2 => 'approved',
+        3 => 'rejected',
+        default => 'pending'
+    };
+
+    // Подготовка запроса
+    $query = "UPDATE reviews SET 
+                status = ?,
+                reason_deletion = ?,
+                deletion_time = CASE 
+                    WHEN ? = 3 THEN DATE_ADD(NOW(), INTERVAL 24 HOUR)
+                    ELSE NULL
+                END
+              WHERE id = ?";
+    
+    $stmt = $connect->prepare($query);
+    if (!$stmt) {
+        throw new Exception("Ошибка подготовки запроса: " . $connect->error);
+    }
+
+    // Привязываем параметры (s - string, i - integer)
+    $stmt->bind_param("ssii", $statusText, $reason, $newStatus, $reviewId);
+    
+    if (!$stmt->execute()) {
+        throw new Exception("Ошибка выполнения запроса: " . $stmt->error);
+    }
+
     echo "success";
-} else {
-    echo "error: Ошибка базы данных";
+
+} catch (Exception $e) {
+    error_log("Error in review_status.php: " . $e->getMessage());
+    echo $e->getMessage();
 }
+
+
+
+
+// header('Content-Type: text/plain');
+// require_once __DIR__ . '/../../connect/connect.php';
+
+// $reviewId = (int)($_POST['review_id'] ?? 0);
+// $newStatus = (int)($_POST['status'] ?? 0);
+
+// // Проверка данных
+// if ($reviewId <= 0 || !in_array($newStatus, [1, 2, 3])) {
+//     die('error: Неверные параметры');
+// }
+
+// // Получаем текущий статус из БД
+// $stmt = $connect->prepare("SELECT status FROM reviews WHERE id = ?");
+// $stmt->bind_param("i", $reviewId);
+// $stmt->execute();
+// $currentStatus = $stmt->get_result()->fetch_assoc()['status'];
+
+// // Если уже approved - запрещаем изменения
+// if ($currentStatus == 2 && $newStatus != 2) {
+//     die('error: Отзыв уже одобрен');
+// }
+
+// // Обновляем статус
+// $update = $connect->prepare("UPDATE reviews SET status = ? WHERE id = ?");
+// $update->bind_param("ii", $newStatus, $reviewId);
+
+// if ($update->execute()) {
+//     echo "success";
+// } else {
+//     echo "error: Ошибка базы данных";
+// }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

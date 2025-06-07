@@ -263,8 +263,8 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
         <div class="crumbs_content">
             <a href="home.php">Главная страница -> </a><a href="catalog.php">Каталог -> </a>
             <a href="<?= htmlspecialchars($categoryLink) ?>" class="category-link">
-    <?= htmlspecialchars($recipe['caregories']) ?> ->
-</a>
+                <?= htmlspecialchars($recipe['caregories']) ?> ->
+            </a>
             <a href="#"><?= htmlspecialchars($recipe['name']) ?></a>
         </div>
     </section>
