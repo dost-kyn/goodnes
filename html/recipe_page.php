@@ -332,6 +332,21 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
         <p class="desc_text"><?= htmlspecialchars($recipe['description']) ?></p>
     </section>
 
+<section class="ingredients">
+    <h2 class="ingre_title">Ингредиенты</h2>
+    
+    <div class="ingre_content">
+
+        <div class="ingre_box">
+            <input type="checkbox" class="wr-checkbox8" id="wr8" name="wr">
+            <label for="wr8"></label>
+            <p class="ingre_text">Название ингредиента 1</p>
+        </div>
+
+    </div>
+</section>
+
+
     <section class="instruction">
         <h1 class="instru_title">Инструкция</h1>
         <div class="instru_content">
