@@ -185,6 +185,7 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
                 <a href="blog.php" class="header_nav_blog">Блог</a>
 
                 <?php if (isset($_SESSION['user'])): ?>
+                    <a href="profile.php" class="header_nav_profile">Профиль</a>
                     <a href="/connect/logout.php" class="header_nav_exit">Выйти</a>
                 <?php else: ?>
                     <a href="/components/modal_auth.php" class="header_nav_exit">Войти</a>
@@ -201,6 +202,32 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
             </div>
         </div>
     </header>
+
+    <div class="mobile-menu-overlay"></div>
+    <nav class="mobile-menu">
+        <button class="mobile-menu-close">
+            <span></span>
+            <span></span>
+        </button>
+
+        <div class="mobile-menu-content">
+            <button class="mobile-menu-theme">
+                <img src="/image/tema.svg" data-theme-image data-light="/image/tema.svg"
+                    data-dark="/image/tema-dark.svg" class="mobile-menu-theme-img">
+                <span>Сменить тему</span>
+            </button>
+
+            <a href="catalog.php" class="mobile-menu-link">Каталог</a>
+            <a href="blog.php" class="mobile-menu-link">Блог</a>
+
+            <?php if (isset($_SESSION['user'])): ?>
+                <a href="profile.php" class="mobile-menu-link">Профиль</a>
+                <a href="/connect/logout.php" class="mobile-menu-link">Выйти</a>
+            <?php else: ?>
+                <a href="/components/modal_auth.php" class="mobile-menu-link">Войти</a>
+            <?php endif; ?>
+        </div>
+    </nav>
 
     <section class="menu">
         <div class="menu_buttons">
@@ -323,7 +350,7 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
                         foreach ($descriptions as $description):
                             if (!empty(trim($description))): ?>
                                 <p><?= htmlspecialchars(trim($description)) ?></p>
-                        <?php endif;
+                            <?php endif;
                         endforeach; ?>
                     </div>
                 </div>
@@ -332,31 +359,32 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
     </section>
 
 
-   <?php if (!isset($_SESSION['user'])): ?>
-<section class="save_auto">
-    <form class="modal_form" id="loginForm" action="../connect/auto.php" method="POST">
-        <h1 class="save_auto_title">Хотите сохранить этот рецепт?</h1>
-        <p class="save_auto_undertitle">Зайдите в свой аккаунт и каждую неделю получайте проверенные рецепты выпечки!</p>
-        <p class="save_auto_akk">Нет аккаунта? <a href="../components/modal_reg.php">Зарегистрируйтесь</a></p>
-        <div class="save_auto_content">
-            <input class="save_auto_inp" type="email" placeholder="Почта" name="email" required>
-            <input class="save_auto_inp" type="password" placeholder="Пароль" name="password" required>
-            <input type="hidden" name="recipe_id" value="<?= htmlspecialchars($recipe['id']) ?>">
-        </div>
+    <?php if (!isset($_SESSION['user'])): ?>
+        <section class="save_auto">
+            <form class="modal_form" id="loginForm" action="../connect/auto.php" method="POST">
+                <h1 class="save_auto_title">Хотите сохранить этот рецепт?</h1>
+                <p class="save_auto_undertitle">Зайдите в свой аккаунт и каждую неделю получайте проверенные рецепты
+                    выпечки!</p>
+                <p class="save_auto_akk">Нет аккаунта? <a href="../components/modal_reg.php">Зарегистрируйтесь</a></p>
+                <div class="save_auto_content">
+                    <input class="save_auto_inp" type="email" placeholder="Почта" name="email" required>
+                    <input class="save_auto_inp" type="password" placeholder="Пароль" name="password" required>
+                    <input type="hidden" name="recipe_id" value="<?= htmlspecialchars($recipe['id']) ?>">
+                </div>
 
-        <?php
-        if (isset($_SESSION['message'])) {
-            echo '<div class="alert alert-danger">' . $_SESSION['message'] . '</div>';
-            unset($_SESSION['message']);
-        }
-        ?>
+                <?php
+                if (isset($_SESSION['message'])) {
+                    echo '<div class="alert alert-danger">' . $_SESSION['message'] . '</div>';
+                    unset($_SESSION['message']);
+                }
+                ?>
 
-        <div class="save_auto_auto">
-            <button type="submit" class="save_auto_btn">Войти</button>
-        </div>
-    </form>
-</section>
-<?php endif; ?>
+                <div class="save_auto_auto">
+                    <button type="submit" class="save_auto_btn">Войти</button>
+                </div>
+            </form>
+        </section>
+    <?php endif; ?>
 
 
     <div class="notification-container">
@@ -371,50 +399,50 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
         </div>
     </div>
 
-<section class="review">
-    <div class="review_info">
-        <div class="review_quantity">
-            <span class="review_quan_num"><?= count($reviews) ?></span>
-            <span class=""> Отзыва(ов)</span>
+    <section class="review">
+        <div class="review_info">
+            <div class="review_quantity">
+                <span class="review_quan_num"><?= count($reviews) ?></span>
+                <span class=""> Отзыва(ов)</span>
+            </div>
+            <?php if (isset($_SESSION['user'])): ?>
+                <div class="review_leave">
+                    <button class="review_leave_btn">Оставить отзыв</button>
+                </div>
+            <?php endif; ?>
         </div>
-        <?php if (isset($_SESSION['user'])): ?>
-            <div class="review_leave">
-                <button class="review_leave_btn">Оставить отзыв</button>
+
+        <div class="review_content">
+            <?php if (empty($reviews)): ?>
+                <p class="no-reviews">Пока нет отзывов к этому рецепту. Будьте первым!</p>
+            <?php else: ?>
+                <?php foreach ($reviews as $review): ?>
+                    <?php
+                    // Получаем информацию о пользователе, оставившем отзыв
+                    $user_stmt = $connect->prepare("SELECT name FROM users WHERE id = ?");
+                    $user_stmt->bind_param("i", $review['user_id']);
+                    $user_stmt->execute();
+                    $user_result = $user_stmt->get_result();
+                    $user = $user_result->fetch_assoc();
+                    ?>
+
+                    <div class="review_box">
+                        <div class="review_box_info">
+                            <span class="review_name"><?= htmlspecialchars($user['name'] ?? 'Аноним') ?></span>
+                            <span class="review_date"><?= date('d.m.Y', strtotime($review['created_at'])) ?></span>
+                        </div>
+                        <p class="review_box_text"><?= nl2br(htmlspecialchars($review['text'])) ?></p>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+
+        <?php if (count($reviews) > 4): ?>
+            <div class="review_more">
+                <button class="review_more_btn">Показать ещё+</button>
             </div>
         <?php endif; ?>
-    </div>
-    
-    <div class="review_content">
-        <?php if (empty($reviews)): ?>
-            <p class="no-reviews">Пока нет отзывов к этому рецепту. Будьте первым!</p>
-        <?php else: ?>
-            <?php foreach ($reviews as $review): ?>
-                <?php 
-                // Получаем информацию о пользователе, оставившем отзыв
-                $user_stmt = $connect->prepare("SELECT name FROM users WHERE id = ?");
-                $user_stmt->bind_param("i", $review['user_id']);
-                $user_stmt->execute();
-                $user_result = $user_stmt->get_result();
-                $user = $user_result->fetch_assoc();
-                ?>
-                
-                <div class="review_box">
-                    <div class="review_box_info">
-                        <span class="review_name"><?= htmlspecialchars($user['name'] ?? 'Аноним') ?></span>
-                        <span class="review_date"><?= date('d.m.Y', strtotime($review['created_at'])) ?></span>
-                    </div>
-                    <p class="review_box_text"><?= nl2br(htmlspecialchars($review['text'])) ?></p>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </div>
-
-    <?php if (count($reviews) > 4): ?>
-        <div class="review_more">
-            <button class="review_more_btn">Показать ещё+</button>
-        </div>
-    <?php endif; ?>
-</section>
+    </section>
 
     <div class="modal-new_review">
         <div class="new_review_box">
@@ -434,12 +462,12 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
                     data-dark="/image/лого-dark.svg" class="footer_logo_img">
             </div>
             <div class="footer_cataloge">
-                <a href="" class="footer_cataloge_link">Кексы</a>
-                <a href="" class="footer_cataloge_link">Пироги</a>
-                <a href="" class="footer_cataloge_link">Хлеб</a>
-                <a href="" class="footer_cataloge_link">Торты</a>
-                <a href="" class="footer_cataloge_link">Конфеты</a>
-                <a href="" class="footer_cataloge_link">Печенье</a>
+                <a href="catalog.php" class="footer_cataloge_link">Кексы</a>
+                <a href="catalog.php" class="footer_cataloge_link">Пироги</a>
+                <a href="catalog.php" class="footer_cataloge_link">Хлеб</a>
+                <a href="catalog.php" class="footer_cataloge_link">Торты</a>
+                <a href="catalog.php" class="footer_cataloge_link">Конфеты</a>
+                <a href="catalog.php" class="footer_cataloge_link">Печенье</a>
             </div>
             <div class="footer_info">
                 <p class="footer_phone">+8 999 035 6471</p>
@@ -458,7 +486,7 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
             </div>
         </div>
         <div class="footer_confi">
-            <a href="">Политика конфиденциальности</a>
+            <a href="policy.php">Политика конфиденциальности</a>
         </div>
     </footer>
 
@@ -466,82 +494,82 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
     <script src="/js/recipe_page.js"></script>
     <script>
 
-// Проверка статуса входа
-function checkLoginStatus() {
-    // Проверяем наличие элемента формы
-    const loginForm = document.querySelector('.save_auto');
-    if (!loginForm) return;
+        // Проверка статуса входа
+        function checkLoginStatus() {
+            // Проверяем наличие элемента формы
+            const loginForm = document.querySelector('.save_auto');
+            if (!loginForm) return;
 
-    // Проверяем, авторизован ли пользователь (через PHP-сессию)
-    const isLoggedIn = <?= isset($_SESSION['user']) ? 'true' : 'false' ?>;
+            // Проверяем, авторизован ли пользователь (через PHP-сессию)
+            const isLoggedIn = <?= isset($_SESSION['user']) ? 'true' : 'false' ?>;
 
-    if (isLoggedIn) {
-        loginForm.style.display = 'none';
-    }
-}
+            if (isLoggedIn) {
+                loginForm.style.display = 'none';
+            }
+        }
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.querySelector('.modal_form');
-    
-    if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(loginForm);
-            
-            fetch(loginForm.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest' // Добавляем заголовок для идентификации AJAX
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Показываем уведомление об успешном входе
-                    document.getElementById('login-success').style.display = 'block';
-                    setTimeout(() => {
-                        window.location.reload(); // Перезагружаем страницу
-                    }, 1500);
-                } else {
-                    // Показываем сообщение об ошибке
-                    document.getElementById('login-error').textContent = data.message || 'Ошибка входа';
-                    document.getElementById('login-error').style.display = 'block';
-                    setTimeout(() => {
-                        document.getElementById('login-error').style.display = 'none';
-                    }, 3000);
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
-                document.getElementById('login-error').textContent = 'Ошибка соединения';
-                document.getElementById('login-error').style.display = 'block';
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginForm = document.querySelector('.modal_form');
+
+            if (loginForm) {
+                loginForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(loginForm);
+
+                    fetch(loginForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest' // Добавляем заголовок для идентификации AJAX
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Показываем уведомление об успешном входе
+                                document.getElementById('login-success').style.display = 'block';
+                                setTimeout(() => {
+                                    window.location.reload(); // Перезагружаем страницу
+                                }, 1500);
+                            } else {
+                                // Показываем сообщение об ошибке
+                                document.getElementById('login-error').textContent = data.message || 'Ошибка входа';
+                                document.getElementById('login-error').style.display = 'block';
+                                setTimeout(() => {
+                                    document.getElementById('login-error').style.display = 'none';
+                                }, 3000);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Ошибка:', error);
+                            document.getElementById('login-error').textContent = 'Ошибка соединения';
+                            document.getElementById('login-error').style.display = 'block';
+                        });
+                });
+            }
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Обработка кнопки "Показать ещё"
+            const moreBtn = document.querySelector('.review_more_btn');
+            if (moreBtn) {
+                moreBtn.addEventListener('click', function () {
+                    const hiddenReviews = document.querySelectorAll('.review_box:nth-child(n+5)');
+                    hiddenReviews.forEach(review => {
+                        review.style.display = 'block';
+                    });
+                    moreBtn.style.display = 'none';
+                });
+            }
+
+            // Изначально скрываем отзывы, начиная с 5-го
+            document.querySelectorAll('.review_box:nth-child(n+5)').forEach(review => {
+                review.style.display = 'none';
             });
         });
-    }
-});
-    
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Обработка кнопки "Показать ещё"
-    const moreBtn = document.querySelector('.review_more_btn');
-    if (moreBtn) {
-        moreBtn.addEventListener('click', function() {
-            const hiddenReviews = document.querySelectorAll('.review_box:nth-child(n+5)');
-            hiddenReviews.forEach(review => {
-                review.style.display = 'block';
-            });
-            moreBtn.style.display = 'none';
-        });
-    }
-    
-    // Изначально скрываем отзывы, начиная с 5-го
-    document.querySelectorAll('.review_box:nth-child(n+5)').forEach(review => {
-        review.style.display = 'none';
-    });
-});
     </script>
 </body>
 
