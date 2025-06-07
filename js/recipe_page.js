@@ -185,17 +185,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // showNotification('login-success');
   });
   
-  // Проверка статуса входа
-  function checkLoginStatus() {
-    const isLoggedIn = false;
-    if (isLoggedIn) {
-      showNotification('already-logged-in');
-      loginForm.style.display = 'none';
-    }
-  }
+  // // Проверка статуса входа
+  // function checkLoginStatus() {
+  //   const isLoggedIn = false;
+  //   if (isLoggedIn) {
+  //     showNotification('already-logged-in');
+  //     loginForm.style.display = 'none';
+  //   }
+  // }
   
-  // Проверяем статус при загрузке страницы
-  checkLoginStatus();
+  // // Проверяем статус при загрузке страницы
+  // checkLoginStatus();
 });
 
 

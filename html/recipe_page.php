@@ -1,8 +1,7 @@
 <?php
-
 session_start();
-
 require_once '../connect/connect.php';
+
 // Получаем ID рецепта из URL
 $recipe_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
@@ -11,43 +10,33 @@ if ($recipe_id <= 0) {
     die("Неверный ID рецепта");
 }
 
-
-$sql = "SELECT r.*, rs.step_number, rs.description as step_description, rs.image_path 
-        FROM recipes r
-        LEFT JOIN recipe_steps rs ON r.id = rs.recipe_id
-        WHERE r.id = ?
-        ORDER BY rs.step_number";
-
-
-$stmt = mysqli_prepare($connect, $sql);
-mysqli_stmt_bind_param($stmt, "i", $recipe_id);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-
-
-// Получаем данные
-$recipe = mysqli_fetch_assoc($result);
-$steps = [];
-
-if ($recipe) {
-    do {
-        if (!empty($recipe['step_number'])) {
-            $steps[] = [
-                'number' => $recipe['step_number'],
-                'description' => $recipe['step_description'],
-                'image_path' => $recipe['image_path']
-            ];
-        }
-    } while ($recipe = mysqli_fetch_assoc($result));
-
-    // Возвращаем указатель на первую строку
-    mysqli_data_seek($result, 0);
-    $recipe = mysqli_fetch_assoc($result);
-}
+// Запрос для получения основной информации о рецепте
+$sql_recipe = "SELECT * FROM recipes WHERE id = ?";
+$stmt_recipe = mysqli_prepare($connect, $sql_recipe);
+mysqli_stmt_bind_param($stmt_recipe, "i", $recipe_id);
+mysqli_stmt_execute($stmt_recipe);
+$result_recipe = mysqli_stmt_get_result($stmt_recipe);
+$recipe = mysqli_fetch_assoc($result_recipe);
 
 if (!$recipe) {
     die("Рецепт не найден");
 }
+
+// Запрос для получения шагов рецепта
+$sql_steps = "SELECT * FROM recipe_steps WHERE recipe_id = ? ORDER BY step_number";
+$stmt_steps = mysqli_prepare($connect, $sql_steps);
+mysqli_stmt_bind_param($stmt_steps, "i", $recipe_id);
+mysqli_stmt_execute($stmt_steps);
+$result_steps = mysqli_stmt_get_result($stmt_steps);
+$steps = mysqli_fetch_all($result_steps, MYSQLI_ASSOC);
+
+// Запрос для получения отзывов к рецепту
+$sql_reviews = "SELECT * FROM reviews WHERE recipe_id = ? ORDER BY created_at DESC";
+$stmt_reviews = mysqli_prepare($connect, $sql_reviews);
+mysqli_stmt_bind_param($stmt_reviews, "i", $recipe_id);
+mysqli_stmt_execute($stmt_reviews);
+$result_reviews = mysqli_stmt_get_result($stmt_reviews);
+$reviews = mysqli_fetch_all($result_reviews, MYSQLI_ASSOC);
 
 
 // Создаем соответствие между значениями caregories и ID чекбоксов
@@ -75,99 +64,107 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
     <link rel="stylesheet" href="/css/recipe_page.css">
     <title><?= htmlspecialchars($recipe['name']) ?></title>
     <style>
+        .main_info_image {
+            max-width: 60vw;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 150px;
+            box-sizing: border-box;
+        }
 
-.main_info_image {
-    max-width: 60vw;
-    background-color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px 150px;
-    box-sizing: border-box;
-}
-.main_info_img {
-    min-width: 145%;
-    object-fit: contain; /* Сохраняет пропорции */
-    display: block;
-}
-@media (max-width: 1000px){
-    .main_info_image {
-    padding: 20px 130px;
-}
-.main_info_img {
-    min-width: 125%;
-}
-}
+        .main_info_img {
+            min-width: 145%;
+            object-fit: contain;
+            /* Сохраняет пропорции */
+            display: block;
+        }
 
-@media (max-width: 900px){
-    .main_info_image {
-    max-width: 80vw;
-}
-.main_info_img {
-    min-width: 115%;
-}
-}
+        @media (max-width: 1000px) {
+            .main_info_image {
+                padding: 20px 130px;
+            }
 
-@media (max-width: 800px){
-    .main_info_image {
-    padding: 30px 160px;
-    width: 65vw;
-}
-.main_info_img {
-    min-width: 130%;
-}
-}
+            .main_info_img {
+                min-width: 125%;
+            }
+        }
 
-@media (max-width: 700px){
-    .main_info_image {
-    width: 70vw;
-}
-.main_info_img {
-    min-width: 130%;
-}
-}
+        @media (max-width: 900px) {
+            .main_info_image {
+                max-width: 80vw;
+            }
 
-@media (max-width: 600px){
-.main_info_img {
-    min-width: 170%;
-}
-}
+            .main_info_img {
+                min-width: 115%;
+            }
+        }
 
-@media (max-width: 550px){
-    .main_info_image {
-    padding: 25px 140px;
-}
-.main_info_img {
-    min-width: 180%;
-}
-}
+        @media (max-width: 800px) {
+            .main_info_image {
+                padding: 30px 160px;
+                width: 65vw;
+            }
 
-@media (max-width: 500px){
-.main_info_img {
-    min-width: 210%;
-}
-}
+            .main_info_img {
+                min-width: 130%;
+            }
+        }
 
-@media (max-width: 460px){
-    .main_info_image {
-    padding: 15px 110px;
-}
-.main_info_img {
-    min-width: 130%;
-}
-}
+        @media (max-width: 700px) {
+            .main_info_image {
+                width: 70vw;
+            }
 
-@media (max-width: 410px){
-.main_info_img {
-    min-width: 180%;
-}
-}
+            .main_info_img {
+                min-width: 130%;
+            }
+        }
 
-@media (max-width: 370px){
-.main_info_img {
-    min-width: 260%;
-}
-}
+        @media (max-width: 600px) {
+            .main_info_img {
+                min-width: 170%;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .main_info_image {
+                padding: 25px 140px;
+            }
+
+            .main_info_img {
+                min-width: 180%;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .main_info_img {
+                min-width: 210%;
+            }
+        }
+
+        @media (max-width: 460px) {
+            .main_info_image {
+                padding: 15px 110px;
+            }
+
+            .main_info_img {
+                min-width: 130%;
+            }
+        }
+
+        @media (max-width: 410px) {
+            .main_info_img {
+                min-width: 180%;
+            }
+        }
+
+        @media (max-width: 370px) {
+            .main_info_img {
+                min-width: 260%;
+            }
+        }
     </style>
 </head>
 
@@ -185,7 +182,7 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
                         data-dark="/image/tema-dark.svg" class="header_nav_tema_img">
                 </button>
                 <a href="catalog.php" class="header_nav_catalog">Каталог</a>
-                <a href="home.php" class="header_nav_blog">Блог</a>
+                <a href="blog.php" class="header_nav_blog">Блог</a>
 
                 <?php if (isset($_SESSION['user'])): ?>
                     <a href="/connect/logout.php" class="header_nav_exit">Выйти</a>
@@ -263,18 +260,18 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
         <div class="crumbs_content">
             <a href="home.php">Главная страница -> </a><a href="catalog.php">Каталог -> </a>
             <a href="<?= htmlspecialchars($categoryLink) ?>" class="category-link">
-    <?= htmlspecialchars($recipe['caregories']) ?> ->
-</a>
+                <?= htmlspecialchars($recipe['caregories']) ?> ->
+            </a>
             <a href="#"><?= htmlspecialchars($recipe['name']) ?></a>
         </div>
     </section>
 
     <section class="main_info">
         <div class="main_info_content" data-id="<?= htmlspecialchars($recipe['id']) ?>">
-                <div class="main_info_image">
-                    <img src="<?= htmlspecialchars($recipe['maun_image']) ?>" alt="" class="main_info_img">
-                </div>
-       
+            <div class="main_info_image">
+                <img src="<?= htmlspecialchars($recipe['maun_image']) ?>" alt="" class="main_info_img">
+            </div>
+
             <div class="main_info_conteiner">
                 <h1 class="main_info_name"><?= htmlspecialchars($recipe['name']) ?></h1>
                 <div class="main_info_mini">
@@ -288,7 +285,7 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
                     </div>
                     <div class="main_info_m">
                         <span>Калорийность: </span>
-                        <span class="calories"><?= htmlspecialchars($recipe['calorie']) ?> Ккал</span>
+                        <span class="calories"><?= htmlspecialchars($recipe['calorie']) ?>Ккал</span>
                     </div>
                     <div class="main_info_m">
                         <span>Категория: </span>
@@ -308,118 +305,60 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
         <p class="desc_text"><?= htmlspecialchars($recipe['description']) ?></p>
     </section>
 
-    <section class="ingredients">
-    <h1 class="ingre_title">Ингредиенты</h1>
-    <div class="ingre_content">
-        <?php 
-        // Разбиваем строку ингредиентов по точке
-        $ingredients = explode('.', $recipe['ingredients']);
-        
-        // Удаляем пустые элементы (если есть)
-        $ingredients = array_filter(array_map('trim', $ingredients));
-        
-        // Для каждого ингредиента создаем отдельный блок
-        foreach ($ingredients as $index => $ingredient): 
-            if (!empty($ingredient)): ?>
-                <div class="ingre_box">
-                    <input type="checkbox" class="wr-checkbox" id="ingredient_<?= $index ?>" name="ingredient_<?= $index ?>">
-                    <label for="ingredient_<?= $index ?>"></label>
-                    <p class="ingre_text"><?= htmlspecialchars($ingredient) ?></p>
-                </div>
-            <?php endif;
-        endforeach; ?>
-
-            <!-- <div class="ingre_box">
-                <input type="checkbox" class="wr-checkbox1" id="wr1" name="wr">
-                <label for="wr1"></label>
-                <p class="ingre_text">Масло сливочное – 110 г</p>
-            </div> -->
-        </div>
-    </section>
-
     <section class="instruction">
         <h1 class="instru_title">Инструкция</h1>
         <div class="instru_content">
-            <div class="instru_item">
-                <div class="instru_item_image">
-                    
-                    <img src="/image/recipe/item1.jpg" class="instru_item_img" alt="">
+            <?php foreach ($steps as $step): ?>
+                <div class="instru_item">
+                    <?php if (!empty($step['image_path'])): ?>
+                        <div class="instru_item_image">
+                            <img src="<?= htmlspecialchars($step['image_path']) ?>" class="instru_item_img"
+                                alt="Шаг <?= $step['step_number'] ?>">
+                        </div>
+                    <?php endif; ?>
+                    <div class="instru_item_text">
+                        <?php
+                        // Разбиваем описание шага по переносам строки
+                        $descriptions = explode("\n", $step['description']);
+                        foreach ($descriptions as $description):
+                            if (!empty(trim($description))): ?>
+                                <p><?= htmlspecialchars(trim($description)) ?></p>
+                        <?php endif;
+                        endforeach; ?>
+                    </div>
                 </div>
-                <div class="instru_item_text">
-                    <p>Подготовить все необходимые ингредиенты для приготовления овсяного печенья с шоколадом. Удобно
-                        заранее отвесить все необходимое. Все ингредиенты должны быть комнатной температуры, поэтому
-                        сливочное масло и яйцо необходимо вынуть из холодильника заранее, примерно за час до
-                        приготовления.</p>
-                    <p>Сливочное масло выбирайте качественное с жирностью 72.5% или 82.5%. Идеальные овсяные хлопья –
-                        это долгой варки, 15- или 20-минутные.</p>
-                    <p>Шоколадные капли можно купить в любом магазине для кондитеров или на маркетплейсах. Если вдруг вы
-                        все же не нашли такие капли, то купите плитку темного шоколада и просто порубите ее ножом на
-                        кусочки.</p>
-                </div>
-            </div>
-            <div class="instru_item">
-                <div class="instru_item_image">
-                    <img src="/image/recipe/item2.jpg" class="instru_item_img" alt="">
-                </div>
-                <div class="instru_item_text">
-                    <p>Соединить тщательно сливочное масло комнатной температуры, сахар и соль силиконовой лопаткой.</p>
-                    <p>Добавить яйцо комнатной температуры в масляно-сахарную смесь и очень тщательно его размешать.</p>
-                </div>
-            </div>
-            <div class="instru_item">
-                <div class="instru_item_image">
-                    <img src="/image/recipe/item3.jpg" class="instru_item_img" alt="">
-                </div>
-                <div class="instru_item_text">
-                    <p>Всыпать в миску к яично-масляной смеси просеянную муку с разрыхлителем, добавить овсяные хлопья и
-                        шоколадные капли.</p>
-                    <p>Вымесить тесто силиконовой лопаткой очень тщательно. Все ингредиенты должны хорошо соединиться
-                        друг с другом. Тесто становится очень послушным и не слишком липким. Если вдруг на вашей кухне
-                        очень жарко, то уберите тесто в холодильник минут на 20. Я не убирала в холод и сразу приступила
-                        к формовке печенья.</p>
-                    <p>Включить духовой шкаф и установить температуру нагрева 170°С.</p>
-                </div>
-            </div>
-            <div class="instru_item">
-                <div class="instru_item_image">
-                    <img src="/image/recipe/item4.jpg" class="instru_item_img" alt="">
-                </div>
-                <div class="instru_item_text">
-                    <p>Отщипните небольшое количество теста и сформируйте шарик. Тесто практически не липнет к рукам, и
-                        шарики формируются легко. Разложить их нужно на хорошем расстоянии друг от друга, так как при
-                        выпечке они немного расползутся. Шарики из теста лишь слегка приплюснуть рукой. Если хотите
-                        печенье потоньше, то шарики теста делайте поменьше и расплющите посильнее.</p>
-                    <p>Поставить противень с заготовками овсяного печенья в хорошо разогретую духовку и выпекать в
-                        течение 20-25 минут. Если ваши печеньки будут тоньше, то сократите время их приготовления. Сразу
-                        после выпечки горячее овсяное печенье с шоколадом переложить на решетку или деревянную доску для
-                        остывания.</p>
-                </div>
-            </div>
-            <div class="instru_item">
-                <div class="instru_item_image">
-                    <img src="/image/recipe/item5.jpg" class="instru_item_img" alt="">
-                </div>
-                <div class="instru_item_text">
-                    <p>Хранить остывшее овсяное печенье с шоколадом, приготовленное в домашних условиях, нужно в
-                        герметичном контейнере или плотном пакете. Приятного аппетита!</p>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
     </section>
 
-    <section class="save_auto">
+
+   <?php if (!isset($_SESSION['user'])): ?>
+<section class="save_auto">
+    <form class="modal_form" id="loginForm" action="../connect/auto.php" method="POST">
         <h1 class="save_auto_title">Хотите сохранить этот рецепт?</h1>
-        <p class="save_auto_undertitle">Зайдите в свой аккаунт и каждую неделю получайте проверенные рецепты выпечки!
-        </p>
-        <p class="save_auto_akk">Нет аккаунта? <a href="">Зарегистрируйтесь</a></p>
+        <p class="save_auto_undertitle">Зайдите в свой аккаунт и каждую неделю получайте проверенные рецепты выпечки!</p>
+        <p class="save_auto_akk">Нет аккаунта? <a href="../components/modal_reg.php">Зарегистрируйтесь</a></p>
         <div class="save_auto_content">
-            <input class="save_auto_inp" type="text" placeholder="Email"><!--  Email -->
-            <input class="save_auto_inp" type="text" placeholder="Имя">
+            <input class="save_auto_inp" type="email" placeholder="Почта" name="email" required>
+            <input class="save_auto_inp" type="password" placeholder="Пароль" name="password" required>
+            <input type="hidden" name="recipe_id" value="<?= htmlspecialchars($recipe['id']) ?>">
         </div>
+
+        <?php
+        if (isset($_SESSION['message'])) {
+            echo '<div class="alert alert-danger">' . $_SESSION['message'] . '</div>';
+            unset($_SESSION['message']);
+        }
+        ?>
+
         <div class="save_auto_auto">
-            <button class="save_auto_btn">Войти</button>
+            <button type="submit" class="save_auto_btn">Войти</button>
         </div>
-    </section>
+    </form>
+</section>
+<?php endif; ?>
+
+
     <div class="notification-container">
         <div class="notification notification-success" id="login-success">
             Вы успешно вошли в систему!
@@ -432,55 +371,50 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
         </div>
     </div>
 
-    <section class="review">
-        <div class="review_info">
-            <div class="review_quantity">
-                <span class="review_quan_num">2</span>
-                <span class=""> Отзыва(ов)</span>
-            </div>
+<section class="review">
+    <div class="review_info">
+        <div class="review_quantity">
+            <span class="review_quan_num"><?= count($reviews) ?></span>
+            <span class=""> Отзыва(ов)</span>
+        </div>
+        <?php if (isset($_SESSION['user'])): ?>
             <div class="review_leave">
                 <button class="review_leave_btn">Оставить отзыв</button>
             </div>
-        </div>
-        <div class="review_content">
-            <div class="review_box">
-                <div class="review_box_info">
-                    <span class="review_name">Федор Достоевский</span>
-                    <span class="review_date">09.03.2025</span>
+        <?php endif; ?>
+    </div>
+    
+    <div class="review_content">
+        <?php if (empty($reviews)): ?>
+            <p class="no-reviews">Пока нет отзывов к этому рецепту. Будьте первым!</p>
+        <?php else: ?>
+            <?php foreach ($reviews as $review): ?>
+                <?php 
+                // Получаем информацию о пользователе, оставившем отзыв
+                $user_stmt = $connect->prepare("SELECT name FROM users WHERE id = ?");
+                $user_stmt->bind_param("i", $review['user_id']);
+                $user_stmt->execute();
+                $user_result = $user_stmt->get_result();
+                $user = $user_result->fetch_assoc();
+                ?>
+                
+                <div class="review_box">
+                    <div class="review_box_info">
+                        <span class="review_name"><?= htmlspecialchars($user['name'] ?? 'Аноним') ?></span>
+                        <span class="review_date"><?= date('d.m.Y', strtotime($review['created_at'])) ?></span>
+                    </div>
+                    <p class="review_box_text"><?= nl2br(htmlspecialchars($review['text'])) ?></p>
                 </div>
-                <p class="review_box_text">Вымесить тесто силиконовой лопаткой очень тщательно. Все ингредиенты должны
-                    хорошо соединиться друг с другом. Тесто становится очень послушным и не слишком липким.</p>
-            </div>
-            <div class="review_box">
-                <div class="review_box_info">
-                    <span class="review_name">Иосиф Сталин</span>
-                    <span class="review_date">09.03.2025</span>
-                </div>
-                <p class="review_box_text">Вымесить тесто силиконовой лопаткой очень тщательно. Все ингредиенты должны
-                    хорошо соединиться друг с другом. Тесто становится очень послушным и не слишком липким.</p>
-            </div>
-            <div class="review_box">
-                <div class="review_box_info">
-                    <span class="review_name">Федор Достоевский</span>
-                    <span class="review_date">09.03.2025</span>
-                </div>
-                <p class="review_box_text">Вымесить тесто силиконовой лопаткой очень тщательно. Все ингредиенты должны
-                    хорошо соединиться друг с другом. Тесто становится очень послушным и не слишком липким.</p>
-            </div>
-            <div class="review_box">
-                <div class="review_box_info">
-                    <span class="review_name">Иосиф Сталин</span>
-                    <span class="review_date">09.03.2025</span>
-                </div>
-                <p class="review_box_text">Вымесить тесто силиконовой лопаткой очень тщательно. Все ингредиенты должны
-                    хорошо соединиться друг с другом. Тесто становится очень послушным и не слишком липким.</p>
-            </div>
-        </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
 
+    <?php if (count($reviews) > 4): ?>
         <div class="review_more">
             <button class="review_more_btn">Показать ещё+</button>
         </div>
-    </section>
+    <?php endif; ?>
+</section>
 
     <div class="modal-new_review">
         <div class="new_review_box">
@@ -530,6 +464,85 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
 
     <script src="/js/tema.js"></script>
     <script src="/js/recipe_page.js"></script>
+    <script>
+
+// Проверка статуса входа
+function checkLoginStatus() {
+    // Проверяем наличие элемента формы
+    const loginForm = document.querySelector('.save_auto');
+    if (!loginForm) return;
+
+    // Проверяем, авторизован ли пользователь (через PHP-сессию)
+    const isLoggedIn = <?= isset($_SESSION['user']) ? 'true' : 'false' ?>;
+
+    if (isLoggedIn) {
+        loginForm.style.display = 'none';
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.querySelector('.modal_form');
+    
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(loginForm);
+            
+            fetch(loginForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest' // Добавляем заголовок для идентификации AJAX
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Показываем уведомление об успешном входе
+                    document.getElementById('login-success').style.display = 'block';
+                    setTimeout(() => {
+                        window.location.reload(); // Перезагружаем страницу
+                    }, 1500);
+                } else {
+                    // Показываем сообщение об ошибке
+                    document.getElementById('login-error').textContent = data.message || 'Ошибка входа';
+                    document.getElementById('login-error').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('login-error').style.display = 'none';
+                    }, 3000);
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                document.getElementById('login-error').textContent = 'Ошибка соединения';
+                document.getElementById('login-error').style.display = 'block';
+            });
+        });
+    }
+});
+    
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Обработка кнопки "Показать ещё"
+    const moreBtn = document.querySelector('.review_more_btn');
+    if (moreBtn) {
+        moreBtn.addEventListener('click', function() {
+            const hiddenReviews = document.querySelectorAll('.review_box:nth-child(n+5)');
+            hiddenReviews.forEach(review => {
+                review.style.display = 'block';
+            });
+            moreBtn.style.display = 'none';
+        });
+    }
+    
+    // Изначально скрываем отзывы, начиная с 5-го
+    document.querySelectorAll('.review_box:nth-child(n+5)').forEach(review => {
+        review.style.display = 'none';
+    });
+});
+    </script>
 </body>
 
 </html>
