@@ -1,12 +1,28 @@
 <?php
-
 session_start();
+require_once '../connect/connect.php';
 
+$sql_popular = "SELECT 
+           id,
+           name,
+           cooking_time,
+           calorie,
+           caregories,
+           maun_image,
+           created_at 
+        FROM recipes
+        ORDER BY created_at DESC 
+        LIMIT 8";
+
+$result_popular = mysqli_query($connect, $sql_popular);
+
+if (!$result_popular) {
+    die("Ошибка запроса: " . mysqli_error($connect));
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -115,10 +131,32 @@ session_start();
 
         <div class="container_card">
             <button class="pre">⭠</button>
-
             <div class="recipes_cards">
 
-                <div class="recipes_card">
+                <?php while ($card = mysqli_fetch_assoc($result_popular)): ?>
+                    <a href="recipe_page.php?id=<?= htmlspecialchars($card['id']) ?>" class="recipes_card"
+                        data-id="<?= htmlspecialchars($card['id']) ?>"
+                        data-cooking-time="<?= htmlspecialchars($card['cooking_time']) ?>">
+                        <h1 class="recipes_title"><?= htmlspecialchars($card['name']) ?></h1>
+                        <div class="recipes_image">
+                            <?php if (!empty($card['maun_image'])): ?>
+                                <img src="<?= htmlspecialchars($card['maun_image']) ?>"
+                                    alt="<?= htmlspecialchars($card['name']) ?>" class="recipes_image_img">
+                            <?php else: ?>
+                                <img src="/path/to/default/image.jpg" alt="No image" class="recipes_image_img">
+                            <?php endif; ?>
+                        </div>
+                        <div class="recipes_info">
+                            <p class="recipes_calory">Калорийность: <?= htmlspecialchars($card['calorie']) ?> ккал</p>
+                            <p class="recipes_category">Категория: <?= htmlspecialchars($card['caregories']) ?></p>
+
+                        </div>
+                        <button class="recipes_btn">Сохранить</button>
+                    </a>
+                <?php endwhile; ?>
+
+
+                <!-- <div class="recipes_card">
                     <h1 class="recipes_title">Клубничый пирог</h1>
                     <div class="recipes_image">
                         <img src="/image/home/Клубничый пирог.png" alt="" class="recipes_image_img">
@@ -128,93 +166,9 @@ session_start();
                         <p class="recipes_category">Категория: пироги</p>
                     </div>
                     <button class="recipes_btn">Cохранить</button>
-                </div>
+                </div> -->
 
-                <div class="recipes_card">
-                    <h1 class="recipes_title">Батон</h1>
-                    <div class="recipes_image">
-                        <img src="/image/home/Батон.png" alt="" class="recipes_image_img">
-                    </div>
-                    <div class="recipes_info">
-                        <p class="recipes_calory">Калорийность: 266 ккал</p>
-                        <p class="recipes_category">Категория: хлеб</p>
-                    </div>
-                    <button class="recipes_btn">Cохранить</button>
-                </div>
-
-                <div class="recipes_card">
-                    <h1 class="recipes_title">Кокосовые конфеты</h1>
-                    <div class="recipes_image">
-                        <img src="/image/home/Кокосовые конфеты.png" alt="" class="recipes_image_img">
-                    </div>
-                    <div class="recipes_info">
-                        <p class="recipes_calory">Калорийность: 369 ккал</p>
-                        <p class="recipes_category">Категория: конфеты</p>
-                    </div>
-                    <button class="recipes_btn">Cохранить</button>
-                </div>
-
-                <div class="recipes_card">
-                    <h1 class="recipes_title">Трюфели</h1>
-                    <div class="recipes_image">
-                        <img src="/image/home/Трюфели.png" alt="" class="recipes_image_img">
-                    </div>
-                    <div class="recipes_info">
-                        <p class="recipes_calory">Калорийность: 433 ккал</p>
-                        <p class="recipes_category">Категория: конфеты</p>
-                    </div>
-                    <button class="recipes_btn">Cохранить</button>
-                </div>
-                <!--  -->
-                <div class="recipes_card">
-                    <h1 class="recipes_title">Клубничый пирог</h1>
-                    <div class="recipes_image">
-                        <img src="/image/home/Клубничый пирог.png" alt="" class="recipes_image_img">
-                    </div>
-                    <div class="recipes_info">
-                        <p class="recipes_calory">Калорийность: 189,6 ккал</p>
-                        <p class="recipes_category">Категория: пироги</p>
-                    </div>
-                    <button class="recipes_btn">Cохранить</button>
-                </div>
-
-                <div class="recipes_card">
-                    <h1 class="recipes_title">Батон</h1>
-                    <div class="recipes_image">
-                        <img src="/image/home/Батон.png" alt="" class="recipes_image_img">
-                    </div>
-                    <div class="recipes_info">
-                        <p class="recipes_calory">Калорийность: 266 ккал</p>
-                        <p class="recipes_category">Категория: хлеб</p>
-                    </div>
-                    <button class="recipes_btn">Cохранить</button>
-                </div>
-
-                <div class="recipes_card">
-                    <h1 class="recipes_title">Кокосовые конфеты</h1>
-                    <div class="recipes_image">
-                        <img src="/image/home/Кокосовые конфеты.png" alt="" class="recipes_image_img">
-                    </div>
-                    <div class="recipes_info">
-                        <p class="recipes_calory">Калорийность: 369 ккал</p>
-                        <p class="recipes_category">Категория: конфеты</p>
-                    </div>
-                    <button class="recipes_btn">Cохранить</button>
-                </div>
-
-                <div class="recipes_card">
-                    <h1 class="recipes_title">Трюфели</h1>
-                    <div class="recipes_image">
-                        <img src="/image/home/Трюфели.png" alt="" class="recipes_image_img">
-                    </div>
-                    <div class="recipes_info">
-                        <p class="recipes_calory">Калорийность: 433 ккал</p>
-                        <p class="recipes_category">Категория: конфеты</p>
-                    </div>
-                    <button class="recipes_btn">Cохранить</button>
-                </div>
             </div>
-
             <button class="next">⭢</button>
         </div>
     </section>
@@ -288,16 +242,18 @@ session_start();
 
     <section class="subscription">
         <h1 class="popular_recipes_title">Подписка на наши новости</h1>
-        <div class="subscription_content">
-            <input type="text" class="subscription_inp" placeholder="Ваш email">
-            <button class="subscription_btn">Подписаться</button>
-        </div>
-        <div class="subscription_approval">
-            <input type="checkbox" class="wr-checkbox20" id="wr20" name="wr">
-            <label for="wr20"></label>
-            <a href="/html/home.html" class="subscription_approval_text">Я согласен(а) с политикой персональных
-                данных</a>
-        </div>
+        <form id="subscriptionForm" class="subscription_conteniner">
+            <div class="subscription_content">
+                <input type="text" class="subscription_inp" placeholder="Ваш email">
+                <button class="subscription_btn">Подписаться</button>
+            </div>
+            <div class="subscription_approval">
+                <input type="checkbox" class="wr-checkbox21" id="wr21" name="wr">
+                <label for="wr21"></label>
+                <a href="/html/polite.html" class="subscription_approval_text">Я согласен(а) с политикой персональных
+                    данных</a>
+            </div>
+        </form>
     </section>
 
     <footer class="footer">

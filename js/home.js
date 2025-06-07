@@ -63,3 +63,47 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
+
+
+
+
+
+//проверка на подписку
+    document.getElementById('subscriptionForm').addEventListener('submit', function (e) {
+        e.preventDefault(); // Предотвращаем стандартную отправку формы
+
+        const emailInput = this.querySelector('.subscription_inp');
+        const checkbox = document.getElementById('wr21');
+        let isValid = true;
+
+        // Проверка email
+        if (!emailInput.value.trim()) {
+            emailInput.style.borderColor = 'red';
+            isValid = false;
+        } else if (!validateEmail(emailInput.value.trim())) {
+            emailInput.style.borderColor = 'red';
+            alert('Пожалуйста, введите корректный email');
+            isValid = false;
+        } else {
+            emailInput.style.borderColor = '';
+        }
+
+        // Проверка чекбокса
+        if (!checkbox.checked) {
+            alert('Пожалуйста, подтвердите согласие на обработку данных');
+            isValid = false;
+        }
+
+        // Если все проверки пройдены
+        if (isValid) {
+            // Здесь можно добавить AJAX-запрос для отправки данных
+            alert('Спасибо за подписку!');
+            this.reset(); // Очищаем форму после успешной отправки
+        }
+    });
+
+    // Функция валидации email
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
