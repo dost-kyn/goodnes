@@ -65,7 +65,7 @@ session_start();
                     <label for="wr20"></label>
                     <p class="approval_text">Нажимая на кнопку, вы даете согласие на обработку
                         персональных данных и
-                        соглашаетесь c политикой конфиденциальности.</p>
+                        соглашаетесь <a href="../html/policy.php" style="text-decoration-line: underline;">c политикой конфиденциальности.</a></p>
                 </div>
                 <button class="btn" type="submit">Зарегистрироваться</button>
 

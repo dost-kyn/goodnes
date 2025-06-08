@@ -58,11 +58,11 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
 
 
 // После выполнения запроса на отзывы
-if (empty($reviews)) {
-    echo "Нет отзывов для рецепта ID: $recipe_id";
-    var_dump($sql_reviews); // Посмотрите какой запрос формируется
-    var_dump(mysqli_error($connect)); // Проверьте ошибки SQL
-}
+// if (empty($reviews)) {
+//     echo "Нет отзывов для рецепта ID: $recipe_id";
+//     var_dump($sql_reviews); // Посмотрите какой запрос формируется
+//     var_dump(mysqli_error($connect)); // Проверьте ошибки SQL
+// }
 ?>
 
 <!DOCTYPE html>
@@ -240,32 +240,32 @@ if (empty($reviews)) {
         <p class="desc_text"><?= htmlspecialchars($recipe['description']) ?></p>
     </section>
 
-<section class="ingredients">
-    <h2 class="ingre_title">Ингредиенты</h2>
-    
-    <div class="ingre_content">
-        <?php 
-        // Разбиваем строку ингредиентов по точкам
-        $ingredients = explode('.', $recipe['ingredients']);
-        $counter = 1;
-        
-        foreach ($ingredients as $ingredient):
-            // Удаляем лишние пробелы и пропускаем пустые элементы
-            $ingredient = trim($ingredient);
-            if (!empty($ingredient)):
-        ?>
-                <div class="ingre_box">
-                    <input type="checkbox" class="wr-checkbox<?= $counter ?>" id="wr<?= $counter ?>" name="wr">
-                    <label for="wr<?= $counter ?>"></label>
-                    <p class="ingre_text"><?= htmlspecialchars($ingredient) ?></p>
-                </div>
-        <?php 
-                $counter++;
-            endif;
-        endforeach; 
-        ?>
-    </div>
-</section>
+    <section class="ingredients">
+        <h2 class="ingre_title">Ингредиенты</h2>
+
+        <div class="ingre_content">
+            <?php
+            // Разбиваем строку ингредиентов по точкам
+            $ingredients = explode('.', $recipe['ingredients']);
+            $counter = 1;
+
+            foreach ($ingredients as $ingredient):
+                // Удаляем лишние пробелы и пропускаем пустые элементы
+                $ingredient = trim($ingredient);
+                if (!empty($ingredient)):
+                    ?>
+                    <div class="ingre_box">
+                        <input type="checkbox" class="wr-checkbox<?= $counter ?>" id="wr<?= $counter ?>" name="wr">
+                        <label for="wr<?= $counter ?>"></label>
+                        <p class="ingre_text"><?= htmlspecialchars($ingredient) ?></p>
+                    </div>
+                    <?php
+                    $counter++;
+                endif;
+            endforeach;
+            ?>
+        </div>
+    </section>
 
 
     <section class="instruction">
@@ -378,10 +378,10 @@ if (empty($reviews)) {
                 <button class="review_more_btn">Показать ещё+</button>
             </div>
         <?php endif; ?>
-    </div>
+        </div>
 
 
-</section>
+    </section>
 
     <div class="modal-new_review">
         <div class="new_review_box">
@@ -430,6 +430,7 @@ if (empty($reviews)) {
     </footer>
 
     <script src="/js/tema.js"></script>
+    <script src="/js/home.js"></script>
     <script src="/js/recipe_page.js"></script>
     <script>
         // Проверка статуса входа
