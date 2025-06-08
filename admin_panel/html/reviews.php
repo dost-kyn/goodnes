@@ -128,12 +128,12 @@ $result = mysqli_query($connect, $sql);
 
           <?php while ($row = mysqli_fetch_assoc($result)): ?>
             <tr class="table_row">
-              <td><?= $row['row_num'] ?></td>
-              <td><?= htmlspecialchars($row['user_name']) ?></td>
-              <td><?= htmlspecialchars($row['recipe_name']) ?></td>
-              <td class="review-text"><?= htmlspecialchars($row['text']) ?></td>
-              <td><?= date('d.m.Y', strtotime($row['created_at'])) ?></td>
-              <td class="select_status">
+              <td class="table_cell"><?= $row['row_num'] ?></td>
+              <td class="table_cell name_user"><?= htmlspecialchars($row['user_name']) ?></td>
+              <td class="table_cell name_recipe"><?= htmlspecialchars($row['recipe_name']) ?></td>
+              <td class="review-text table_cell"><?= htmlspecialchars($row['text']) ?></td>
+              <td  class="table_cell"><?= date('d.m.Y', strtotime($row['created_at'])) ?></td>
+              <td class="select_status table_cell">
                 <select name="status" class="status-select" data-review-id="<?= $row['id'] ?>"
                   <?= $row['status'] == 'approved' || $row['status'] == 'rejected' ? 'disabled' : '' ?>>
                   <option value="1" <?= $row['status'] == 'pending' ? 'selected' : '' ?>>В ожидании</option>
@@ -182,11 +182,6 @@ $result = mysqli_query($connect, $sql);
               </td>
             </tr>
           <?php endwhile; ?> -->
-
-
-
-
-
 
 
           <!-- <?php while ($row = mysqli_fetch_assoc($result)): ?>
@@ -296,12 +291,67 @@ $result = mysqli_query($connect, $sql);
             </div>
           </div>
         </div> -->
-      
-      
+
+
       </section>
     </section>
   </div>
   <script>
+    //  ПОИСК 
+    document.addEventListener('DOMContentLoaded', function () {
+      const searchInput = document.querySelector('.search_inp');
+      const searchBtn = document.querySelector('.search_btn');
+      const tableRows = document.querySelectorAll('.table_row:not(.table_row_titles)');
+      const originalDisplay = [];
+
+      // Сохраняем оригинальное состояние строк
+      tableRows.forEach(row => {
+        originalDisplay.push(row.style.display);
+      });
+
+      // Функция поиска
+      function performSearch() {
+        const query = searchInput.value.trim().toLowerCase();
+
+        tableRows.forEach(row => {
+          const nameCell = row.querySelector('.name_user');
+          const name = nameCell.textContent.toLowerCase();
+
+          const name_recipeCell = row.querySelector('.name_recipe');
+          const name_recipe = name_recipeCell.textContent.toLowerCase();
+
+          if (name.includes(query) || name_recipe.includes(query)) {
+            row.style.display = ''; // Возвращаем оригинальное значение
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      }
+
+      // Функция сброса поиска
+      function resetSearch() {
+        searchInput.value = '';
+        tableRows.forEach((row, index) => {
+          row.style.display = originalDisplay[index] || '';
+        });
+      }
+
+      // Обработчики событий
+      searchBtn.addEventListener('click', performSearch);
+
+      searchInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          performSearch();
+        }
+      });
+
+      searchInput.addEventListener('input', function () {
+        if (searchInput.value.trim() === '') {
+          resetSearch();
+        }
+      });
+    });
+
 
 
 

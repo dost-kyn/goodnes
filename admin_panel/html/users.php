@@ -17,6 +17,40 @@ $row_month = mysqli_fetch_assoc($result_month);
 $month_users = $row_month['month_users'];
 
 
+// функция для подсчёта и сохранения сохранненых рецептов пользователями
+function updateSavedRecipesCount($connect)
+{
+    // Получаем количество сохранённых рецептов для каждого пользователя
+    $sql = "SELECT user_id, COUNT(*) as saved_count 
+            FROM saved_recipes 
+            GROUP BY user_id";
+
+    $result = mysqli_query($connect, $sql);
+
+    if (!$result) {
+        die("Ошибка при подсчёте сохранённых рецептов: " . mysqli_error($connect));
+    }
+
+    // Обновляем количество сохранённых рецептов для каждого пользователя
+    while ($row = mysqli_fetch_assoc($result)) {
+        $user_id = $row['user_id'];
+        $saved_count = $row['saved_count'];
+
+        $update_sql = "UPDATE users 
+                      SET numder_recipes = $saved_count 
+                      WHERE id = $user_id";
+
+        if (!mysqli_query($connect, $update_sql)) {
+            die("Ошибка при обновлении количества рецептов для пользователя $user_id: " . mysqli_error($connect));
+        }
+    }
+
+    return true;
+}
+// Пример использования:
+updateSavedRecipesCount($connect);
+
+
 $sql = "SELECT 
            ROW_NUMBER() OVER (ORDER BY id) AS row_num,
            id,
@@ -47,7 +81,7 @@ $result = mysqli_query($connect, $sql);
             <div class="sidebar_nav">
                 <a href="users.php" class="sidebar_nav_link users">Пользователи</a>
                 <a href="reviews.php" class="sidebar_nav_link reviews">Отзывы</a>
-                <a href="recipes.php" class="sidebar_nav_link" >Рецепты</a>
+                <a href="recipes.php" class="sidebar_nav_link">Рецепты</a>
                 <a href="blog.php" class="sidebar_nav_link">Блоги</a>
             </div>
         </section>
@@ -74,7 +108,25 @@ $result = mysqli_query($connect, $sql);
                 </div>
 
 
+
                 <table class="table_users">
+                    <tr class="table_row_titles">
+                        <th class="table_row_title">№</th>
+                        <th class="table_row_title">Имя</th>
+                        <th class="table_row_title">Кол-во сохранненых рецептов</th>
+                    </tr>
+
+                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                        <tr class="table_row">
+                            <td class="table_cell"><?= $row['row_num'] ?></td>
+                            <td class="table_cell name_user"><?= $row['name'] ?></td>
+                            <td class="table_cell"><?= $row['numder_recipes'] ?></td>
+                        </tr>
+                    <?php endwhile; ?>
+                </table>
+
+
+                <!-- <table class="table_users">
                     <tr class="table_row_titles">
                         <th class="table_row_title">№</th>
                         <th class="table_row_title">Имя</th>
@@ -85,18 +137,71 @@ $result = mysqli_query($connect, $sql);
                     <?php while ($row = mysqli_fetch_assoc($result)): ?>
                         <tr class="table_row">
                             <td><?= $row['row_num'] ?></td>
-                            <!-- <td><?= htmlspecialchars($row['name']) ?></td> -->
-                            <td><?= $row['name'] ?></td>
+                            <td class="name_user"><?= $row['name'] ?></td>
                             <td><?= $row['numder_recipes'] ?></td> 
                         </tr>
                     <?php endwhile; ?>
 
-                </table>
+                </table> -->
 
 
             </section>
         </section>
     </div>
 </body>
+<script>
+    //  ПОИСК 
+    document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.querySelector('.search_inp');
+    const searchBtn = document.querySelector('.search_btn');
+    const tableRows = document.querySelectorAll('.table_row:not(.table_row_titles)');
+    const originalDisplay = [];
+
+    // Сохраняем оригинальное состояние строк
+    tableRows.forEach(row => {
+        originalDisplay.push(row.style.display);
+    });
+
+    // Функция поиска
+    function performSearch() {
+        const query = searchInput.value.trim().toLowerCase();
+        
+        tableRows.forEach(row => {
+            const nameCell = row.querySelector('.name_user');
+            const name = nameCell.textContent.toLowerCase();
+            
+            if (name.includes(query)) {
+                row.style.display = ''; // Возвращаем оригинальное значение
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    // Функция сброса поиска
+    function resetSearch() {
+        searchInput.value = '';
+        tableRows.forEach((row, index) => {
+            row.style.display = originalDisplay[index] || '';
+        });
+    }
+
+    // Обработчики событий
+    searchBtn.addEventListener('click', performSearch);
+    
+    searchInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            performSearch();
+        }
+    });
+
+    searchInput.addEventListener('input', function () {
+        if (searchInput.value.trim() === '') {
+            resetSearch();
+        }
+    });
+});
+
+</script>
 
 </html>

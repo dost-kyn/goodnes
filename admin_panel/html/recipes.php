@@ -149,14 +149,15 @@ $result = mysqli_query($connect, $sql);
           <?php while ($row = mysqli_fetch_assoc($result)): ?>
             <tr class="table_row" date-time="<?= $row['created_at'] ?>">
 
-              <td><?= $row['row_num'] ?></td>
-              <td><?= $row['name'] ?></td>
-              <td><?= $row['cooking_time'] ?></td>
-              <td><?= $row['calorie'] ?></td>
-              <td><?= $row['portions'] ?></td>
-              <td class="row_categories"><?= $row['caregories'] ?></td>
-              <td><?= basename($row['maun_image']) ?></td>
-              <td class="more"><button class="more_btn"><a href="more.php?id=<?= $row['id'] ?>">Подробнее</a></button></td>
+              <td class="table_cell"><?= $row['row_num'] ?></td>
+              <td class="table_cell name_recipe"><?= $row['name'] ?></td>
+              <td class="table_cell"><?= $row['cooking_time'] ?></td>
+              <td class="table_cell"><?= $row['calorie'] ?></td>
+              <td class="table_cell"><?= $row['portions'] ?></td>
+              <td class="row_categories table_cell"><?= $row['caregories'] ?></td>
+              <td class="table_cell"><?= basename($row['maun_image']) ?></td>
+              <td class="more table_cell"><button class="more_btn"><a
+                    href="more.php?id=<?= $row['id'] ?>">Подробнее</a></button></td>
             </tr>
           <?php endwhile; ?>
 
@@ -183,6 +184,68 @@ $result = mysqli_query($connect, $sql);
     </section>
   </div>
   <script>
+//  ПОИСК 
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.querySelector('.search_inp');
+    const searchBtn = document.querySelector('.search_btn');
+    const tableRows = document.querySelectorAll('.table_row:not(.table_row_titles)');
+    
+    // Функция нормализации текста
+    function normalizeText(text) {
+        return text ? text.toString().toLowerCase().trim() : '';
+    }
+
+    // Функция поиска
+    function performSearch() {
+        const query = normalizeText(searchInput.value);
+        
+        tableRows.forEach(row => {
+            const nameCell = row.querySelector('.name_recipe');
+            const nameText = normalizeText(nameCell?.textContent);
+            
+            const categoryCell = row.querySelector('.row_categories');
+            const categoryText = normalizeText(categoryCell?.textContent);
+            
+            // Проверяем совпадение в названии или категории
+            const nameMatch = nameText.includes(query);
+            const categoryMatch = categoryText.includes(query);
+            
+            row.style.display = (nameMatch || categoryMatch) ? '' : 'none';
+        });
+    }
+
+    // Функция сброса
+    function resetSearch() {
+        tableRows.forEach(row => {
+            row.style.display = '';
+        });
+    }
+
+    // Обработчики событий
+    const handleSearch = () => {
+        if (searchInput.value.trim() === '') {
+            resetSearch();
+        } else {
+            performSearch();
+        }
+    };
+
+    searchBtn.addEventListener('click', handleSearch);
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleSearch();
+    });
+    searchInput.addEventListener('input', handleSearch);
+});
+
+
+
+
+
+
+
+
+
+
     document.addEventListener('DOMContentLoaded', function () {
       // Получаем все чекбоксы с классами, начинающимися на "wr-checkbox"
       const checkboxes = document.querySelectorAll('input[type="checkbox"][class^="wr-checkbox"]');
@@ -214,155 +277,158 @@ $result = mysqli_query($connect, $sql);
 
 
 
-// открытие и закрытие фильтра
-document.querySelector('.filter-mobile-toggle').addEventListener('click', function() {
-    document.querySelector('.catalog_filter_content').classList.toggle('active');
-});
-  
-// Закрытие при клике вне фильтра (опционально)
-document.addEventListener('click', function(e) {
-    const filter = document.querySelector('.catalog_filter_content');
-    const toggleBtn = document.querySelector('.filter-mobile-toggle');
-    
-    if (!filter.contains(e.target) && e.target !== toggleBtn) {
+
+
+
+    // открытие и закрытие фильтра
+    document.querySelector('.filter-mobile-toggle').addEventListener('click', function () {
+      document.querySelector('.catalog_filter_content').classList.toggle('active');
+    });
+
+    // Закрытие при клике вне фильтра (опционально)
+    document.addEventListener('click', function (e) {
+      const filter = document.querySelector('.catalog_filter_content');
+      const toggleBtn = document.querySelector('.filter-mobile-toggle');
+
+      if (!filter.contains(e.target) && e.target !== toggleBtn) {
         filter.classList.remove('active');
+      }
+    });
+
+    // Открытие фильтров
+    document.querySelector('.filter-mobile-toggle').addEventListener('click', function () {
+      document.querySelector('.catalog_filter_content').classList.add('active');
+      document.body.classList.add('menu-open');
+    });
+
+    // Закрытие фильтров
+    function closeFilters() {
+      document.querySelector('.catalog_filter_content').classList.remove('active');
+      document.body.classList.remove('menu-open');
     }
-});
 
-// Открытие фильтров
-document.querySelector('.filter-mobile-toggle').addEventListener('click', function() {
-    document.querySelector('.catalog_filter_content').classList.add('active');
-    document.body.classList.add('menu-open');
-});
-  
-// Закрытие фильтров
-function closeFilters() {
-    document.querySelector('.catalog_filter_content').classList.remove('active');
-    document.body.classList.remove('menu-open');
-}
-  
-document.querySelector('.close-filters').addEventListener('click', closeFilters);
+    document.querySelector('.close-filters').addEventListener('click', closeFilters);
 
-// работа фильтра
-document.addEventListener('DOMContentLoaded', function() {
-    // Элементы DOM
-    const recipeRows = document.querySelectorAll('.table_row');
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    const searchInput = document.querySelector('.search_inp');
-    const searchBtn = document.querySelector('.search_btn');
+    // работа фильтра
+    document.addEventListener('DOMContentLoaded', function () {
+      // Элементы DOM
+      const recipeRows = document.querySelectorAll('.table_row');
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      // const searchInput = document.querySelector('.search_inp');
+      // const searchBtn = document.querySelector('.search_btn');
 
-    // Функция для проверки, была ли дата в последний месяц
-    function isWithinLastMonth(dateString) {
+      // Функция для проверки, была ли дата в последний месяц
+      function isWithinLastMonth(dateString) {
         try {
-            const recipeDate = new Date(dateString);
-            const now = new Date();
-            const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
-            return recipeDate >= oneMonthAgo;
+          const recipeDate = new Date(dateString);
+          const now = new Date();
+          const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+          return recipeDate >= oneMonthAgo;
         } catch (e) {
-            console.error("Ошибка при обработке даты:", dateString, e);
-            return false;
+          console.error("Ошибка при обработке даты:", dateString, e);
+          return false;
         }
-    }
+      }
 
-    // Функция для проверки, является ли дата старой (более месяца)
-    function isOldDate(dateString) {
+      // Функция для проверки, является ли дата старой (более месяца)
+      function isOldDate(dateString) {
         return !isWithinLastMonth(dateString);
-    }
+      }
 
-    // Функция проверки активных фильтров
-    function hasActiveFilters() {
+      // Функция проверки активных фильтров
+      function hasActiveFilters() {
         const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
         return checkedBoxes.length > 0 || searchInput.value.trim() !== '';
-    }
+      }
 
-    // Функция фильтрации по категориям
-    function filterByCategory(row, selectedCategories) {
+      // Функция фильтрации по категориям
+      function filterByCategory(row, selectedCategories) {
         if (selectedCategories.length === 0) return true;
-        
+
         const categoryElement = row.querySelector('.row_categories');
         if (!categoryElement) return false;
-        
+
         const rowCategory = categoryElement.textContent.trim().toLowerCase();
         return selectedCategories.some(cat => rowCategory.includes(cat));
-    }
+      }
 
-    // Функция фильтрации по времени (неделя/старые)
-    function filterByTime(row, selectedTimes) {
+      // Функция фильтрации по времени (неделя/старые)
+      function filterByTime(row, selectedTimes) {
         if (selectedTimes.length === 0) return true;
-        
+
         const dateTime = row.getAttribute('date-time');
         if (!dateTime) return false;
-        
-        return selectedTimes.some(timeFilter => {
-            if (timeFilter === 'недавние') {
-                return isWithinLastMonth(dateTime); // Используем месяц вместо недели
-            } else if (timeFilter === 'старые') {
-                return isOldDate(dateTime);
-            }
-            return false;
-        });
-    }
 
-    // Функция фильтрации по поисковому запросу
-    function filterBySearch(row, searchText) {
+        return selectedTimes.some(timeFilter => {
+          if (timeFilter === 'недавние') {
+            return isWithinLastMonth(dateTime); // Используем месяц вместо недели
+          } else if (timeFilter === 'старые') {
+            return isOldDate(dateTime);
+          }
+          return false;
+        });
+      }
+
+      // Функция фильтрации по поисковому запросу
+      function filterBySearch(row, searchText) {
         if (!searchText) return true;
-        
+
         const name = row.querySelector('td:nth-child(2)').textContent.trim().toLowerCase();
         return name.includes(searchText.toLowerCase());
-    }
+      }
 
-    // Основная функция фильтрации
-    function applyFilters() {
+      // Основная функция фильтрации
+      function applyFilters() {
         // 1. Получаем выбранные категории (в нижнем регистре)
         const selectedCategories = Array.from(
-            document.querySelectorAll('.catalog_filter_column:nth-of-type(1) input[type="checkbox"]:checked')
+          document.querySelectorAll('.catalog_filter_column:nth-of-type(1) input[type="checkbox"]:checked')
         ).map(checkbox => {
-            return checkbox.nextElementSibling.nextElementSibling.textContent.trim().toLowerCase();
+          return checkbox.nextElementSibling.nextElementSibling.textContent.trim().toLowerCase();
         });
 
         // 2. Получаем выбранное время
         const selectedTimes = Array.from(
-            document.querySelectorAll('.catalog_filter_column:nth-of-type(2) input[type="checkbox"]:checked')
+          document.querySelectorAll('.catalog_filter_column:nth-of-type(2) input[type="checkbox"]:checked')
         ).map(checkbox => {
-            return checkbox.nextElementSibling.nextElementSibling.textContent.trim().toLowerCase();
+          return checkbox.nextElementSibling.nextElementSibling.textContent.trim().toLowerCase();
         });
 
-        // 3. Получаем поисковый запрос
-        const searchText = searchInput.value.trim();
+        // // 3. Получаем поисковый запрос
+        // const searchText = searchInput.value.trim();
 
         // Фильтруем строки таблицы
         recipeRows.forEach(row => {
-            const matchesCategory = filterByCategory(row, selectedCategories);
-            const matchesTime = filterByTime(row, selectedTimes);
-            const matchesSearch = filterBySearch(row, searchText);
+          const matchesCategory = filterByCategory(row, selectedCategories);
+          const matchesTime = filterByTime(row, selectedTimes);
+          // const matchesSearch = filterBySearch(row, searchText);
 
-            if (matchesCategory && matchesTime && matchesSearch) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
+          if (matchesCategory && matchesTime) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
         });
-    }
+      }
 
-    // Обработчики событий
-    checkboxes.forEach(checkbox => {
+      // Обработчики событий
+      checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', applyFilters);
-    });
+      });
 
-    searchBtn.addEventListener('click', applyFilters);
-    searchInput.addEventListener('keyup', function(e) {
-        if (e.key === 'Enter') {
-            applyFilters();
-        }
-    });
+      // searchBtn.addEventListener('click', applyFilters);
+      // searchInput.addEventListener('keyup', function (e) {
+      //   if (e.key === 'Enter') {
+      //     applyFilters();
+      //   }
+      // });
 
-    // Инициализация
-    applyFilters();
-});
+      // Инициализация
+      applyFilters();
+    });
 
 
   </script>
-  
+
 </body>
 
 </html>
