@@ -1,3 +1,9 @@
+<?php
+session_start();
+require_once '../connect/connect.php';
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -41,7 +47,7 @@
 
     <section class="crumds">
         <div class="crumbs_content">
-            <a href="">Главная страница -> </a><a href="">Блоги</a>
+            <a href="home.php">Главная страница -> </a><a href="">Блоги</a>
         </div>
     </section>
 

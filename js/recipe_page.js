@@ -184,179 +184,247 @@ document.addEventListener('DOMContentLoaded', function () {
     // Здесь будет ваша PHP-логика
     // showNotification('login-success');
   });
-
-  // // Проверка статуса входа
-  // function checkLoginStatus() {
-  //   const isLoggedIn = false;
-  //   if (isLoggedIn) {
-  //     showNotification('already-logged-in');
-  //     loginForm.style.display = 'none';
-  //   }
-  // }
-
-  // // Проверяем статус при загрузке страницы
-  // checkLoginStatus();
+  
+  // Проверка статуса входа
+  function checkLoginStatus() {
+    const isLoggedIn = false;
+    if (isLoggedIn) {
+      showNotification('already-logged-in');
+      loginForm.style.display = 'none';
+    }
+  }
+  
+  // Проверяем статус при загрузке страницы
+  checkLoginStatus();
 });
 
 
 
 
 
-
-//   комменты
-document.addEventListener('DOMContentLoaded', function () {
-  // Элементы для отображения отзывов
-  const reviewContent = document.querySelector('.review_content');
-  const reviewBoxes = document.querySelectorAll('.review_box');
-  const reviewMoreBtn = document.querySelector('.review_more_btn');
-  const reviewQuantity = document.querySelector('.review_quan_num');
-
-  // Элементы для формы отзыва
-  const reviewLeaveBtn = document.querySelector('.review_leave_btn');
-  const modalReview = document.querySelector('.modal-new_review');
-  const cancelBtn = document.querySelector('.back');
-  const publishBtn = document.querySelector('.start');
-  const reviewTextarea = document.querySelector('.new_review_inp');
-
-  // Настройки отображения отзывов
-  const reviewsPerRow = 2;
-  const rowsPerLoad = 2;
-  const reviewsPerLoad = reviewsPerRow * rowsPerLoad;
-  let visibleReviewsCount = reviewsPerRow;
-
-  // Инициализация отзывов
-  function initReviews() {
-    reviewBoxes.forEach((box, index) => {
-      if (index < visibleReviewsCount) {
-        box.style.display = 'block';
-      } else {
-        box.style.display = 'none';
-      }
-    });
-
-    toggleMoreButton();
-    updateReviewCount();
-  }
-
-  // Показать еще отзывы
-  function showMoreReviews() {
-    visibleReviewsCount += reviewsPerLoad;
-
-    reviewBoxes.forEach((box, index) => {
-      if (index < visibleReviewsCount) {
-        box.style.display = 'block';
-      }
-    });
-
-    toggleMoreButton();
-  }
-
-  // Управление кнопкой "Показать еще"
-  function toggleMoreButton() {
-    if (visibleReviewsCount >= document.querySelectorAll('.review_box').length) {
-      reviewMoreBtn.style.display = 'none';
-    } else {
-      reviewMoreBtn.style.display = 'block';
-    }
-  }
-
-  // Добавление нового отзыва
-  function addNewReview(text) {
-    const newReview = document.createElement('div');
-    newReview.className = 'review_box';
-    newReview.style.opacity = '0';
-    newReview.style.transform = 'scale(0.9)';
-    newReview.style.transition = 'all 0.3s ease';
-
-    const date = new Date();
-    const formattedDate = `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
-
-    newReview.innerHTML = `
-      <div class="review_box_info">
-        <span class="review_name">Новый пользователь</span>
-        <span class="review_date">${formattedDate}</span>
-      </div>
-      <p class="review_box_text">${text}</p>
-    `;
-
-    // Добавляем в начало
-    reviewContent.insertBefore(newReview, reviewContent.firstChild);
-
-    // Анимация появления
-    setTimeout(() => {
-      newReview.style.opacity = '1';
-      newReview.style.transform = 'scale(1)';
-    }, 10);
-
-    // Обновляем счетчик и карточки
-    updateReviewCount();
-    updateReviewCards();
-  }
-
-  // Обновление счетчика отзывов
-  function updateReviewCount() {
+document.addEventListener('DOMContentLoaded', function() {
+    // Элементы для отображения отзывов
+    const reviewContent = document.querySelector('.review_content');
     const reviewBoxes = document.querySelectorAll('.review_box');
-    reviewQuantity.textContent = reviewBoxes.length;
-  }
+    const reviewMoreBtn = document.querySelector('.review_more_btn');
+    const reviewQuantity = document.querySelector('.review_quan_num');
+    
+    // Элементы для формы отзыва
+    const reviewLeaveBtn = document.querySelector('.review_leave_btn');
+    const modalReview = document.querySelector('.modal-new_review');
+    const cancelBtn = document.querySelector('.back');
+    const publishBtn = document.querySelector('.start');
+    const reviewTextarea = document.querySelector('.new_review_inp');
 
-  // Обновление отображения карточек отзывов
-  function updateReviewCards() {
-    // Сбрасываем счетчик видимых отзывов
-    visibleReviewsCount = reviewsPerRow;
+    // Настройки отображения отзывов
+    const reviewsPerRow = 2;
+    const rowsPerLoad = 2;
+    const reviewsPerLoad = reviewsPerRow * rowsPerLoad;
+    let visibleReviewsCount = reviewsPerRow;
 
-    // Получаем все карточки (включая новую)
-    const allReviewBoxes = document.querySelectorAll('.review_box');
+    // ===== Основные функции =====
+    
+    // Инициализация отзывов
+    function initReviews() {
+        if (!reviewContent || !reviewBoxes.length) return;
+        
+        reviewBoxes.forEach((box, index) => {
+            box.style.display = index < visibleReviewsCount ? 'block' : 'none';
+        });
+        
+        toggleMoreButton();
+        updateReviewCount();
+    }
 
-    // Обновляем отображение
-    allReviewBoxes.forEach((box, index) => {
-      if (index < visibleReviewsCount) {
-        box.style.display = 'block';
-      } else {
-        box.style.display = 'none';
-      }
+    // Показать еще отзывы
+    function showMoreReviews() {
+        if (!reviewMoreBtn) return;
+        
+        visibleReviewsCount += reviewsPerLoad;
+        document.querySelectorAll('.review_box').forEach((box, index) => {
+            box.style.display = index < visibleReviewsCount ? 'block' : 'none';
+        });
+        
+        toggleMoreButton();
+    }
+
+    // Управление кнопкой "Показать еще"
+    function toggleMoreButton() {
+        if (!reviewMoreBtn) return;
+        
+        const allReviews = document.querySelectorAll('.review_box');
+        reviewMoreBtn.style.display = visibleReviewsCount >= allReviews.length ? 'none' : 'block';
+    }
+
+    // Обновление счетчика отзывов
+    function updateReviewCount() {
+        if (!reviewQuantity) return;
+        
+        const reviewBoxes = document.querySelectorAll('.review_box');
+        reviewQuantity.textContent = reviewBoxes.length;
+    }
+
+    // Добавление нового отзыва (обновленная версия)
+    function addNewReview(text, userName = 'Вы') {
+        if (!reviewContent) return;
+        
+        const newReview = document.createElement('div');
+        newReview.className = 'review_box';
+        newReview.style.opacity = '0';
+        newReview.style.transform = 'scale(0.9)';
+        newReview.style.transition = 'all 0.3s ease';
+        
+        const date = new Date();
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth()+1).toString().padStart(2, '0')}.${date.getFullYear()}`;
+        
+        newReview.innerHTML = `
+            <div class="review_box_info">
+                <span class="review_name">${userName}</span>
+                <span class="review_date">${formattedDate}</span>
+            </div>
+            <p class="review_box_text">${text}</p>
+        `;
+        
+        reviewContent.insertBefore(newReview, reviewContent.firstChild);
+        
+        setTimeout(() => {
+            newReview.style.opacity = '1';
+            newReview.style.transform = 'scale(1)';
+        }, 10);
+        
+        updateReviewCount();
+        showMoreReviews(); // Автоматически показываем новые отзывы
+    }
+
+    // ===== Обработчики событий =====
+    
+    // Открытие модального окна
+    if (reviewLeaveBtn) {
+        reviewLeaveBtn.addEventListener('click', function() {
+            if (modalReview) modalReview.classList.add('active');
+            if (reviewTextarea) reviewTextarea.focus();
+        });
+    }
+
+    // Закрытие модального окна
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', function() {
+            if (modalReview) modalReview.classList.remove('active');
+            if (reviewTextarea) reviewTextarea.value = '';
+        });
+    }
+
+    // Закрытие по клику вне окна
+    if (modalReview) {
+        modalReview.addEventListener('click', function(e) {
+            if (e.target === modalReview) {
+                modalReview.classList.remove('active');
+                if (reviewTextarea) reviewTextarea.value = '';
+            }
+        });
+    }
+
+
+// Публикация отзыва (обновленная версия)
+if (publishBtn) {
+    publishBtn.addEventListener('click', async function() {
+        const reviewText = reviewTextarea ? reviewTextarea.value.trim() : '';
+        const recipeId = document.querySelector('.main_info_content')?.dataset.id;
+        
+        if (!reviewText) {
+            alert('Пожалуйста, напишите текст отзыва');
+            return;
+        }
+
+        if (!recipeId) {
+            alert('Не удалось определить рецепт');
+            return;
+        }
+
+        // Показываем индикатор загрузки
+        publishBtn.disabled = true;
+        publishBtn.textContent = 'Отправка...';
+
+        try {
+            const response = await fetch('/connect/add_review.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    recipe_id: recipeId,
+                    text: reviewText
+                })
+            });
+
+            // Проверяем Content-Type ответа
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                const text = await response.text();
+                throw new Error(`Ожидался JSON, но получен: ${contentType}. Ответ: ${text}`);
+            }
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Ошибка сервера');
+            }
+
+            if (data.success) {
+                // Добавляем новый отзыв в список
+                addNewReview(reviewText, data.user_name, data.avatar);
+                
+                // Закрываем модальное окно
+                if (modalReview) modalReview.classList.remove('active');
+                if (reviewTextarea) reviewTextarea.value = '';
+                
+                // Обновляем счетчик отзывов
+                updateReviewsCount();
+            } else {
+                throw new Error(data.message || 'Неизвестная ошибка');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Ошибка: ' + error.message);
+        } finally {
+            publishBtn.disabled = false;
+            publishBtn.textContent = 'Опубликовать';
+        }
     });
+}
 
-    // Обновляем кнопку
-    toggleMoreButton();
-  }
 
-  // Открытие модального окна
-  reviewLeaveBtn.addEventListener('click', function () {
-    modalReview.classList.add('active');
-    reviewTextarea.focus();
-  });
+// Функция для добавления нового отзыва в DOM
+function addNewReview(text, userName) {
+    const reviewsContainer = document.querySelector('.reviews_list');
+    if (!reviewsContainer) return;
 
-  // Закрытие модального окна
-  cancelBtn.addEventListener('click', function () {
-    modalReview.classList.remove('active');
-    reviewTextarea.value = '';
-  });
+    const newReview = document.createElement('div');
+    newReview.className = 'review_item';
+    newReview.innerHTML = `
+        <div class="review_user">
+            <span class="review_user_name">${userName}</span>
+            <span class="review_date">Только что</span>
+        </div>
+        <div class="review_text">${text}</div>
+    `;
+    
+    reviewsContainer.prepend(newReview);
+}
 
-  // Закрытие по клику вне окна
-  modalReview.addEventListener('click', function (e) {
-    if (e.target === modalReview) {
-      modalReview.classList.remove('active');
-      reviewTextarea.value = '';
+// Функция для обновления счетчика отзывов
+function updateReviewsCount() {
+    const counter = document.querySelector('.review_quan_num');
+    if (counter) {
+        const currentCount = parseInt(counter.textContent) || 0;
+        counter.textContent = currentCount + 1;
     }
-  });
-
-  // Публикация отзыва
-  publishBtn.addEventListener('click', function () {
-    const reviewText = reviewTextarea.value.trim();
-
-    if (reviewText === '') {
-      alert('Пожалуйста, напишите текст отзыва');
-      return;
+}
+    // Кнопка "Показать еще"
+    if (reviewMoreBtn) {
+        reviewMoreBtn.addEventListener('click', showMoreReviews);
     }
 
-    addNewReview(reviewText);
-    modalReview.classList.remove('active');
-    reviewTextarea.value = '';
-  });
-
-  // Кнопка "Показать еще"
-  reviewMoreBtn.addEventListener('click', showMoreReviews);
-
-  // Инициализация при загрузке
-  initReviews();
+    // Инициализация при загрузке
+    initReviews();
 });

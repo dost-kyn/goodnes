@@ -25,21 +25,6 @@ $pending_reviews = $row_pending['pending_reviews'];
 
 
 
-// // пользователи
-// $sql = "SELECT 
-//        ROW_NUMBER() OVER (ORDER BY r.id) AS row_num,
-//        r.id,
-//        r.user_id,
-//        u.name AS user_name,
-//        r.recipe_id,
-//        IFNULL(rec.name, 'Рецепт удалён') AS recipe_name,
-//        r.text,
-//        r.created_at,
-//        r.status
-//     FROM reviews r
-//     LEFT JOIN users u ON r.user_id = u.id
-//     LEFT JOIN recipes rec ON r.recipe_id = rec.id
-//     ORDER BY r.id";
 
 
 $sql = "SELECT 

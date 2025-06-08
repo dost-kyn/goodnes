@@ -30,14 +30,17 @@ mysqli_stmt_execute($stmt_steps);
 $result_steps = mysqli_stmt_get_result($stmt_steps);
 $steps = mysqli_fetch_all($result_steps, MYSQLI_ASSOC);
 
-// Запрос для получения отзывов к рецепту
-$sql_reviews = "SELECT * FROM reviews WHERE recipe_id = ? ORDER BY created_at DESC";
+// Запрос для получения отзывов к рецепту с именем пользователя
+$sql_reviews = "SELECT r.*, u.name as user_name 
+                FROM reviews r 
+                JOIN users u ON r.user_id = u.id 
+                WHERE r.recipe_id = ? AND r.status = 'approved' 
+                ORDER BY r.created_at DESC";
 $stmt_reviews = mysqli_prepare($connect, $sql_reviews);
 mysqli_stmt_bind_param($stmt_reviews, "i", $recipe_id);
 mysqli_stmt_execute($stmt_reviews);
 $result_reviews = mysqli_stmt_get_result($stmt_reviews);
 $reviews = mysqli_fetch_all($result_reviews, MYSQLI_ASSOC);
-
 
 // Создаем соответствие между значениями caregories и ID чекбоксов
 $categoryMapping = [
@@ -52,6 +55,14 @@ $categoryMapping = [
 // Получаем ID чекбокса для текущей категории
 $checkboxId = $categoryMapping[strtolower($recipe['caregories'])] ?? '';
 $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) : '#';
+
+
+// После выполнения запроса на отзывы
+if (empty($reviews)) {
+    echo "Нет отзывов для рецепта ID: $recipe_id";
+    var_dump($sql_reviews); // Посмотрите какой запрос формируется
+    var_dump(mysqli_error($connect)); // Проверьте ошибки SQL
+}
 ?>
 
 <!DOCTYPE html>
@@ -229,19 +240,32 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
         <p class="desc_text"><?= htmlspecialchars($recipe['description']) ?></p>
     </section>
 
-    <section class="ingredients">
-        <h2 class="ingre_title">Ингредиенты</h2>
-
-        <div class="ingre_content">
-
-            <div class="ingre_box">
-                <input type="checkbox" class="wr-checkbox8" id="wr8" name="wr">
-                <label for="wr8"></label>
-                <p class="ingre_text">Название ингредиента 1</p>
-            </div>
-
-        </div>
-    </section>
+<section class="ingredients">
+    <h2 class="ingre_title">Ингредиенты</h2>
+    
+    <div class="ingre_content">
+        <?php 
+        // Разбиваем строку ингредиентов по точкам
+        $ingredients = explode('.', $recipe['ingredients']);
+        $counter = 1;
+        
+        foreach ($ingredients as $ingredient):
+            // Удаляем лишние пробелы и пропускаем пустые элементы
+            $ingredient = trim($ingredient);
+            if (!empty($ingredient)):
+        ?>
+                <div class="ingre_box">
+                    <input type="checkbox" class="wr-checkbox<?= $counter ?>" id="wr<?= $counter ?>" name="wr">
+                    <label for="wr<?= $counter ?>"></label>
+                    <p class="ingre_text"><?= htmlspecialchars($ingredient) ?></p>
+                </div>
+        <?php 
+                $counter++;
+            endif;
+        endforeach; 
+        ?>
+    </div>
+</section>
 
 
     <section class="instruction">
@@ -349,12 +373,15 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
             <?php endif; ?>
         </div>
 
-        <?php if (count($reviews) > 4): ?>
+        <?php if (count($reviews) > 2): ?>
             <div class="review_more">
                 <button class="review_more_btn">Показать ещё+</button>
             </div>
         <?php endif; ?>
-    </section>
+    </div>
+
+
+</section>
 
     <div class="modal-new_review">
         <div class="new_review_box">
