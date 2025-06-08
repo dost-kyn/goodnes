@@ -1,25 +1,77 @@
-
 <?php
 session_start();
+
+require_once __DIR__ . '/../../connect/connect.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // 1. Сохраняем основной блог
+    $name = mysqli_real_escape_string($connect, $_POST['name']);
+    $number_image = isset($_FILES['image']) ? count($_FILES['image']['name']) : 0;
+    $created_at = date('Y-m-d H:i:s'); // Добавляем текущую дату и время
+    
+    $sql_blog = "INSERT INTO blogs (name, number_image, created_at) VALUES ('$name', '$number_image', '$created_at')";
+    if (!mysqli_query($connect, $sql_blog)) {
+        $_SESSION['error'] = "Ошибка при сохранении блога: " . mysqli_error($connect);
+        header("Location: ".$_SERVER['PHP_SELF']);
+        exit();
+    }
+    $blog_id = mysqli_insert_id($connect);
+    
+    // 2. Сохраняем шаги блога
+    if (isset($_POST['title']) && is_array($_POST['title'])) {
+        for ($i = 0; $i < count($_POST['title']); $i++) {
+            $title = mysqli_real_escape_string($connect, $_POST['title'][$i]);
+            $description = mysqli_real_escape_string($connect, $_POST['description'][$i]);
+            $step_number = $i + 1;
+            
+            $image_name = '';
+            if (!empty($_FILES['image']['name'][$i])) {
+                $upload_dir = '/image/blog/';
+                if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $upload_dir)) {
+                    mkdir($_SERVER['DOCUMENT_ROOT'] . $upload_dir, 0777, true);
+                }
+                
+                $file_ext = pathinfo($_FILES['image']['name'][$i], PATHINFO_EXTENSION);
+                $new_filename = uniqid() . '.' . $file_ext;
+                $image_name = $upload_dir . $new_filename;
+                $upload_path = $_SERVER['DOCUMENT_ROOT'] . $image_name;
+                
+                if (move_uploaded_file($_FILES['image']['tmp_name'][$i], $upload_path)) {
+                    // Файл успешно загружен
+                } else {
+                    $_SESSION['error'] = "Ошибка при загрузке изображения для шага $step_number";
+                    continue;
+                }
+            }
+            
+            $sql_step = "INSERT INTO blog_steps (blog_id, step_number, title, image, description) 
+                        VALUES ('$blog_id', '$step_number', '$title', '$image_name', '$description')";
+            if (!mysqli_query($connect, $sql_step)) {
+                $_SESSION['error'] = "Ошибка при сохранении шага $step_number: " . mysqli_error($connect);
+            }
+        }
+    }
+    
+    $_SESSION['success'] = "Блог успешно сохранен!";
+    header("Location: blog.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/admin_panel/css/new_recipes.css" />
-    <title>Овсяное печенье</title>
+    <title>Создание блога</title>
 </head>
-
 <body>
     <div class="container">
         <section class="sidebar">
             <a class="header_logo">
                 <img src="/image/лого.svg" class="header_logo_img" />
             </a>
-
             <div class="sidebar_nav">
                 <a href="users.html" class="sidebar_nav_link users">Пользователи</a>
                 <a href="reviews.php" class="sidebar_nav_link">Отзывы</a>
@@ -29,6 +81,16 @@ session_start();
         </section>
 
         <section class="contant">
+            <?php if (isset($_SESSION['error'])): ?>
+                <div class="alert alert-error"><?= $_SESSION['error'] ?></div>
+                <?php unset($_SESSION['error']); ?>
+            <?php endif; ?>
+            
+            <?php if (isset($_SESSION['success'])): ?>
+                <div class="alert alert-success"><?= $_SESSION['success'] ?></div>
+                <?php unset($_SESSION['success']); ?>
+            <?php endif; ?>
+            
             <section class="search">
                 <div class="find">
                     <input class="search_inp" type="text" placeholder="Поиск.." />
@@ -37,184 +99,87 @@ session_start();
             </section>
 
             <section class="container_review">
-
-                <table class="table_users">
-                    <tr class="table_row">
-                        <th class="table_column_1">Название</th>
-                        <th><input type="text" class="table_inp"></th>
-                    </tr>
+                <form class="modal_form" method="POST" enctype="multipart/form-data" id="blogForm">
+                    <table class="table_users">
+                        <tr class="table_row">
+                            <th class="table_column_1">Название</th>
+                            <th><input type="text" class="table_inp" name="name" required></th>
+                        </tr>
+                        
+                        <tbody id="stepsContainer">
+                            <tr class="table_row">
+                                <th class="table_column_1" style="vertical-align: top;">Шаг 1</th>
+                                <th class="table_column_2">
+                                    <p>Заголовок: <input type="text" class="table_inp" name="title[]" required></p>
+                                    <p>Фото: <input type="file" name="image[]" required></p>
+                                    <p>Описание: <input type="text" class="table_inp" name="description[]" required></p>
+                                </th>
+                            </tr>
+                        </tbody>
+                        
+                        <tr class="table_row">
+                            <th></th>
+                            <th>
+                                <button type="button" class="btn" id="moreButton">Добавить ещё шаг</button>
+                            </th>
+                        </tr>
+                    </table>
                     
-
-
-                    <tr class="table_row">
-                        <th class="table_column_1" style="vertical-align: top;">Основа</th>
-                        <th class="table_column_2">
-                            <p>Заголовок 1: <input type="text" class="table_inp"></p>
-                            <p>Фото 1: <input type="file"></p>
-                            <p>Описание 1: <input type="text" class="table_inp"></p>
-                        </th>
-                    </tr>
-                    <tr class="table_row">
-                        <th>
-
-                        </th>
-                        <th>
-                            <button class="btn" id="moreButton">Добавить ещё</button>
-                        </th>
-                    </tr>
-                </table>
-
-                <p class="error"></p>
-                <div class="container_review_buttons">
-                    <button class="btn"><a href="blog.html">Вернуться</a></button>
-                    <button class="btn" id="saveButton">Сохранить</button>
-                    <button class="btn" id="editButton" style="display: none;">Изменить</button>
-                </div>
+                    <div class="container_review_buttons">
+                        <a href="blog.php" class="btn">Вернуться</a>
+                        <button type="submit" class="btn" id="saveButton">Сохранить</button>
+                    </div>
+                </form>
             </section>
         </section>
     </div>
 
-
-
     <script>
-        const moreButton = document.querySelector('#moreButton');
-        const saveButton = document.querySelector('#saveButton');
-        const editButton = document.querySelector('#editButton');
-        const inputs = document.querySelectorAll('.table_inp');
-        let counter = 2;
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('blogForm');
+            const moreButton = document.getElementById('moreButton');
+            const stepsContainer = document.getElementById('stepsContainer');
+            let stepCounter = 2;
 
-        moreButton.addEventListener('click', () => {
-            const newRow = document.createElement('tr');
-            newRow.className = 'table_row';
-
-            const newTh = document.createElement('th');
-            newTh.className = 'table_column_2';
-
-            newTh.innerHTML = `
-            <p>Заголовок ${counter} : <input type="text" class="table_inp"></p>
-            <p>Фото ${counter} : <input type="file"></p>
-            <p>Описание ${counter} : <input type="text" class="table_inp"></p>`;
-
-            newRow.appendChild(document.createElement('th')); // Пустая ячейка слева
-            newRow.appendChild(newTh);
-            moreButton.closest('tr').before(newRow);
-
-            counter++;
-        });
-
-
-    saveButton.addEventListener('click', () => {
-    // Проверяем, все ли обязательные поля заполнены
-    let allFilled = true;
-    const textInputs = document.querySelectorAll('.table_inp');
-    
-    textInputs.forEach(input => {
-        if (!input.value.trim()) {
-            allFilled = false;
-        }
-    });
-
-    if (allFilled) {
-        const tableRows = document.querySelectorAll('.table_row:not(:last-child)');
-
-        tableRows.forEach(row => {
-            const inputs = row.querySelectorAll('input[type="text"]');
-            inputs.forEach(input => {
-                const p = document.createElement('p');
-                p.className = 'saved-value';
-                p.textContent = input.value;
-                input.replaceWith(p);
+            // Добавление нового шага
+            moreButton.addEventListener('click', function() {
+                const newRow = document.createElement('tr');
+                newRow.className = 'table_row';
+                newRow.innerHTML = `
+                    <th class="table_column_1" style="vertical-align: top;">Шаг ${stepCounter}</th>
+                    <th class="table_column_2">
+                        <p>Заголовок: <input type="text" class="table_inp" name="title[]" required></p>
+                        <p>Фото: <input type="file" name="image[]" required></p>
+                        <p>Описание: <input type="text" class="table_inp" name="description[]" required></p>
+                    </th>
+                `;
+                stepsContainer.appendChild(newRow);
+                stepCounter++;
             });
 
-            const fileInputs = row.querySelectorAll('input[type="file"]');
-            fileInputs.forEach(fileInput => {
-                const fileName = document.createElement('p');
-                fileName.className = 'saved-file';
-                fileName.textContent = fileInput.files[0] ? fileInput.files[0].name : 'Файл не выбран';
-                fileInput.replaceWith(fileName);
-            });
-        });
-
-        moreButton.style.display = 'none';
-        saveButton.style.display = 'none';
-        editButton.style.display = "block";
-        alert('Данные успешно сохранены!');
-    } else {
-        // Создаем или находим элемент для ошибки
-        let error = document.querySelector('.error');
-        if (!error) {
-            error = document.createElement('div');
-            error.className = 'error';
-            document.querySelector('.container_review').prepend(error);
-        }
-        error.textContent = "Не все поля заполнены!";
-        error.style.color = 'red';
-    }
-});
-
-
-
-        editButton.addEventListener('click', function () {
-            editableCells.forEach(cell => {
-                const content = cell.innerHTML;
-
-                // Извлекаем только текст без HTML-тегов
-                const textContent = extractTextFromHTML(content);
-
-                if (content.includes('<p>') || content.includes('<br>') || textContent.length > 50) {
-                    const textarea = document.createElement('textarea');
-                    textarea.className = 'editable editable-textarea';
-                    textarea.value = textContent;
-                    cell.innerHTML = '';
-                    cell.appendChild(textarea);
-                }
-                else {
-                    const input = document.createElement('input');
-                    input.className = 'editable';
-                    input.type = 'text';
-                    input.value = textContent;
-                    cell.innerHTML = '';
-                    cell.appendChild(input);
+            // Валидация формы перед отправкой
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                const requiredInputs = form.querySelectorAll('input[required]');
+                
+                requiredInputs.forEach(input => {
+                    if (!input.value.trim() && input.type !== 'file') {
+                        input.style.border = '1px solid red';
+                        isValid = false;
+                    } else if (input.type === 'file' && !input.files[0]) {
+                        input.style.border = '1px solid red';
+                        isValid = false;
+                    } else {
+                        input.style.border = '';
+                    }
+                });
+                
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Пожалуйста, заполните все обязательные поля!');
                 }
             });
-
-            moreButton.style.display = 'block';
-            saveButton.style.display = "block";
-            editButton.style.display = "none";
-        })
-
-
-        editButton.addEventListener('click', function () {
-            // Находим все сохраненные значения
-            const savedValues = document.querySelectorAll('.saved-value, .saved-file');
-
-            savedValues.forEach(savedElement => {
-                // Определяем тип поля (текст или файл)
-                const isFile = savedElement.classList.contains('saved-file');
-
-                // Создаем соответствующий input
-                let input;
-                if (isFile) {
-                    input = document.createElement('input');
-                    input.type = 'file';
-                    // Для файловых полей нельзя установить предыдущее значение
-                } else {
-                    input = document.createElement('input');
-                    input.type = 'text';
-                    input.className = 'table_inp';
-                    input.value = savedElement.textContent;
-                }
-
-                // Заменяем <p> на input
-                savedElement.replaceWith(input);
-            });
-
-            // Переключаем кнопки
-            saveButton.style.display = 'block';
-            editButton.style.display = 'none';
         });
-
     </script>
 </body>
-
 </html>

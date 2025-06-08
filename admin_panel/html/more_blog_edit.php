@@ -24,7 +24,7 @@ foreach ($_FILES as $key => $file) {
         }
         
         // Создаем папку для загрузки, если её нет
-        $upload_dir = __DIR__ . '/../../uploads/blogs/';
+        $upload_dir = __DIR__ . '/../../image/blog/steps/';
         if (!file_exists($upload_dir)) {
             mkdir($upload_dir, 0777, true);
         }
@@ -36,7 +36,7 @@ foreach ($_FILES as $key => $file) {
         
         if (move_uploaded_file($file['tmp_name'], $target_path)) {
             // Обновляем путь в базе данных
-            $image_path = '/uploads/blogs/' . $file_name;
+            $image_path = '/image/blog/steps/' . $file_name;
             $sql = "UPDATE blog_steps SET image = ? WHERE blog_id = ? AND step_number = ?";
             $stmt = mysqli_prepare($connect, $sql);
             mysqli_stmt_bind_param($stmt, "sii", $image_path, $blog_id, $step_number);
