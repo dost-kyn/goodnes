@@ -38,97 +38,97 @@ input[type='checkbox'] {
   background-color: #B0206B;
   border: none;
 }
-  
-  :root {
-    /* Светлая тема (по умолчанию) */
-    --bg-color: #fff8f0;
-    --text-color: #410e28;
-    --header-bg: #fff;
-    --card-bg: #fff;
-    --button-bg: #d587af;
-    --button-text: #fff;
-    --border-color: #410e28;
-    --chekbox: #EDC6D1;
-  }
-  
-  [data-theme="dark"] {
-    /* Тёмная тема */
-    --bg-color: #5D4A58;
-    --text-color: #FBF5F8;
-    --header-bg: #806868;
-    --card-bg: #806868;
-    --button-bg: #602E47;
-    --button-text: #FBF5F8;
-    --border-color: #FBF5F8;
-    --chekbox: #BEA4B2;
-  }
-  
-  
-  [data-theme-image] {
-    transition: opacity 0.3s ease;
-  }
-  
-  /* Добавьте эти стили в ваш CSS файл */
-  
-  /* Общие стили для изображений с темой */
-  [data-theme-image] {
-    transition: opacity 0.3s ease;
-    position: relative;
-  }
-  
-  /* Светлая версия изображения (по умолчанию) */
-  [data-theme-image]::before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: var(--light-image);
-    background-size: contain;
-    background-repeat: no-repeat;
-    opacity: 1;
-    transition: opacity 0.3s ease;
-    z-index: 1;
-  }
-  
-  /* Темная версия изображения */
-  [data-theme-image]::after {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: var(--dark-image);
-    background-size: contain;
-    background-repeat: no-repeat;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 2;
-  }
-  
-  /* При темной теме показываем темное изображение */
-  [data-theme="dark"] [data-theme-image]::before {
-    opacity: 0;
-  }
-  
-  [data-theme="dark"] [data-theme-image]::after {
-    opacity: 1;
-  }
-  
-  /* Скрываем оригинальный тег img */
-  [data-theme-image] img {
-    opacity: 0;
-    width: 100%;
-    height: auto;
-  }
-  
-  
 
-  
+:root {
+  /* Светлая тема (по умолчанию) */
+  --bg-color: #fff8f0;
+  --text-color: #410e28;
+  --header-bg: #fff;
+  --card-bg: #fff;
+  --button-bg: #d587af;
+  --button-text: #fff;
+  --border-color: #410e28;
+  --chekbox: #EDC6D1;
+}
+
+[data-theme="dark"] {
+  /* Тёмная тема */
+  --bg-color: #5D4A58;
+  --text-color: #FBF5F8;
+  --header-bg: #806868;
+  --card-bg: #806868;
+  --button-bg: #602E47;
+  --button-text: #FBF5F8;
+  --border-color: #FBF5F8;
+  --chekbox: #BEA4B2;
+}
+
+
+[data-theme-image] {
+  transition: opacity 0.3s ease;
+}
+
+/* Добавьте эти стили в ваш CSS файл */
+
+/* Общие стили для изображений с темой */
+[data-theme-image] {
+  transition: opacity 0.3s ease;
+  position: relative;
+}
+
+/* Светлая версия изображения (по умолчанию) */
+[data-theme-image]::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: var(--light-image);
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+/* Темная версия изображения */
+[data-theme-image]::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: var(--dark-image);
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+/* При темной теме показываем темное изображение */
+[data-theme="dark"] [data-theme-image]::before {
+  opacity: 0;
+}
+
+[data-theme="dark"] [data-theme-image]::after {
+  opacity: 1;
+}
+
+/* Скрываем оригинальный тег img */
+[data-theme-image] img {
+  opacity: 0;
+  width: 100%;
+  height: auto;
+}
+
+
+
+
 
 
 /*               section menu             */
@@ -138,6 +138,7 @@ input[type='checkbox'] {
   justify-content: space-between;
   max-width: 1148px;
 }
+
 .menu_btn {
   color: var(--text-color);
   position: relative;
@@ -147,6 +148,7 @@ input[type='checkbox'] {
   border: none;
   cursor: pointer;
 }
+
 .menu_btn_icon {
   position: absolute;
   margin-bottom: 30px;
@@ -156,342 +158,401 @@ input[type='checkbox'] {
   top: -40px;
   left: 19%;
 }
+
 .menu_btn_icon_img {
   width: 100%;
 }
+
 .menu_btn_name {
   margin-top: 50px;
   font-size: 25px;
   font-family: "Calypso";
   text-decoration-line: underline;
 }
+
 .one_or_hour {
   text-decoration-color: #e7bcd3;
 }
+
 .two_or_five {
   text-decoration-color: #efceba;
 }
+
 .three_or_six {
   text-decoration-color: #f2c1b7;
 }
 
 /*               section menu             */
 
-  /*               section crumds             */
-  .crumds{
-    margin-top: 60px;
-  }
-  .crumbs_content a{
-    font-size: 15px;
-  }
-
-  /*               section crumds             */
-
-  /*               section main_info             */
-  .main_info {
-    margin: 150px 0;
-    width: 100%;
-  }
-  .main_info_content{
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-  }
-  /* .main_info_image{
-    width: 560px;
-    width: 360px;
-    margin: 0 auto; 
-  }
-  .main_info_img{
-    width: 100%;
-    height: auto; 
-    display: block; 
-    transition: all 0.3s ease;
-  } */
-
-  /* .main_info_image{
-    max-width: 560px;
-  } */
-  /* .main_info_img{
-    width: 100%;
-  }  */
-  .main_info_conteiner{
-    max-width: 560px;
-  }
-  .main_info_name {
-    font-size: 2.6vw;
-    font-family: "Calypso";
-    font-weight: 300;
-    margin: 0;
-  }
-  .main_info_mini{
-    margin-top: 160px;
-    max-width: 520px;
-    min-width: 320px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    row-gap: 20px;
-    column-gap: 20px;
-    font-size: 16px;
+/*               section crumds             */
+.crumds {
+  margin-top: 60px;
 }
-.main_info_save{
-    margin: 30px auto 0 auto;
-    justify-content: center;
-    text-align: center;
-  }
-  .main_info_btn {
-    text-align: center;
-    font-size: 18px;
-    margin: 10px auto 0 auto;
-    font-weight: 500;
-    font-family: "Rounded Mplus 1c";
-    height: 40px;
-    width: 290px;
-    background-color: var(--button-bg);
-    border: none;
-    border-radius: 12px;
-    color: var(--button-text);
-    cursor: pointer;
-  }  
-  .main_info_btn.saved {
-    color: #555555;
-  } 
 
-  /*               section main_info             */
+.crumbs_content a {
+  font-size: 15px;
+}
 
-  /*               section description             */
-  .description {
-    margin: 150px 0;
-    width: 100%;
-  }
-  .description_title {
-    font-size: 2.6vw;
-    font-family: "Calypso";
-    font-weight: 300;
-    margin: 0 auto 30px auto;
-    text-align: center;
-  }
-  .desc_text{
-    font-size: 24px;
-    text-align: center;
-  }
+/*               section crumds             */
 
-  /*               section description             */
+/*               section main_info             */
+.main_info {
+  margin: 150px 0;
+  width: 100%;
+}
 
-  /*               section ingredients             */
-  .ingredients {
-    margin: 150px 0;
-    width: 100%;
-  }
-  .ingre_title {
-    font-size: 2.6vw;
-    font-family: "Calypso";
-    font-weight: 300;
-    margin: 0 auto 30px auto;
-    text-align: center;
-  }
-  .ingre_content{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
-    row-gap: 30px;
-    column-gap: 25px;
-    transition: all 0.3s ease;
-  }
-  .ingre_box{
-    display: flex;
-    height: 40px;
-    gap: 15px;
-    margin-top: 0;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  .ingre_box input[type="checkbox"] {
-    position: absolute;
-    z-index: -1;
-    opacity: 0;
-  }
-  /* вертикальное центрирование флажка и надписи к нему */
-  .ingre_box input[type="checkbox"]+label {
-    display: inline-flex;
-    align-items: center;
-    user-select: none;
-  }
-  .ingre_box input[type="checkbox"]+label::before {
-    content: '';
-    width: 35px;
-    height: 35px;
-    background-color: var(--chekbox); 
-    border: 0px; 
-    border-radius: 10px;
-    display: inline-block;
-    position: relative;
-    margin: auto 0;
-    cursor: pointer;
-  }
-  .ingre_box input[type="checkbox"]:checked+label::before {
-    background-image: url(../image/галочка.svg);
-        background-size: 80% 80%;
-        background-repeat: no-repeat;
-        background-position: center center;
-  }
-  .ingre_box input[type="checkbox"]:focus {
-    /* background-color: #B0206B; Цвет фона при выборе */
-    border: 0px;
-    outline: none;
-  }
-  .ingre_text{
-    font-size: 20px;
-    margin: auto 0;
-  }
+.main_info_content {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
 
-  /*               section ingredients             */
+.main_info_image {
+  max-width: 60vw;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 150px;
+  box-sizing: border-box;
+}
 
-  /*               section instruction             */
-  .instruction {
-    margin: 150px 0;
-    width: 100%;
-  }
-  .instru_title {
-    font-size: 2.6vw;
-    font-family: "Calypso";
-    font-weight: 300;
-    margin: 0 auto 30px auto;
-    text-align: center;
-  }
-  .instru_item{
-    display: flex;
-    gap: 20px;
-    width: 100%;
-    margin-bottom: 60px;
-    align-items: flex-start;
-  }
-  .instru_item_image{
-    width: 100%; 
-    max-width: 590px;
-    flex-shrink: 0; 
-  }
-  .instru_item_img{
-    width: 100%;
-    height: auto; /* Сохраняем пропорции */
-    display: block; /* Убираем лишнее пространство снизу */
-    object-fit: cover;
-  }
-  .instru_item_text{
-    font-size: 20px;
-    flex-grow: 1; 
-  }
-  .instru_item_text p{
-    margin: 0 0 15px 0;
-  }
+.main_info_img {
+  min-width: 145%;
+  object-fit: contain;
+  /* Сохраняет пропорции */
+  display: block;
+}
 
-  /*               section instruction             */
+.main_info_conteiner {
+  max-width: 560px;
+}
 
-  /*               section save_auto             */
-  .save_auto {
-    margin: 150px 0;
-    width: 100%;
-    text-align: center;
-  }
-  .save_auto_title {
-    font-size: 2.6vw;
-    font-family: "Calypso";
-    font-weight: 300;
-    margin: 0 auto 20px auto;
-    text-align: center;
-  }
-  .save_auto_undertitle{
-    max-width: 550px;
-    font-size: 18px;
-    text-align: center;
-    margin: 0 auto 60px auto;
-  }
-  .save_auto_akk{
-    font-size: 22px;
-    text-align: center;
-    margin: 0 auto 40px auto;
-  }
-  .save_auto_akk a{
-    text-decoration: underline;
-  }
-  .save_auto_content{
-    display: flex;
-    gap: 40px;
-    justify-content: center;
-    margin: 0 auto 30px auto;
-  }
-  .save_auto_inp{
-    width: 100%;
-    max-width: 460px;
-    background-color: var(--bg-color);
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    font-size: 18px;
-    /* color: var(--border-color); */
-  }
-  .save_auto_inp:focus{
-    border-top: none;
-    border-left: none;
-    border-right: none;
+.main_info_name {
+  font-size: 2.6vw;
+  font-family: "Calypso";
+  font-weight: 300;
+  margin: 0;
+}
+
+.main_info_mini {
+  margin-top: 160px;
+  max-width: 520px;
+  min-width: 320px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 20px;
+  column-gap: 20px;
+  font-size: 16px;
+}
+
+.main_info_save {
+  margin: 30px auto 0 auto;
+  justify-content: center;
+  text-align: center;
+}
+
+.main_info_btn {
+  text-align: center;
+  font-size: 18px;
+  margin: 10px auto 0 auto;
+  font-weight: 500;
+  font-family: "Rounded Mplus 1c";
+  height: 40px;
+  width: 290px;
+  background-color: var(--button-bg);
+  border: none;
+  border-radius: 12px;
+  color: var(--button-text);
+  cursor: pointer;
+}
+
+.main_info_btn.saved {
+  color: #555555;
+}
+
+/*               section main_info             */
+
+/*               section description             */
+.description {
+  margin: 150px 0;
+  width: 100%;
+}
+
+.description_title {
+  font-size: 2.6vw;
+  font-family: "Calypso";
+  font-weight: 300;
+  margin: 0 auto 30px auto;
+  text-align: center;
+}
+
+.desc_text {
+  font-size: 24px;
+  text-align: center;
+}
+
+/*               section description             */
+
+/*               section ingredients             */
+.ingredients {
+  margin: 150px 0;
+  width: 100%;
+}
+
+.ingre_title {
+  font-size: 2.6vw;
+  font-family: "Calypso";
+  font-weight: 300;
+  margin: 0 auto 30px auto;
+  text-align: center;
+}
+
+.ingre_content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+  row-gap: 30px;
+  column-gap: 25px;
+  transition: all 0.3s ease;
+}
+
+.ingre_box {
+  display: flex;
+  height: 40px;
+  gap: 15px;
+  margin-top: 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ingre_box input[type="checkbox"] {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+
+/* вертикальное центрирование флажка и надписи к нему */
+.ingre_box input[type="checkbox"]+label {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+}
+
+.ingre_box input[type="checkbox"]+label::before {
+  content: '';
+  width: 35px;
+  height: 35px;
+  background-color: var(--chekbox);
+  border: 0px;
+  border-radius: 10px;
+  display: inline-block;
+  position: relative;
+  margin: auto 0;
+  cursor: pointer;
+}
+
+.ingre_box input[type="checkbox"]:checked+label::before {
+  background-image: url(../image/галочка.svg);
+  background-size: 80% 80%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.ingre_box input[type="checkbox"]:focus {
+  /* background-color: #B0206B; Цвет фона при выборе */
+  border: 0px;
   outline: none;
-  }
-  .save_auto_auto{
-    margin: 30px auto 0 auto;
-    justify-content: center;
-    text-align: center;
-  }
-  .save_auto_btn {
-    text-align: center;
-    font-size: 20px;
-    margin: 10px auto 0 auto;
-    font-weight: 500;
-    font-family: "Rounded Mplus 1c";
-    height: 45px;
-    width: 220px;
-    background-color: var(--button-bg);
-    border: none;
-    border-radius: 12px;
-    color: var(--button-text);
-    cursor: pointer;
-  } 
+}
+
+.ingre_text {
+  font-size: 20px;
+  margin: auto 0;
+}
+
+/*               section ingredients             */
+
+/*               section instruction             */
+.instruction {
+  margin: 150px 0;
+  width: 100%;
+}
+
+.instru_title {
+  font-size: 2.6vw;
+  font-family: "Calypso";
+  font-weight: 300;
+  margin: 0 auto 30px auto;
+  text-align: center;
+}
+
+.instru_item {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  margin-bottom: 60px;
+  align-items: flex-start;
+}
+
+.instru_item_image {
+  width: 100%;
+  max-width: 590px;
+  flex-shrink: 0;
+}
+
+.instru_item_img {
+  width: 100%;
+  height: auto;
+  /* Сохраняем пропорции */
+  display: block;
+  /* Убираем лишнее пространство снизу */
+  object-fit: cover;
+}
+
+.instru_item_text {
+  font-size: 20px;
+  flex-grow: 1;
+}
+
+.instru_item_text p {
+  margin: 0 0 15px 0;
+}
+
+/*               section instruction             */
+
+/*               section save_auto             */
+.save_auto {
+  margin: 150px 0;
+  width: 100%;
+  text-align: center;
+}
+
+.save_auto_title {
+  font-size: 2.6vw;
+  font-family: "Calypso";
+  font-weight: 300;
+  margin: 0 auto 20px auto;
+  text-align: center;
+}
+
+.save_auto_undertitle {
+  max-width: 550px;
+  font-size: 18px;
+  text-align: center;
+  margin: 0 auto 60px auto;
+}
+
+.save_auto_akk {
+  font-size: 22px;
+  text-align: center;
+  margin: 0 auto 40px auto;
+}
+
+.save_auto_akk a {
+  text-decoration: underline;
+}
+
+.save_auto_content {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  margin: 0 auto 30px auto;
+}
+
+.save_auto_inp {
+  width: 100%;
+  max-width: 460px;
+  background-color: var(--bg-color);
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  font-size: 18px;
+  /* color: var(--border-color); */
+}
+
+.save_auto_inp:focus {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  outline: none;
+}
+
+.save_auto_auto {
+  margin: 30px auto 0 auto;
+  justify-content: center;
+  text-align: center;
+}
+
+.save_auto_btn {
+  text-align: center;
+  font-size: 20px;
+  margin: 10px auto 0 auto;
+  font-weight: 500;
+  font-family: "Rounded Mplus 1c";
+  height: 45px;
+  width: 220px;
+  background-color: var(--button-bg);
+  border: none;
+  border-radius: 12px;
+  color: var(--button-text);
+  cursor: pointer;
+}
 
 /*               notification         */
-   .notification-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-  }
-  .notification {
-    padding: 15px 25px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    color: white;
-    display: none;
-    animation: slideIn 0.5s forwards, fadeOut 0.5s 2.5s forwards;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  .notification-success {
-    background-color: #8ab98c;
-  }
-  .notification-info {
-    background-color: #6a9bc4;
-  }
-  .notification-error {
-    background-color: #bd6e69;
-  }
-  @keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-  }
-  @keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
+.notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.notification {
+  padding: 15px 25px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  color: white;
+  display: none;
+  animation: slideIn 0.5s forwards, fadeOut 0.5s 2.5s forwards;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.notification-success {
+  background-color: #8ab98c;
+}
+
+.notification-info {
+  background-color: #6a9bc4;
+}
+
+.notification-error {
+  background-color: #bd6e69;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
   }
 
-  .notification-warning {
-  background-color: #b68337; 
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.notification-warning {
+  background-color: #b68337;
   color: white;
 }
+
 .error-message {
   color: #e94141;
   font-size: 14px;
@@ -503,603 +564,820 @@ input[type='checkbox'] {
   border-color: #e94141 !important;
 }
 
-  /*               notification         */
-  /*               section save_auto             */
+/*               notification         */
+/*               section save_auto             */
 
-  /*               section review             */
-  .review{
-    margin: 0 0 150px  ;
-  }
-  .review_info{
-    max-width: 1200px;
-    display: flex;
-    justify-content: space-between;
-    text-align: center;
-    margin: 0 auto 30px auto;
-  }
-  .review_quantity{
-    font-size: 30px;
-  }
-  .review_leave{
-    margin:0;
-  }
-  .review_leave_btn {
-    font-size: 18px;
-    margin: 0 auto 0 auto;
-    font-weight: 500;
-    font-family: "Rounded Mplus 1c";
-    height: 45px;
-    width: 220px;
-    background-color: var(--button-bg);
-    border: none;
-    border-radius: 12px;
-    color: var(--button-text);
-    cursor: pointer;
-  } 
+/*               section review             */
+.review {
+  margin: 0 0 150px;
+}
 
-  .review_content{
-    width: 100%;
-    display: flex;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 30px;
-    transition: all 0.5s ease;
-  }
-  .review_box{
-    max-width: 690px;
-    flex: 1 0 calc(50% - 20px); 
-    background-color: var(--card-bg);
-    padding: 20px 25px 30px 20px;
-    
-    box-sizing: border-box;
+.review_info {
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  margin: 0 auto 30px auto;
+}
+
+.review_quantity {
+  font-size: 30px;
+}
+
+.review_leave {
+  margin: 0;
+}
+
+.review_leave_btn {
+  font-size: 18px;
+  margin: 0 auto 0 auto;
+  font-weight: 500;
+  font-family: "Rounded Mplus 1c";
+  height: 45px;
+  width: 220px;
+  background-color: var(--button-bg);
+  border: none;
+  border-radius: 12px;
+  color: var(--button-text);
+  cursor: pointer;
+}
+
+.review_content {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 30px;
+  transition: all 0.5s ease;
+}
+
+.review_box {
+  max-width: 690px;
+  flex: 1 0 calc(50% - 20px);
+  background-color: var(--card-bg);
+  padding: 20px 25px 30px 20px;
+
+  box-sizing: border-box;
   transform: scale(0.98);
   opacity: 1;
   pointer-events: auto;
   transition: opacity 0.3s ease, transform 0.3s ease;
-  }
-  .review_box.show {
-    opacity: 1;
-    transform: scale(1);
-  }
-  .review_box_info{
-    display: flex;
-    justify-content: space-between;
-    text-align: center;
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
-  .review_box_text{
-    font-size: 22px;
-  }
+}
 
-  .review_more{
-    margin: 60px auto 0 auto;
-    text-align: center;
-  }
-  .review_more_btn {
-    font-size: 18px;
-    margin: 0 auto 0 auto;
-    font-weight: 500;
-    font-family: "Rounded Mplus 1c";
-    height: 45px;
-    width: 220px;
-    background-color: var(--button-bg);
-    border: none;
-    border-radius: 12px;
-    color: var(--button-text);
-    cursor: pointer;
-  } 
+.review_box.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.review_box_info {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.review_box_text {
+  font-size: 22px;
+}
+
+.review_more {
+  margin: 60px auto 0 auto;
+  text-align: center;
+}
+
+.review_more_btn {
+  font-size: 18px;
+  margin: 0 auto 0 auto;
+  font-weight: 500;
+  font-family: "Rounded Mplus 1c";
+  height: 45px;
+  width: 220px;
+  background-color: var(--button-bg);
+  border: none;
+  border-radius: 12px;
+  color: var(--button-text);
+  cursor: pointer;
+}
 
 
-  /*               section review             */
+/*               section review             */
 
-  /*               section modal-new_review             */
+/*               section modal-new_review             */
 .modal-new_review {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  .modal-new_review.active {
-    opacity: 1;
-    display: flex;
-  }
-  .new_review_box {
-    background-color: var(--bg-color);
-    padding: 30px;
-    border-radius: 7px;
-    width: 100%;
-    max-width: 500px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    transform: translateY(-20px);
-    transition: transform 0.3s ease;
-  }
-  .modal-new_review.active .new_review_box {
-    transform: translateY(0);
-  }
-  .new_review_title {
-    margin-bottom: 20px;
-    font-weight: normal;
-    font-size: 24px;
-    color: var(--text-color);
-  }
-  .new_review_inp {
-    width: 90%;
-    min-height: 150px;
-    padding: 15px;
-    border: 1px solid var(--text-color);
-    border-radius: 5px;
-    resize: vertical;
-    font-family: inherit;
-    font-size: 16px;
-    margin-bottom: 20px;
-    border: none;
-    background-color: var(--card-bg);
-    color: var(--text-color);
-  }
-  .new_review_inp::placeholder {
-    color: var(--text-color);
-  }
-  .new_review_inp:focus {
-    outline: none;
-    border: 1px solid var(--text-color);
-  }
-  .new_review_button {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-  .new_review_btn {
-    padding: 7px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    background-color: var(--button-bg);
-    color: var(--button-text);
-    transition: background-color 0.3s ease;
-  }
-  /*               section modal-new_review             */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.modal-new_review.active {
+  opacity: 1;
+  display: flex;
+}
+
+.new_review_box {
+  background-color: var(--bg-color);
+  padding: 30px;
+  border-radius: 7px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-20px);
+  transition: transform 0.3s ease;
+}
+
+.modal-new_review.active .new_review_box {
+  transform: translateY(0);
+}
+
+.new_review_title {
+  margin-bottom: 20px;
+  font-weight: normal;
+  font-size: 24px;
+  color: var(--text-color);
+}
+
+.new_review_inp {
+  width: 90%;
+  min-height: 150px;
+  padding: 15px;
+  border: 1px solid var(--text-color);
+  border-radius: 5px;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 16px;
+  margin-bottom: 20px;
+  border: none;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.new_review_inp::placeholder {
+  color: var(--text-color);
+}
+
+.new_review_inp:focus {
+  outline: none;
+  border: 1px solid var(--text-color);
+}
+
+.new_review_button {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.new_review_btn {
+  padding: 7px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  transition: background-color 0.3s ease;
+}
+
+/*               section modal-new_review             */
 
 
-  /*        адаптив       */
-  @media (max-width: 1100px) {
+/*        адаптив       */
+@media (max-width: 1100px) {
   body {
     padding: 0 30px;
   }
+
   .main_info_mini {
     margin-top: 130px;
   }
+
   .desc_text {
     font-size: 22px;
   }
+
   .instru_item_image {
     max-width: 480px;
   }
+
   .review_quantity {
     font-size: 27px;
-  } 
+  }
+
   .review_box_info {
     font-size: 16px;
   }
+
   .review_box_text {
     font-size: 18px;
   }
 }
 
 
-@media (max-width: 1000px){
+@media (max-width: 1000px) {
+
   /* menu */
   .menu_btn {
     width: 100px;
     margin-bottom: 20px;
   }
+
   .menu_btn_icon {
     width: 70px;
     top: -40px;
     left: 15.5%;
   }
+
   .menu_btn_name {
     margin-top: 40px;
     font-size: 18px;
   }
+
   /* menu */
 
-.main_info_mini {
-  font-size: 14px;
-}
-.main_info_mini {
-  margin-top: 90px;
-}
-.main_info_btn {
-  font-size: 16px;
-  height: 38px;
-  width: 260px;
-  margin: 5px auto 0 auto;
-}
-.desc_text {
-  font-size: 18px;
-}
-.ingre_text {
-  font-size: 18px;
-}
-.ingre_box input[type="checkbox"]+label::before {
-  width: 30px;
-  height: 30px;
-}
-.ingre_content {
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-  row-gap: 30px;
-  column-gap: 25px;
-}
-.instru_item_image {
-  max-width: 450px;
-}
-.instru_item_text {
-  font-size: 17px;
-}
-.save_auto_btn {
-  font-size: 18px;
-  height: 40px;
-  width: 220px;
-}
-.review_leave_btn {
-  font-size: 16px;
-  height: 40px;
-  width: 220px;
-}
-.review_more_btn {
-  font-size: 16px;
-  height: 40px;
-  width: 200px;
-}
-}
-
-
-@media (max-width: 900px){
-
-.main_info_m span{
-  font-size: 12px;
-}
-
-  .review{
-    margin: 0 0 100px  ;
+  .main_info_mini {
+    font-size: 14px;
   }
-  .main_info_name, .description_title, .ingre_title, .instru_title, .save_auto_title {
+
+  .main_info_mini {
+    margin-top: 90px;
+  }
+
+  .main_info_btn {
+    font-size: 16px;
+    height: 38px;
+    width: 260px;
+    margin: 5px auto 0 auto;
+  }
+
+  .desc_text {
+    font-size: 18px;
+  }
+
+  .ingre_text {
+    font-size: 18px;
+  }
+
+  .ingre_box input[type="checkbox"]+label::before {
+    width: 30px;
+    height: 30px;
+  }
+
+  .ingre_content {
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    row-gap: 30px;
+    column-gap: 25px;
+  }
+
+  .instru_item_image {
+    max-width: 450px;
+  }
+
+  .instru_item_text {
+    font-size: 17px;
+  }
+
+  .save_auto_btn {
+    font-size: 18px;
+    height: 40px;
+    width: 220px;
+  }
+
+  .review_leave_btn {
+    font-size: 16px;
+    height: 40px;
+    width: 220px;
+  }
+
+  .review_more_btn {
+    font-size: 16px;
+    height: 40px;
+    width: 200px;
+  }
+}
+
+
+@media (max-width: 900px) {
+
+  .main_info_m span {
+    font-size: 12px;
+  }
+
+  .review {
+    margin: 0 0 100px;
+  }
+
+  .main_info_name,
+  .description_title,
+  .ingre_title,
+  .instru_title,
+  .save_auto_title {
     font-size: 3.7vw;
-}
-.instru_item_image {
-  max-width: 390px;
-}
-.review_quantity {
-  font-size: 24px;
-}
-.review_box_info {
-  font-size: 13px;
-}
-.review_box_text {
-  font-size: 15px;
-}
+  }
+
+  .instru_item_image {
+    max-width: 390px;
+  }
+
+  .review_quantity {
+    font-size: 24px;
+  }
+
+  .review_box_info {
+    font-size: 13px;
+  }
+
+  .review_box_text {
+    font-size: 15px;
+  }
 }
 
 
-@media (max-width: 800px){
+@media (max-width: 800px) {
   .main_info_mini {
     margin-top: 20px;
-    
-}
-.main_info_content {
-  flex-direction: column;
-  text-align: center;
-  align-items: center;
-  gap: 30px;
-}
-.main_info_m span {
-  font-size: 15px;
+
+  }
+
+  .main_info_content {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .main_info_m span {
+    font-size: 15px;
+  }
+
+  .ingre_content {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    row-gap: 30px;
+    column-gap: 25px;
+  }
+
+  .ingre_text {
+    font-size: 16px;
+  }
+
+  .instru_item_image {
+    max-width: 330px;
+  }
+
+  .instru_item_text {
+    font-size: 16px;
+  }
+
+  .save_auto_undertitle {
+    font-size: 14px;
+  }
+
+  .save_auto_akk {
+    font-size: 17px;
+  }
+
+  .save_auto_inp {
+    font-size: 15px;
+  }
 }
 
-.ingre_content {
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  row-gap: 30px;
-  column-gap: 25px;
-}
-.ingre_text {
-  font-size: 16px;
-}
-.instru_item_image {
-  max-width: 330px;
-}
-.instru_item_text {
-  font-size: 16px;
-}
-.save_auto_undertitle {
-  font-size: 14px;
-}
-.save_auto_akk {
-  font-size: 17px;
-}
-.save_auto_inp {
-  font-size: 15px;
-}
-}
 
+@media (max-width: 720px) {
 
-@media (max-width: 720px){
-    /* menu */
+  /* menu */
   .menu_buttons {
     margin: 80px auto 0 auto;
   }
+
   .menu_btn {
     background-color: var(--bg-color);
   }
+
   .menu_btn_icon {
     width: 65px;
     top: -40px;
     left: 15.5%;
   }
+
   .menu_btn_name {
     display: none;
   }
+
   /* menu */
 
 
 
- 
+
 
   .main_info {
     margin: 90px 0;
-}
-.main_info_m span {
-  font-size: 13px;
-}
-.main_info_btn {
-  font-size: 16px;
-  height: 38px;
-  width: 240px;
-  margin: 0 auto 0 auto;
-}
-.description {
-  margin: 90px 0;
-}
-.desc_text {
-  font-size: 16px;
-}
-.ingredients {
-  margin: 90px 0;
-}
+  }
+
+  .main_info_m span {
+    font-size: 13px;
+  }
+
+  .main_info_btn {
+    font-size: 16px;
+    height: 38px;
+    width: 240px;
+    margin: 0 auto 0 auto;
+  }
+
+  .description {
+    margin: 90px 0;
+  }
+
+  .desc_text {
+    font-size: 16px;
+  }
+
+  .ingredients {
+    margin: 90px 0;
+  }
+
   .ingre_content {
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     row-gap: 30px;
     column-gap: 25px;
   }
+
   .ingre_text {
     font-size: 15px;
   }
+
   .instruction {
     margin: 90px 0;
+  }
+
+  .instru_item_image {
+    max-width: 260px;
+  }
+
+  .instru_item_text {
+    font-size: 14px;
+  }
+
+  .review_quantity {
+    font-size: 20px;
+  }
+
+  .review_content {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
 }
-.instru_item_image {
-  max-width: 260px;
-}
-.instru_item_text {
-  font-size: 14px;
-}
-.review_quantity {
-  font-size: 20px;
-}
-.review_content {
-  width: 100%;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
-}
- } 
 
 
-@media (max-width: 600px){
+@media (max-width: 600px) {
+
   /* menu */
   .menu_buttons {
     margin: 60px auto 0 auto;
   }
+
   .menu_btn {
     background-color: var(--bg-color);
   }
+
   .menu_btn_icon {
     width: 45px;
     top: -40px;
     left: 15.5%;
   }
+
   .menu_btn_name {
     display: none;
   }
+
   /* menu */
 
   .crumbs_content a {
     font-size: 12px;
-}
-.main_info_mini {
-  font-size: 12px;
-}
-.main_info_save {
-  margin: 15px auto 0 auto;
-}
-.main_info_btn {
-  font-size: 14px;
-  height: 35px;
-  width: 220px;
-}
-.desc_text {
-  font-size: 15px;
-}
-.ingre_content {
-  margin: 0 40px;
-}
-.instru_item {
-  flex-direction: column;
-}
-.instru_item_image {
-  max-width: 450px;
-  margin: 0 auto;
-}
-.save_auto {
-  margin: 120px 0;
-}
-.save_auto_undertitle {
-  max-width: 440px;
-}
-.save_auto_content {
-  flex-direction: column;
-  align-items: center; 
-}
-.review_more {
-  margin: 30px auto 0 auto;
-}
-.review{
-  margin: 0 0 60px  ;
-}
+  }
+
+  .main_info_mini {
+    font-size: 12px;
+  }
+
+  .main_info_save {
+    margin: 15px auto 0 auto;
+  }
+
+  .main_info_btn {
+    font-size: 14px;
+    height: 35px;
+    width: 220px;
+  }
+
+  .desc_text {
+    font-size: 15px;
+  }
+
+  .ingre_content {
+    margin: 0 40px;
+  }
+
+  .instru_item {
+    flex-direction: column;
+  }
+
+  .instru_item_image {
+    max-width: 450px;
+    margin: 0 auto;
+  }
+
+  .save_auto {
+    margin: 120px 0;
+  }
+
+  .save_auto_undertitle {
+    max-width: 440px;
+  }
+
+  .save_auto_content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .review_more {
+    margin: 30px auto 0 auto;
+  }
+
+  .review {
+    margin: 0 0 60px;
+  }
 }
 
 
-@media (max-width: 520px){
-  .main_info_name, .description_title, .ingre_title, .instru_title, .save_auto_title {
+@media (max-width: 520px) {
+
+  .main_info_name,
+  .description_title,
+  .ingre_title,
+  .instru_title,
+  .save_auto_title {
     font-size: 4.8vw;
-}
-.main_info_btn {
-  font-size: 14px;
-  height: 32px;
-  width: 180px;
-}
-.main_info_m span {
-  font-size: 12px;
-}
-.main_info_mini {
-  max-width: 370px;
-  min-width: 240px;
-  gap: 10px;
-}
-.desc_text {
-  font-size: 13px;
-}
-.description_title {
-  margin: 0 auto 10px auto;
-}
-.ingre_text {
-  font-size: 14px;
-}
-.ingre_box input[type="checkbox"]+label::before {
-  width: 27px;
-  height: 27px;
-}
-.ingre_content {
-  row-gap: 13px;
-}
-.save_auto_akk {
-  font-size: 15px;
-  margin: 0 auto 20px auto;
-}
-.save_auto_btn {
-  font-size: 16px;
-  height: 36px;
-}
-.save_auto_auto {
-  margin: 15px auto 0 auto;
-}
-.save_auto_content {
-  margin: 0 auto 10px auto;
-}
-.review_leave_btn {
-  font-size: 14px;
-  height: 36px;
-  width: 190px;
-}
-.review_quantity {
-  font-size: 18px;
-}
-.review_info {
-  margin: 0 auto 20px auto;
-}
-.review_box_info {
-  font-size: 11px;
-}
-.review_box_text {
-  font-size: 13px;
-}
-.review_more_btn {
-  font-size: 14px;
-  height: 36px;
-  width: 190px;
-}
+  }
+
+  .main_info_btn {
+    font-size: 14px;
+    height: 32px;
+    width: 180px;
+  }
+
+  .main_info_m span {
+    font-size: 12px;
+  }
+
+  .main_info_mini {
+    max-width: 370px;
+    min-width: 240px;
+    gap: 10px;
+  }
+
+  .desc_text {
+    font-size: 13px;
+  }
+
+  .description_title {
+    margin: 0 auto 10px auto;
+  }
+
+  .ingre_text {
+    font-size: 14px;
+  }
+
+  .ingre_box input[type="checkbox"]+label::before {
+    width: 27px;
+    height: 27px;
+  }
+
+  .ingre_content {
+    row-gap: 13px;
+  }
+
+  .save_auto_akk {
+    font-size: 15px;
+    margin: 0 auto 20px auto;
+  }
+
+  .save_auto_btn {
+    font-size: 16px;
+    height: 36px;
+  }
+
+  .save_auto_auto {
+    margin: 15px auto 0 auto;
+  }
+
+  .save_auto_content {
+    margin: 0 auto 10px auto;
+  }
+
+  .review_leave_btn {
+    font-size: 14px;
+    height: 36px;
+    width: 190px;
+  }
+
+  .review_quantity {
+    font-size: 18px;
+  }
+
+  .review_info {
+    margin: 0 auto 20px auto;
+  }
+
+  .review_box_info {
+    font-size: 11px;
+  }
+
+  .review_box_text {
+    font-size: 13px;
+  }
+
+  .review_more_btn {
+    font-size: 14px;
+    height: 36px;
+    width: 190px;
+  }
 }
 
 
-@media (max-width: 420px){
-.crumbs_content{
-  max-width: 240px;
-}
-.ingre_content {
-  margin: 0 30px;
-}
-.main_info_m span {
-  font-size: 11px;
-}
-.main_info_mini {
-  margin-top: 10px;
-}
-.main_info_btn {
-  font-size: 13px;
-  height: 28px;
-  width: 140px;
-}
+@media (max-width: 420px) {
+  .crumbs_content {
+    max-width: 240px;
+  }
+
+  .ingre_content {
+    margin: 0 30px;
+  }
+
+  .main_info_m span {
+    font-size: 11px;
+  }
+
+  .main_info_mini {
+    margin-top: 10px;
+  }
+
+  .main_info_btn {
+    font-size: 13px;
+    height: 28px;
+    width: 140px;
+  }
 }
 
-@media (max-width: 420px){
+@media (max-width: 420px) {
   .ingre_content {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-}
+  }
+
   .ingre_content {
     margin: 0 5px;
   }
+
   .instru_item {
     gap: 10px;
   }
+
   .instru_item_text p {
     margin: 0 0 9px 0;
-}
+  }
+
   .instru_item {
     margin-bottom: 30px;
+  }
+
+  .save_auto_btn {
+    font-size: 13px;
+    height: 28px;
+    width: 140px;
+  }
+
+  .save_auto_undertitle {
+    font-size: 12px;
+  }
+
+  .save_auto_undertitle {
+    margin: 0 auto 30px auto;
+  }
+
+  .review_quantity {
+    font-size: 15px;
+  }
+
+  .review_leave_btn {
+    font-size: 12px;
+    height: 30px;
+    width: 130px;
+
+  }
+
+  .review_more_btn {
+    font-size: 13px;
+    height: 28px;
+    width: 140px;
+  }
 }
-.save_auto_btn {
-  font-size: 13px;
-  height: 28px;
-  width: 140px;
-}
-.save_auto_undertitle {
-  font-size: 12px;
-}
-.save_auto_undertitle {
-  margin: 0 auto 30px auto;
-}
-.review_quantity {
-  font-size: 15px;
-}
-.review_leave_btn {
-  font-size: 12px;
-  height: 30px;
-  width: 130px;
-  
-}
-.review_more_btn {
-  font-size: 13px;
-  height: 28px;
-  width: 140px;
-}
-}
+
 /*     адаптив      */
+
+
+
+/* адаптив главной фотки */
+@media (max-width: 1000px) {
+  .main_info_image {
+    padding: 20px 130px;
+  }
+
+  .main_info_img {
+    min-width: 125%;
+  }
+}
+
+@media (max-width: 900px) {
+  .main_info_image {
+    max-width: 80vw;
+  }
+
+  .main_info_img {
+    min-width: 115%;
+  }
+}
+
+@media (max-width: 800px) {
+  .main_info_image {
+    padding: 30px 160px;
+    width: 65vw;
+  }
+
+  .main_info_img {
+    min-width: 130%;
+  }
+}
+
+@media (max-width: 700px) {
+  .main_info_image {
+    width: 70vw;
+  }
+
+  .main_info_img {
+    min-width: 130%;
+  }
+}
+
+@media (max-width: 600px) {
+  .main_info_img {
+    min-width: 170%;
+  }
+}
+
+@media (max-width: 550px) {
+  .main_info_image {
+    padding: 25px 140px;
+  }
+
+  .main_info_img {
+    min-width: 180%;
+  }
+}
+
+@media (max-width: 500px) {
+  .main_info_img {
+    min-width: 210%;
+  }
+}
+
+@media (max-width: 460px) {
+  .main_info_image {
+    padding: 15px 110px;
+  }
+
+  .main_info_img {
+    min-width: 130%;
+  }
+}
+
+@media (max-width: 410px) {
+  .main_info_img {
+    min-width: 180%;
+  }
+}
+
+@media (max-width: 370px) {
+  .main_info_img {
+    min-width: 260%;
+  }
+}

@@ -8,43 +8,98 @@ if (!isset($_SESSION['user']['id'])) {
     exit();
 }
 
-$user_id = (int)$_SESSION['user']['id'];
+$user_id = (int) $_SESSION['user']['id'];
 
-// Запрос данных пользователя
+// Оригинальный запрос (без изменений)
 $sql = "SELECT 
-            u.id, u.name, u.numder_recipes,
-            r.id AS recipe_id, r.name AS recipe_name,
-            r.cooking_time, r.calorie, r.caregories, r.maun_image,
-            sr.saved_at
-        FROM users u
-        LEFT JOIN saved_recipes sr ON u.id = sr.user_id
-        LEFT JOIN recipes r ON sr.recipe_id = r.id
-        WHERE u.id = ?";
-        
+            u.id, 
+            u.name, 
+            u.numder_recipes,
+            r.id AS recipe_id, 
+            r.name AS recipe_name,
+            r.cooking_time, 
+            r.calorie, 
+            r.caregories, 
+            r.maun_image,
+            sr.saved_at,
+            rev.id AS review_id,
+            rev.text AS review_text,
+            rev.created_at AS review_date,
+            rev.status AS review_status
+        FROM 
+            users u
+        LEFT JOIN 
+            saved_recipes sr ON u.id = sr.user_id
+        LEFT JOIN 
+            recipes r ON sr.recipe_id = r.id
+        LEFT JOIN
+            reviews rev ON rev.user_id = u.id AND rev.recipe_id = r.id
+        WHERE 
+            u.id = ?
+        ORDER BY
+            sr.saved_at DESC, rev.created_at DESC";
+
 $stmt = mysqli_prepare($connect, $sql);
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
+
+// Новый запрос только для отзывов пользователя
+$reviews_sql = "SELECT 
+            rev.id AS review_id,
+            rev.text AS review_text,
+            rev.created_at AS review_date,
+            rev.status AS review_status,
+            r.id AS recipe_id,
+            r.name AS recipe_name,
+            r.maun_image
+        FROM 
+            reviews rev
+        JOIN 
+            recipes r ON rev.recipe_id = r.id
+        WHERE 
+            rev.user_id = ?
+        ORDER BY
+            rev.created_at DESC";
+
+$reviews_stmt = mysqli_prepare($connect, $reviews_sql);
+mysqli_stmt_bind_param($reviews_stmt, "i", $user_id);
+mysqli_stmt_execute($reviews_stmt);
+$reviews_result = mysqli_stmt_get_result($reviews_stmt);
 
 // echo "<pre>ID пользователя из сессии: " . htmlspecialchars($user_id) . "</pre>";
 
 
 // Обработчик удаления рецепта
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_recipe'])) {
-    $recipe_id = (int)$_POST['recipe_id'];
-    $user_id = (int)$_SESSION['user']['id'];
-    
+    $recipe_id = (int) $_POST['recipe_id'];
+    $user_id = (int) $_SESSION['user']['id'];
+
     $delete_sql = "DELETE FROM saved_recipes WHERE user_id = ? AND recipe_id = ?";
     $stmt = mysqli_prepare($connect, $delete_sql);
     mysqli_stmt_bind_param($stmt, "ii", $user_id, $recipe_id);
     mysqli_stmt_execute($stmt);
-    
+
     if (mysqli_stmt_affected_rows($stmt) > 0) {
-        header("Location: ".$_SERVER['PHP_SELF']); // Перезагружаем страницу
+        header("Location: " . $_SERVER['PHP_SELF']); // Перезагружаем страницу
         exit();
     } else {
         echo "<script>alert('Ошибка при удалении рецепта');</script>";
     }
+}
+
+
+//  Обработчик удаления отзыва -->
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_review'])) {
+    $review_id = (int) $_POST['review_id'];
+
+    $delete_sql = "DELETE FROM reviews WHERE id = ? AND user_id = ?";
+    $stmt = mysqli_prepare($connect, $delete_sql);
+    mysqli_stmt_bind_param($stmt, "ii", $review_id, $user_id);
+    mysqli_stmt_execute($stmt);
+
+    header("Location: " . $_SERVER['PHP_SELF']); // Перезагрузка страницы
+    exit();
 }
 ?>
 <!DOCTYPE html>
@@ -56,10 +111,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_recipe'])) {
     <link rel="stylesheet" href="/css/header_footer.css">
     <link rel="stylesheet" href="/css/profile.css">
     <title>Профиль</title>
+    <style>
+        .recipes_card form {
+            margin: 5px 0 0 auto;
+        }
+    </style>
 </head>
 
 <body>
-     <header class="header">
+    <header class="header">
         <div class="header_content">
             <a class="header_logo" href="home.php">
                 <img src="/image/лого.svg" data-theme-image data-light="/image/лого.svg"
@@ -130,48 +190,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_recipe'])) {
 
 
     <?php if ($result && mysqli_num_rows($result) > 0): ?>
-    <?php $first = true; ?>
-    <?php while ($row = mysqli_fetch_assoc($result)): ?>
-        <?php if ($first): ?>
-        <div class="name_user">
-            <h1 class="name_user_h1"><?php echo $row['name']?></h1>
-        </div>
-    <?php $first = false; ?>
-        <?php endif; ?>
-
-
-
-
-    <section class="search">
-        <div class="find">
-            <input class="search_inp" type="text" placeholder="Поиск..">
-            <button class="search_btn">Найти</button>
-        </div>
-
-        <div class="blog">
-            <button class="blog_btn" onclick="window.location.href='blog.php'">Блоги</button>
-        </div>
-    </section>
-
-    <section class="catalog">
-        <div class="recipes_cards">
-
-            <?php if ($row['recipe_id']): ?>
-                <div class="recipes_card">
-                    <h1 class="recipes_title"><?php echo $row['recipe_name']?></h1>
-                    <div class="recipes_image">
-                        <img src="<?php echo $row['maun_image']?>" alt="" class="recipes_image_img">
-                    </div>
-                    <div class="recipes_info">
-                        <p class="recipes_calory">Калорийность: <?php echo $row['calorie']?> ккал</p>
-                        <p class="recipes_category">Категория: <?php echo $row['caregories']?></p>
-                    </div>
-                    <form method="POST" onsubmit="return confirm('Вы уверены, что хотите удалить этот рецепт?')">
-                        <input type="hidden" name="recipe_id" value="<?php echo $row['recipe_id']; ?>">
-                        <button type="submit" name="delete_recipe" class="recipes_btn">Удалить</button>
-                    </form>
+        <?php $first = true; ?>
+        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+            <?php if ($first): ?>
+                <div class="name_user">
+                    <h1 class="name_user_h1"><?php echo $row['name'] ?></h1>
                 </div>
+                <?php $first = false; ?>
             <?php endif; ?>
+
+
+
+
+            <section class="search">
+                <div class="find">
+                    <input class="search_inp" type="text" placeholder="Поиск..">
+                    <button class="search_btn">Найти</button>
+                </div>
+
+                <div class="blog">
+                    <button class="blog_btn" onclick="window.location.href='blog.php'">Блоги</button>
+                </div>
+            </section>
+
+            <section class="catalog">
+                <div class="recipes_cards">
+
+                    <?php if ($row['recipe_id']): ?>
+                        <a href="recipe_page.php?id=<?= htmlspecialchars($row['recipe_id']) ?>" class="recipes_card">
+                            <h1 class="recipes_title"><?php echo $row['recipe_name'] ?></h1>
+                            <div class="recipes_image">
+                                <img src="<?php echo $row['maun_image'] ?>" alt="" class="recipes_image_img">
+                            </div>
+                            <div class="recipes_info">
+                                <p class="recipes_calory">Калорийность: <?php echo $row['calorie'] ?> ккал</p>
+                                <p class="recipes_category">Категория: <?php echo $row['caregories'] ?></p>
+                            </div>
+                            <form method="POST" onsubmit="return confirm('Вы уверены, что хотите удалить этот рецепт?')">
+                                <input type="hidden" name="recipe_id" value="<?php echo $row['recipe_id']; ?>">
+                                <button type="submit" name="delete_recipe" class="recipes_btn">Удалить</button>
+                            </form>
+                        </a>
+                    <?php endif; ?>
                 <?php endwhile; ?>
             <?php else: ?>
                 <p>Нет сохранённых рецептов.</p>
@@ -207,7 +267,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_recipe'])) {
             </div>
         </div>
         <div class="review_content">
-            <div class="review_box">
+
+            <?php
+            $has_approved_reviews = false;
+            if ($reviews_result && mysqli_num_rows($reviews_result) > 0):
+                while ($review = mysqli_fetch_assoc($reviews_result)):
+                    // Проверяем, что статус отзыва "approved"
+                    if ($review['review_status'] === 'approved'):
+                        $has_approved_reviews = true;
+                        ?>
+                        <div class="review_box">
+                            <div class="review_box_info">
+                                <span class="review_name"><?= htmlspecialchars($_SESSION['user']['name'] ?? 'Вы') ?></span>
+                                <a href="/recipe.php?id=<?= $review['recipe_id'] ?>" class="review_recipe">
+                                    <?= htmlspecialchars($review['recipe_name']) ?>
+                                </a>
+                                <span class="review_date"><?= date('d.m.Y', strtotime($review['review_date'])) ?></span>
+                            </div>
+                            <p class="review_box_text"><?= htmlspecialchars($review['review_text']) ?></p>
+                            <!-- <div class="review_status approved">Статус: Одобрено</div> -->
+                            <form method="POST">
+                                <input type="hidden" name="review_id" value="<?= $review['review_id'] ?>">
+                                <button type="submit" name="delete_review" class="review_btn">Удалить</button>
+                            </form>
+                        </div>
+                    <?php endif; ?>
+                <?php endwhile; ?>
+
+                <?php if (!$has_approved_reviews): ?>
+                    <p>У вас нет одобренных отзывов.</p>
+                <?php endif; ?>
+            <?php else: ?>
+                <p>У вас пока нет отзывов.</p>
+            <?php endif; ?>
+
+
+
+
+
+
+
+
+
+            <!-- <?php if ($result && mysqli_num_rows($result) > 0): ?>
+                <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                    <?php if ($row['review_id']): ?>  
+                        <div class="review_box">
+                            <div class="review_box_info">
+                                <span class="review_name">Альбер Камю</span>
+                                <a class="review_recipe">Овсяное печенье</a>
+                                <span class="review_date"><?= date('d.m.Y', strtotime($row['review_date'])) ?></span>
+                            </div>
+                            <p class="review_box_text"><?= htmlspecialchars($row['review_text']) ?></p>
+                            <button class="review_btn">Удалить</button>    
+                        </div>
+                    <?php endif; ?>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <p>Нет отзывов.</p>
+            <?php endif; ?> -->
+
+            <!-- <div class="review_box">
                 <div class="review_box_info">
                     <span class="review_name">Альбер Камю</span>
                     <a class="review_recipe">Овсяное печенье</a>
@@ -216,19 +336,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_recipe'])) {
                 <p class="review_box_text">Вымесить тесто силиконовой лопаткой очень тщательно. Все ингредиенты должны
                     хорошо соединиться друг с другом. Тесто становится очень послушным и не слишком липким.</p>
                 <button class="review_btn">Удалить</button>    
-                </div>
-            <div class="review_box">
-                <div class="review_box_info">
-                    <span class="review_name">Альбер Камю</span>
-                    <a class="review_recipe">Ржаной хлеб</a>
-                    <span class="review_date">28.03.2025</span>
-                </div>
-                <p class="review_box_text">Вымесить тесто силиконовой лопаткой очень тщательно. Все ингредиенты должны
-                    хорошо соединиться друг с другом. Тесто становится очень послушным и не слишком липким.</p>
-                <button class="review_btn">Удалить</button> 
-            </div>
-
-            <div class="review_box ban">
+            </div> -->
+            <!-- <div class="review_box ban">
                 <p class="review_box_text_ban">Ваш отзыв заблокирован. Удаление через: 2:59 ч</br>Причина: Спам</p>
                 <div class="review_box_info">
                     <span class="review_name">Альбер Камю</span>
@@ -237,58 +346,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_recipe'])) {
                 </div>
                 <p class="review_box_text">Вымесить тесто силиконовой лопаткой очень тщательно. Все ингредиенты должны
                     хорошо соединиться друг с другом. Тесто становится очень послушным и не слишком липким.</p>
-            </div>
-
-            <div class="review_box ban">
-                <p class="review_box_text_ban">Ваш отзыв заблокирован. Удаление через: 2:59 ч</br>Причина: Спам</p>
-                <div class="review_box_info">
-                    <span class="review_name">Альбер Камю</span>
-                    <a class="review_recipe">Ржаной хлеб</a>
-                    <span class="review_date">28.03.2025</span>
-                </div>
-                <p class="review_box_text">Вымесить тесто силиконовой лопаткой очень тщательно. Все ингредиенты должны
-                    хорошо соединиться друг с другом. Тесто становится очень послушным и не слишком липким.</p>
-            </div>
-            <div class="review_box">
-                <div class="review_box_info">
-                    <span class="review_name">Альбер Камю</span>
-                    <a class="review_recipe">Овсяное печенье</a>
-                    <span class="review_date">09.03.2025</span>
-                </div>
-                <p class="review_box_text">Вымесить тесто силиконовой лопаткой очень тщательно. Все ингредиенты должны
-                    хорошо соединиться друг с другом. Тесто становится очень послушным и не слишком липким.</p>
-                <button class="review_btn">Удалить</button>    
-                </div>
-            <div class="review_box">
-                <div class="review_box_info">
-                    <span class="review_name">Альбер Камю</span>
-                    <a class="review_recipe">Ржаной хлеб</a>
-                    <span class="review_date">28.03.2025</span>
-                </div>
-                <p class="review_box_text">Вымесить тесто силиконовой лопаткой очень тщательно. Все ингредиенты должны
-                    хорошо соединиться друг с другом. Тесто становится очень послушным и не слишком липким.</p>
-                <button class="review_btn">Удалить</button> 
-            </div>
-            <div class="review_box">
-                <div class="review_box_info">
-                    <span class="review_name">Альбер Камю</span>
-                    <a class="review_recipe">Овсяное печенье</a>
-                    <span class="review_date">09.03.2025</span>
-                </div>
-                <p class="review_box_text">Вымесить тесто силиконовой лопаткой очень тщательно. Все ингредиенты должны
-                    хорошо соединиться друг с другом. Тесто становится очень послушным и не слишком липким.</p>
-                <button class="review_btn">Удалить</button>    
-                </div>
-            <div class="review_box">
-                <div class="review_box_info">
-                    <span class="review_name">Альбер Камю</span>
-                    <a class="review_recipe">Ржаной хлеб</a>
-                    <span class="review_date">28.03.2025</span>
-                </div>
-                <p class="review_box_text">Вымесить тесто силиконовой лопаткой очень тщательно. Все ингредиенты должны
-                    хорошо соединиться друг с другом. Тесто становится очень послушным и не слишком липким.</p>
-                <button class="review_btn">Удалить</button> 
-            </div>
+            </div> -->
         </div>
 
         <div class="review_more">

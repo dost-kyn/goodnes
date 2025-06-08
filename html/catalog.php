@@ -4,19 +4,45 @@ require_once '../connect/connect.php';
 
 session_start();
 
+$user_id = isset($_SESSION['user']['id']) ? (int) $_SESSION['user']['id'] : 0;
+
 $sql = "SELECT 
-           id,
-           name,
-           cooking_time,
-           calorie,
-           caregories,
-           maun_image
-        FROM recipes";
-$result = mysqli_query($connect, $sql);
+           r.id,
+           r.name,
+           r.cooking_time,
+           r.calorie,
+           r.caregories,
+           r.maun_image,
+           IFNULL((SELECT 1 FROM saved_recipes sr WHERE sr.user_id = ? AND sr.recipe_id = r.id LIMIT 1), 0) AS is_saved
+        FROM 
+           recipes r
+        ORDER BY r.id DESC"; // Добавлен порядок сортировки
+
+$stmt = mysqli_prepare($connect, $sql);
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+
+
+// Добавляем отладочный вывод для проверки запроса (удалите в продакшене)
+error_log("Executing query: " . $sql);
+error_log("With user_id: " . $user_id);
+
+$stmt = mysqli_prepare($connect, $sql);
+if (!$stmt) {
+    die("Ошибка подготовки запроса: " . mysqli_error($connect));
+}
+
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+
+if (!mysqli_stmt_execute($stmt)) {
+    die("Ошибка выполнения запроса: " . mysqli_stmt_error($stmt));
+}
+
+$result = mysqli_stmt_get_result($stmt);
+if (!$result) {
+    die("Ошибка получения результата: " . mysqli_error($connect));
+}
 
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -85,7 +111,7 @@ $result = mysqli_query($connect, $sql);
 
             <?php if (isset($_SESSION['user'])): ?>
                 <!-- <a href="profile.php" class="mobile-menu-link">Профиль</a> -->
-                 <a href="profile.php?user_id=<?php echo $_SESSION['user']['id']; ?>" class="mobile-menu-link">Профиль</a>
+                <a href="profile.php?user_id=<?php echo $_SESSION['user']['id']; ?>" class="mobile-menu-link">Профиль</a>
                 <a href="/connect/logout.php" class="mobile-menu-link">Выйти</a>
             <?php else: ?>
                 <a href="/components/modal_auth.php" class="mobile-menu-link">Войти</a>
@@ -213,6 +239,7 @@ $result = mysqli_query($connect, $sql);
                         <a href="recipe_page.php?id=<?= htmlspecialchars($card['id']) ?>" class="recipes_card"
                             data-id="<?= htmlspecialchars($card['id']) ?>"
                             data-cooking-time="<?= htmlspecialchars($card['cooking_time']) ?>">
+
                             <h1 class="recipes_title"><?= htmlspecialchars($card['name']) ?></h1>
                             <div class="recipes_image">
                                 <?php if (!empty($card['maun_image'])): ?>
@@ -223,15 +250,19 @@ $result = mysqli_query($connect, $sql);
                                 <?php endif; ?>
                             </div>
                             <div class="recipes_info">
-                                <p class="recipes_calory">Калорийность: <?= htmlspecialchars($card['calorie']) ?> ккал
-                                </p>
+                                <p class="recipes_calory">Калорийность: <?= htmlspecialchars($card['calorie']) ?> ккал</p>
                                 <p class="recipes_category">Категория: <?= htmlspecialchars($card['caregories']) ?></p>
                             </div>
-                            <button class="recipes_btn">Сохранить</button>
+                            <?php if (isset($_SESSION['user']['id'])): ?>
+                                <button class="recipes_btn save-recipe <?= $card['is_saved'] ? 'saved' : '' ?>"
+                                    data-recipe-id="<?= $card['id'] ?>">
+                                    <?= $card['is_saved'] ? 'Сохранено' : 'Сохранить' ?>
+                                </button>
+                            <?php endif; ?>
                         </a>
                     <?php endwhile; ?>
 
-                    <!--<div class="recipes_card" data-id="2">
+                    <!--<div class="recipes_card" data-id="2" data-recipe-id="<?= htmlspecialchars($card['id']) ?>">
                         <h1 class="recipes_title">Батон</h1>
                         <div class="recipes_image">
                             <img src="/image/home/Батон.png" alt="" class="recipes_image_img">
@@ -289,58 +320,110 @@ $result = mysqli_query($connect, $sql);
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Получаем параметр ?category= из URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const categoryId = urlParams.get('category');
+        // Кнопка "сохранить"
+       document.querySelectorAll('.save-recipe').forEach(button => {
+    button.addEventListener('click', async function(e) {
+        e.preventDefault();
+        e.stopPropagation();
 
-            // Если параметр есть, находим чекбокс и отмечаем его
-            if (categoryId) {
-                const checkbox = document.getElementById(categoryId);
-                if (checkbox) {
-                    checkbox.checked = true; // Отмечаем галочку
+        const recipeId = this.dataset.recipeId;
+        const isSaved = this.classList.contains('saved');
+        const action = isSaved ? 'remove' : 'add';
 
-                    // Прокручиваем к этому чекбоксу (опционально)
-                    setTimeout(() => {
-                        checkbox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }, 100);
-                }
-            }
+        window.location.href = `save_recipe.php?recipe_id=${recipeId}&action=${action}`;
+        
+        if (!recipeId || isNaN(recipeId)) {
+            console.error('Invalid recipeId:', recipeId);
+            alert('Ошибка: некорректный ID рецепта');
+            return;
+        }
 
-            // Убираем параметр ?category=... из URL после загрузки
-            if (window.location.search.includes('category=')) {
-                const newUrl = window.location.pathname; // Получаем URL без параметров
-                window.history.replaceState(null, null, newUrl); // Заменяем URL без перезагрузки
-            }
-            // Сброс всех чекбоксов категорий
-            if (categoryParam) {
-                document.querySelectorAll('.catalog_filter_column input[type="checkbox"]').forEach(checkbox => {
-                    checkbox.checked = false;
-                });
-            }
-
-
-
-
-            // Обработка ссылок категорий в хлебных крошках
-            document.querySelectorAll('.category-link').forEach(link => {
-                link.addEventListener('click', function (e) {
-                    if (this.getAttribute('href') !== '#') {
-                        // Сброс всех чекбоксов перед переходом (если нужно)
-                        document.querySelectorAll('.catalog_filter_column input[type="checkbox"]').forEach(checkbox => {
-                            checkbox.checked = false;
-                        });
-                        // Переход произойдет автоматически по ссылке
-                    } else {
-                        e.preventDefault(); // Отменяем переход для неопределенных категорий
-                    }
-                });
+        try {
+            // Формируем URL с параметрами
+            const url = new URL('http://goodnes/html/save_recipe.php');
+            url.searchParams.append('recipe_id', recipeId);
+            url.searchParams.append('action', isSaved ? 'remove' : 'add');
+            
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                credentials: 'include' // Для передачи кук и сессии
             });
-        });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Server error');
+            }
+
+            const data = await response.json();
+            
+            if (data.success) {
+                this.classList.toggle('saved');
+                this.textContent = isSaved ? 'Сохранить' : 'Сохранено';
+                this.style.backgroundColor = isSaved ? '' : '#4CAF50';
+            } else {
+                alert(data.message || 'Ошибка операции');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Ошибка: ' + error.message);
+        }
+    });
+});
 
 
+
+
+        // document.querySelectorAll('.save-recipe').forEach(button => {
+        //     button.addEventListener('click', async function (e) {
+        //         e.preventDefault();
+        //         e.stopPropagation();
+
+        //         const recipeId = this.dataset.recipeId;
+        //         const isSaved = this.classList.contains('saved');
+        //         const action = isSaved ? 'remove' : 'add';
+
+        //         // // Временный код для проверки - перенаправление на save_recipe.php с параметрами
+        //         // window.location.href = `save_recipe.php?recipe_id=${recipeId}&action=${action}`;
+
+        //         if (!recipeId || isNaN(recipeId)) {
+        //             console.error('Invalid recipeId:', recipeId);
+        //             alert('Ошибка: некорректный ID рецепта');
+        //             return;
+        //         }
+
+        //         const isSaved = this.classList.contains('saved');
+        //         const button = this;
+
+        //         try {
+        //             const response = await fetch('save_recipe.php', {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'Content-Type': 'application/x-www-form-urlencoded',
+        //                 },
+        //                 body: `recipe_id=${recipeId}&action=${isSaved ? 'remove' : 'add'}`
+        //             });
+
+        //             if (!response.ok) throw new Error('Network error');
+
+        //             const data = await response.json();
+
+        //             if (data.success) {
+        //                 button.classList.toggle('saved');
+        //                 button.textContent = isSaved ? 'Сохранить' : 'Сохранено';
+        //                 button.style.backgroundColor = isSaved ? '' : '#4CAF50';
+        //             } else {
+        //                 alert(data.message || 'Ошибка операции');
+        //             }
+        //         } catch (error) {
+        //             console.error('Error:', error);
+        //             alert('Ошибка соединения с сервером');
+        //         }
+        //     });
+        // });
     </script>
-
     <script src="/js/tema.js"></script>
     <script src="/js/catalog.js"></script>
 </body>

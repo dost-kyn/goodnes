@@ -63,109 +63,6 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
     <link rel="stylesheet" href="/css/header_footer.css">
     <link rel="stylesheet" href="/css/recipe_page.css">
     <title><?= htmlspecialchars($recipe['name']) ?></title>
-    <style>
-        .main_info_image {
-            max-width: 60vw;
-            background-color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px 150px;
-            box-sizing: border-box;
-        }
-
-        .main_info_img {
-            min-width: 145%;
-            object-fit: contain;
-            /* Сохраняет пропорции */
-            display: block;
-        }
-
-        @media (max-width: 1000px) {
-            .main_info_image {
-                padding: 20px 130px;
-            }
-
-            .main_info_img {
-                min-width: 125%;
-            }
-        }
-
-        @media (max-width: 900px) {
-            .main_info_image {
-                max-width: 80vw;
-            }
-
-            .main_info_img {
-                min-width: 115%;
-            }
-        }
-
-        @media (max-width: 800px) {
-            .main_info_image {
-                padding: 30px 160px;
-                width: 65vw;
-            }
-
-            .main_info_img {
-                min-width: 130%;
-            }
-        }
-
-        @media (max-width: 700px) {
-            .main_info_image {
-                width: 70vw;
-            }
-
-            .main_info_img {
-                min-width: 130%;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .main_info_img {
-                min-width: 170%;
-            }
-        }
-
-        @media (max-width: 550px) {
-            .main_info_image {
-                padding: 25px 140px;
-            }
-
-            .main_info_img {
-                min-width: 180%;
-            }
-        }
-
-        @media (max-width: 500px) {
-            .main_info_img {
-                min-width: 210%;
-            }
-        }
-
-        @media (max-width: 460px) {
-            .main_info_image {
-                padding: 15px 110px;
-            }
-
-            .main_info_img {
-                min-width: 130%;
-            }
-        }
-
-        @media (max-width: 410px) {
-            .main_info_img {
-                min-width: 180%;
-            }
-        }
-
-        @media (max-width: 370px) {
-            .main_info_img {
-                min-width: 260%;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -332,19 +229,19 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
         <p class="desc_text"><?= htmlspecialchars($recipe['description']) ?></p>
     </section>
 
-<section class="ingredients">
-    <h2 class="ingre_title">Ингредиенты</h2>
-    
-    <div class="ingre_content">
+    <section class="ingredients">
+        <h2 class="ingre_title">Ингредиенты</h2>
 
-        <div class="ingre_box">
-            <input type="checkbox" class="wr-checkbox8" id="wr8" name="wr">
-            <label for="wr8"></label>
-            <p class="ingre_text">Название ингредиента 1</p>
+        <div class="ingre_content">
+
+            <div class="ingre_box">
+                <input type="checkbox" class="wr-checkbox8" id="wr8" name="wr">
+                <label for="wr8"></label>
+                <p class="ingre_text">Название ингредиента 1</p>
+            </div>
+
         </div>
-
-    </div>
-</section>
+    </section>
 
 
     <section class="instruction">
@@ -508,7 +405,6 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
     <script src="/js/tema.js"></script>
     <script src="/js/recipe_page.js"></script>
     <script>
-
         // Проверка статуса входа
         function checkLoginStatus() {
             // Проверяем наличие элемента формы
@@ -524,6 +420,8 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
         }
 
 
+
+        // форма входа (не уверена. танена работа)
         document.addEventListener('DOMContentLoaded', function () {
             const loginForm = document.querySelector('.modal_form');
 
@@ -567,6 +465,8 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
         });
 
 
+
+        // "показать еще" к отзывам (не уверена. танена работа) зачем? она у меня есть
         document.addEventListener('DOMContentLoaded', function () {
             // Обработка кнопки "Показать ещё"
             const moreBtn = document.querySelector('.review_more_btn');
@@ -585,6 +485,7 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
                 review.style.display = 'none';
             });
         });
+
     </script>
 </body>
 

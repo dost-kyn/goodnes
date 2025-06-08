@@ -1,185 +1,90 @@
 // открытие и закрытие фильтра
-document.querySelector('.filter-mobile-toggle').addEventListener('click', function() {
-    document.querySelector('.catalog_filter_content').classList.toggle('active');
-  });
-  
-  // Закрытие при клике вне фильтра (опционально)
-  document.addEventListener('click', function(e) {
-    const filter = document.querySelector('.catalog_filter_content');
-    const toggleBtn = document.querySelector('.filter-mobile-toggle');
-    
-    if (!filter.contains(e.target) && e.target !== toggleBtn) {
-      filter.classList.remove('active');
-    }
-  });
+document.querySelector('.filter-mobile-toggle').addEventListener('click', function () {
+  document.querySelector('.catalog_filter_content').classList.toggle('active');
+});
 
-  // Открытие фильтров
-document.querySelector('.filter-mobile-toggle').addEventListener('click', function() {
-    document.querySelector('.catalog_filter_content').classList.add('active');
-    // document.querySelector('.filters-overlay').classList.add('active');
-    document.body.classList.add('menu-open');
-  });
-  
-  // Закрытие фильтров
-  function closeFilters() {
-    document.querySelector('.catalog_filter_content').classList.remove('active');
-    // document.querySelector('.filters-overlay').classList.remove('active');
-    document.body.classList.remove('menu-open');
+// Закрытие при клике вне фильтра (опционально)
+document.addEventListener('click', function (e) {
+  const filter = document.querySelector('.catalog_filter_content');
+  const toggleBtn = document.querySelector('.filter-mobile-toggle');
+
+  if (!filter.contains(e.target) && e.target !== toggleBtn) {
+    filter.classList.remove('active');
   }
-  
-  document.querySelector('.close-filters').addEventListener('click', closeFilters);
-  // document.querySelector('.filters-overlay').addEventListener('click', closeFilters);
+});
+
+// Открытие фильтров
+document.querySelector('.filter-mobile-toggle').addEventListener('click', function () {
+  document.querySelector('.catalog_filter_content').classList.add('active');
+  // document.querySelector('.filters-overlay').classList.add('active');
+  document.body.classList.add('menu-open');
+});
+
+// Закрытие фильтров
+function closeFilters() {
+  document.querySelector('.catalog_filter_content').classList.remove('active');
+  // document.querySelector('.filters-overlay').classList.remove('active');
+  document.body.classList.remove('menu-open');
+}
+
+document.querySelector('.close-filters').addEventListener('click', closeFilters);
+// document.querySelector('.filters-overlay').addEventListener('click', closeFilters);
 
 
 
 
 
-// // перенаправление из главной страницы, фильтр
-// document.addEventListener('DOMContentLoaded', function() {
-//   // Проверяем URL на наличие параметра категории
-//   const urlParams = new URLSearchParams(window.location.search);
-//   const categoryParam = urlParams.get('category');
-  
-//   // Если есть параметр категории, отмечаем соответствующий чекбокс
-//   if (categoryParam) {
-//     const checkbox = document.getElementById(categoryParam);
-//     if (checkbox) {
-//       checkbox.checked = true;
-      
-//       // Прокручиваем фильтр в видимую область
-//       setTimeout(() => {
-//         checkbox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-//       }, 100);
-      
-//       // Применяем фильтры (если у вас уже есть функция applyFilters)
-//       if (typeof applyFilters === 'function') {
-//         applyFilters();
-//       }
-//     }
-//   }
 
-//   // Ваш существующий код фильтрации
-//   const recipesCards = document.querySelectorAll('.recipes_card');
-//   const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-//   const calorieMinInput = document.querySelector('.paragraph_number:nth-of-type(1) .paragraph_inp_num');
-//   const calorieMaxInput = document.querySelector('.paragraph_number:nth-of-type(2) .paragraph_inp_num');
-//   const showMoreBtn = document.querySelector('.recipes_more_btn');
+// переход на стр каталог через меню из главной
+document.addEventListener('DOMContentLoaded', function () {
+  // Получаем параметр ?category= из URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const categoryId = urlParams.get('category');
 
-//   // Настройки пагинации
-//   const cardsPerRow = 4;
-//   const rowsPerLoad = 2;
-//   const cardsPerLoad = cardsPerRow * rowsPerLoad;
-//   let visibleCardsCount = cardsPerLoad;
+  // Если параметр есть, находим чекбокс и отмечаем его
+  if (categoryId) {
+    const checkbox = document.getElementById(categoryId);
+    if (checkbox) {
+      checkbox.checked = true; // Отмечаем галочку
 
-//   // function hasActiveFilters() {
-//   //   const checkedCategoryBoxes = document.querySelectorAll('.catalog_filter_column:nth-of-type(1) input[type="checkbox"]:checked');
-//   //   const checkedTimeBoxes = document.querySelectorAll('.catalog_filter_column:nth-of-type(2) input[type="checkbox"]:checked');
-//   //   const minCalories = parseInt(calorieMinInput.value) || 0;
-//   //   const maxCalories = parseInt(calorieMaxInput.value) || 0;
-//   //   return checkedCategoryBoxes.length > 0 || checkedTimeBoxes.length > 0 || (minCalories > 0 || maxCalories > 0);
-//   // }
+      // Прокручиваем к этому чекбоксу (опционально)
+      setTimeout(() => {
+        checkbox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+  }
 
-//   // function getCaloriesValue(caloriesText) {
-//   //   const match = caloriesText.match(/\d+(\.\d+)?/);
-//   //   return match ? parseFloat(match[0]) : 0;
-//   // }
+  // Убираем параметр ?category=... из URL после загрузки
+  if (window.location.search.includes('category=')) {
+    const newUrl = window.location.pathname; // Получаем URL без параметров
+    window.history.replaceState(null, null, newUrl); // Заменяем URL без перезагрузки
+  }
+  // Сброс всех чекбоксов категорий
+  if (categoryParam) {
+    document.querySelectorAll('.catalog_filter_column input[type="checkbox"]').forEach(checkbox => {
+      checkbox.checked = false;
+    });
+  }
 
-//   function applyFilters() {
-//     const isFilterActive = hasActiveFilters();
-    
-//     const selectedCategories = Array.from(
-//       document.querySelectorAll('.catalog_filter_column:nth-of-type(1) input[type="checkbox"]:checked')
-//     ).map(checkbox => {
-//       return checkbox.nextElementSibling.nextElementSibling.textContent.trim().toLowerCase();
-//     });
 
-//     const selectedTimes = Array.from(
-//       document.querySelectorAll('.catalog_filter_column:nth-of-type(2) input[type="checkbox"]:checked')
-//     ).map(checkbox => {
-//       return checkbox.nextElementSibling.nextElementSibling.textContent.trim();
-//     });
 
-//     // const minCalories = parseInt(calorieMinInput.value) || 0;
-//     // const maxCalories = parseInt(calorieMaxInput.value) || Infinity;
-//     // let visibleCards = 0;
+  // Обработка ссылок категорий в хлебных крошках
+  document.querySelectorAll('.category-link').forEach(link => {
+    link.addEventListener('click', function (e) {
+      if (this.getAttribute('href') !== '#') {
+        // Сброс всех чекбоксов перед переходом (если нужно)
+        document.querySelectorAll('.catalog_filter_column input[type="checkbox"]').forEach(checkbox => {
+          checkbox.checked = false;
+        });
+        // Переход произойдет автоматически по ссылке
+      } else {
+        e.preventDefault(); // Отменяем переход для неопределенных категорий
+      }
+    });
+  });
+});
 
-//     recipesCards.forEach((card, index) => {
-//       const categoryFromCard = card.querySelector('.recipes_category').textContent
-//         .replace('Категория:', '')
-//         .trim()
-//         .toLowerCase();
-        
-//       const caloriesText = card.querySelector('.recipes_calory').textContent;
-//       const calories = getCaloriesValue(caloriesText);
-      
-//       const matchesCategory = selectedCategories.length === 0 || 
-//         selectedCategories.includes(categoryFromCard);
-//       const matchesCalories = calories >= minCalories && calories <= maxCalories;
-        
-//       if (matchesCategory && matchesCalories) {
-//         if (isFilterActive) {
-//           card.style.display = 'flex';
-//           setTimeout(() => {
-//             card.style.opacity = '1';
-//             card.style.transform = 'scale(1)';
-//           }, 10);
-//         } else {
-//           if (index < visibleCardsCount) {
-//             card.style.display = 'flex';
-//             setTimeout(() => {
-//               card.style.opacity = '1';
-//               card.style.transform = 'scale(1)';
-//             }, 10);
-//           } else {
-//             card.style.display = 'none';
-//           }
-//         }
-//         visibleCards++;
-//       } else {
-//         card.style.opacity = '0';
-//         card.style.transform = 'scale(0.98)';
-//         setTimeout(() => {
-//           card.style.display = 'none';
-//         }, 300);
-//       }
-//     });
 
-//     if (showMoreBtn) {
-//       if (isFilterActive) {
-//         showMoreBtn.style.display = 'none';
-//       } else {
-//         showMoreBtn.style.display = visibleCardsCount >= visibleCards ? 'none' : 'block';
-//       }
-//     }
-//   }
-
-//   function showMoreCards() {
-//     visibleCardsCount += cardsPerLoad;
-//     applyFilters();
-//   }
-
-//   checkboxes.forEach(checkbox => {
-//     checkbox.addEventListener('change', applyFilters);
-//   });
-
-//   [calorieMinInput, calorieMaxInput].forEach(input => {
-//     input.addEventListener('input', applyFilters);
-//   });
-
-//   if (showMoreBtn) {
-//     showMoreBtn.addEventListener('click', showMoreCards);
-//   }
-
-//   function init() {
-//     recipesCards.forEach(card => {
-//       card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-//     });
-    
-//     applyFilters();
-//   }
-
-//   init();
-// });
 
 
 
@@ -187,7 +92,7 @@ document.querySelector('.filter-mobile-toggle').addEventListener('click', functi
 
 
 // работа фильтра
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   // Элементы DOM
   const recipesCards = document.querySelectorAll('.recipes_card');
   const checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -208,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const minCalories = parseInt(calorieMinInput.value) || 0;
     const maxCalories = parseInt(calorieMaxInput.value) || 0;
     const caloriesFilterActive = maxCalories > 0; // Фильтр активен только если указано "до"
-    
+
     return checkedCategoryBoxes.length > 0 || checkedTimeBoxes.length > 0 || caloriesFilterActive;
   }
 
@@ -221,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Функция для проверки соответствия времени приготовления
   function matchesTimeFilter(cookingTime, selectedTimes) {
     if (selectedTimes.length === 0) return true;
-    
+
     const time = parseInt(cookingTime);
     if (isNaN(time)) return false;
 
@@ -236,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Основная функция фильтрации
   function applyFilters() {
     const isFilterActive = hasActiveFilters();
-    
+
     // 1. Получаем выбранные категории
     const selectedCategories = Array.from(
       document.querySelectorAll('.catalog_filter_column:nth-of-type(1) input[type="checkbox"]:checked')
@@ -263,17 +168,17 @@ document.addEventListener('DOMContentLoaded', function() {
         .replace('Категория:', '')
         .trim()
         .toLowerCase();
-      
+
       const caloriesText = card.querySelector('.recipes_calory').textContent;
       const calories = getCaloriesValue(caloriesText);
       const cookingTime = card.dataset.cookingTime;
-      
+
       // Проверяем соответствие всем фильтрам
-      const matchesCategory = selectedCategories.length === 0 || 
+      const matchesCategory = selectedCategories.length === 0 ||
         selectedCategories.includes(categoryFromCard);
       const matchesCalories = calories >= minCalories && calories <= maxCalories;
       const matchesTime = matchesTimeFilter(cookingTime, selectedTimes);
-      
+
       // Показываем/скрываем карточку
       if (matchesCategory && matchesCalories && matchesTime) {
         if (isFilterActive) {
@@ -327,13 +232,13 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Обработчики для полей калорий
-  calorieMinInput.addEventListener('input', function() {
+  calorieMinInput.addEventListener('input', function () {
     // Если ввели значение "от", но не ввели "до" - не фильтруем
     if (!calorieMaxInput.value) return;
     applyFilters();
   });
 
-  calorieMaxInput.addEventListener('input', function() {
+  calorieMaxInput.addEventListener('input', function () {
     // При изменении "до" всегда фильтруем
     applyFilters();
   });
@@ -345,13 +250,13 @@ document.addEventListener('DOMContentLoaded', function() {
   // Инициализация
   function init() {
     recipesCards.forEach(card => {
-        card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-        void card.offsetWidth; // Перезапуск анимации
+      card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      void card.offsetWidth; // Перезапуск анимации
     });
-    
+
     // Устанавливаем значение по умолчанию для "от"
     calorieMinInput.value = '0';
-    
+
     applyFilters();
   }
 
@@ -361,14 +266,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+
+
+
 //  ПОИСК и показать еще
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   // Общие элементы
   const searchInput = document.querySelector('.search_inp');
   const searchBtn = document.querySelector('.search_btn');
   const cards = document.querySelectorAll('.recipes_card');
   const showMoreBtn = document.querySelector('.recipes_more_btn');
-  
+
   // Настройки пагинации
   const cardsPerRow = 4;
   const rowsPerLoad = 2;
@@ -400,7 +308,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const title = card.querySelector('.recipes_title').textContent.toLowerCase();
       // const category = card.querySelector('.recipes_category').textContent
       //   .replace('Категория:', '').trim().toLowerCase();
-      
+
       const matches = title.includes(query);
 
       if (matches) {
@@ -449,16 +357,16 @@ document.addEventListener('DOMContentLoaded', function() {
   // Обработчики событий
   searchBtn.addEventListener('click', performSearch);
   showMoreBtn.addEventListener('click', showMoreCards);
-  
+
   // Поиск при нажатии Enter
-  searchInput.addEventListener('keypress', function(e) {
+  searchInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
       performSearch();
     }
   });
 
   // Автоматический сброс при очистке поля
-  searchInput.addEventListener('input', function() {
+  searchInput.addEventListener('input', function () {
     if (searchInput.value.trim() === '') {
       resetToInitialState();
     }
@@ -470,101 +378,106 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-// сохранить/отмена краточки
-document.addEventListener('DOMContentLoaded', function() {
-  // Ключ для localStorage
-  const STORAGE_KEY = 'saved_recipes';
 
-  // Функция для сохранения состояния в localStorage
-  function updateSavedRecipes(recipeId, isSaved) {
-    let savedRecipes = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    
-    if (isSaved) {
-      // Добавляем рецепт, если его нет в списке
-      if (!savedRecipes.includes(recipeId)) {
-        savedRecipes.push(recipeId);
-      }
-    } else {
-      // Удаляем рецепт из списка
-      savedRecipes = savedRecipes.filter(id => id !== recipeId);
-    }
-    
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(savedRecipes));
-  }
 
-  // Функция для проверки сохраненных рецептов
-  function checkSavedRecipes() {
-    const savedRecipes = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    
-    document.querySelectorAll('.recipes_card').forEach(card => {
-      const recipeId = card.dataset.id;
-      const button = card.querySelector('.recipes_btn');
-      
-      if (savedRecipes.includes(recipeId)) {
-        button.textContent = 'Отменить';
-        button.style.backgroundColor = '#cccccc';
-        button.classList.add('saved');
-      }
-    });
-  }
 
-  // Обработчик кликов для кнопок сохранения
-  document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('recipes_btn')) {
-      const button = e.target;
-      const card = button.closest('.recipes_card');
-      const recipeId = card.dataset.id;
-      const isSaved = button.textContent.trim() === 'Отменить';
 
-      // Визуальные изменения
-      if (isSaved) {
-        button.textContent = 'Сохранить';
-        button.style.backgroundColor = '';
-        button.classList.remove('saved');
-      } else {
-        button.textContent = 'Отменить';
-        button.style.backgroundColor = '#cccccc';
-        button.classList.add('saved');
-      }
 
-      // Обновляем localStorage
-      updateSavedRecipes(recipeId, !isSaved);
+// // сохранить/отмена краточки
+// document.addEventListener('DOMContentLoaded', function () {
+//   // Ключ для localStorage
+//   const STORAGE_KEY = 'saved_recipes';
 
-      // Здесь будет ваш код для отправки на сервер
-      /*
-      fetch('/save-recipe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          recipe_id: recipeId,
-          action: isSaved ? 'unsave' : 'save'
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (!data.success) {
-          // Откатываем изменения при ошибке
-          button.textContent = isSaved ? 'Отменить' : 'Сохранить';
-          button.style.backgroundColor = isSaved ? '#cccccc' : '';
-          updateSavedRecipes(recipeId, isSaved);
-          alert('Ошибка: ' + data.message);
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        button.textContent = isSaved ? 'Отменить' : 'Сохранить';
-        button.style.backgroundColor = isSaved ? '#cccccc' : '';
-        updateSavedRecipes(recipeId, isSaved);
-      });
-      */
-    }
-  });
+//   // Функция для сохранения состояния в localStorage
+//   function updateSavedRecipes(recipeId, isSaved) {
+//     let savedRecipes = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
-  // Проверяем сохраненные рецепты при загрузке страницы
-  checkSavedRecipes();
-});
+//     if (isSaved) {
+//       // Добавляем рецепт, если его нет в списке
+//       if (!savedRecipes.includes(recipeId)) {
+//         savedRecipes.push(recipeId);
+//       }
+//     } else {
+//       // Удаляем рецепт из списка
+//       savedRecipes = savedRecipes.filter(id => id !== recipeId);
+//     }
+
+//     localStorage.setItem(STORAGE_KEY, JSON.stringify(savedRecipes));
+//   }
+
+//   // Функция для проверки сохраненных рецептов
+//   function checkSavedRecipes() {
+//     const savedRecipes = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+//     document.querySelectorAll('.recipes_card').forEach(card => {
+//       const recipeId = card.dataset.id;
+//       const button = card.querySelector('.recipes_btn');
+
+//       if (savedRecipes.includes(recipeId)) {
+//         button.textContent = 'Отменить';
+//         button.style.backgroundColor = '#cccccc';
+//         button.classList.add('saved');
+//       }
+//     });
+//   }
+
+//   // Обработчик кликов для кнопок сохранения
+//   document.addEventListener('click', function (e) {
+//     if (e.target.classList.contains('recipes_btn')) {
+//       const button = e.target;
+//       const card = button.closest('.recipes_card');
+//       const recipeId = card.dataset.id;
+//       const isSaved = button.textContent.trim() === 'Отменить';
+
+//       // Визуальные изменения
+//       if (isSaved) {
+//         button.textContent = 'Сохранить';
+//         button.style.backgroundColor = '';
+//         button.classList.remove('saved');
+//       } else {
+//         button.textContent = 'Отменить';
+//         button.style.backgroundColor = '#cccccc';
+//         button.classList.add('saved');
+//       }
+
+//       // Обновляем localStorage
+//       updateSavedRecipes(recipeId, !isSaved);
+
+//       // Здесь будет ваш код для отправки на сервер
+//       /*
+//       fetch('/save-recipe', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({
+//           recipe_id: recipeId,
+//           action: isSaved ? 'unsave' : 'save'
+//         })
+//       })
+//       .then(response => response.json())
+//       .then(data => {
+//         if (!data.success) {
+//           // Откатываем изменения при ошибке
+//           button.textContent = isSaved ? 'Отменить' : 'Сохранить';
+//           button.style.backgroundColor = isSaved ? '#cccccc' : '';
+//           updateSavedRecipes(recipeId, isSaved);
+//           alert('Ошибка: ' + data.message);
+//         }
+//       })
+//       .catch(error => {
+//         console.error('Error:', error);
+//         button.textContent = isSaved ? 'Отменить' : 'Сохранить';
+//         button.style.backgroundColor = isSaved ? '#cccccc' : '';
+//         updateSavedRecipes(recipeId, isSaved);
+//       });
+//       */
+//     }
+//   });
+
+//   // Проверяем сохраненные рецепты при загрузке страницы
+//   checkSavedRecipes();
+// });
 
 
 
