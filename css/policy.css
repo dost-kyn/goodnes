@@ -11,6 +11,7 @@
 html {
   overflow-x: hidden;
 }
+
 body {
   max-width: 1440px;
   margin: 0 auto 0 auto;
@@ -20,14 +21,17 @@ body {
   position: relative;
   padding: 0 20px;
 }
+
 a {
   color: var(--text-color);
   text-decoration: none;
 }
+
 hr {
   height: 1px;
   background-color: var(--border-color);
 }
+
 input[type="checkbox"] {
   width: 30px;
   background-color: #b0206b;
@@ -66,31 +70,144 @@ input[type="checkbox"] {
 .container {
   margin-top: 60px;
 }
+
+.policy_container {
+  margin-bottom: 150px;
+}
+
 .link {
   font-size: 15px;
 }
+
 .policy_title {
   font-size: 2.4vw;
   margin-top: 100px;
-  /* font-size: 35px; */
 }
-.container_whatData {
+
+.container_whatData,
+.container_howUse {
   margin-bottom: 80px;
 }
+
 .container_pounds_title {
   font-size: 25px;
   margin-bottom: 30px;
 }
+
 .privacy-section__title {
   margin-bottom: 0;
 }
+
 .point_1-1,
 .point_1-2,
 .point_1-3 {
   font-size: 17px;
 }
+
 .privacy-section__description {
   margin: 0;
 }
 
 
+/* адаптив */
+@media (max-width: 1100px) {
+  .container_pounds_title {
+    font-size: 20px;
+  }
+
+  .point_1-1,
+  .point_1-2,
+  .point_1-3 {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 900px) {
+  .link {
+    font-size: 13px;
+  }
+
+  .policy_title {
+    font-size: 2.9vw;
+  }
+
+  .container_pounds_title {
+    font-size: 18px;
+  }
+
+  .point_1-1,
+  .point_1-2,
+  .point_1-3 {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 700px) {
+
+  .policy_title {
+    font-size: 3.4vw;
+    margin-bottom: 30px;
+  }
+
+  .container_pounds_title {
+    font-size: 19px;
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+
+  .point_1-1,
+  .point_1-2,
+  .point_1-3 {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 600px) {
+  .link {
+    font-size: 12px;
+  }
+
+  .policy_title {
+    font-size: 3.7vw;
+  }
+
+  .container_pounds_title {
+    font-size: 17px;
+  }
+
+  .container_howUse p {
+    font-size: 15px;
+  }
+
+  .point_1-1,
+  .point_1-2,
+  .point_1-3 {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 500px) {
+  .policy_title {
+    font-size: 4.0vw;
+  }
+}
+
+@media (max-width: 420px) {
+  .policy_title {
+    font-size: 4.4vw;
+  }
+
+  .container_pounds_title {
+    font-size: 15px;
+  }
+
+  .container_howUse p {
+    font-size: 12px;
+  }
+
+  .point_1-1,
+  .point_1-2,
+  .point_1-3 {
+    font-size: 12px;
+  }
+}
