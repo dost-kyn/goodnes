@@ -320,7 +320,6 @@ if (!$result) {
     </footer>
 
     <script>
-        // Кнопка "сохранить"
        document.querySelectorAll('.save-recipe').forEach(button => {
     button.addEventListener('click', async function(e) {
         e.preventDefault();
@@ -328,9 +327,9 @@ if (!$result) {
 
         const recipeId = this.dataset.recipeId;
         const isSaved = this.classList.contains('saved');
-        const action = isSaved ? 'remove' : 'add';
+        // const action = isSaved ? 'remove' : 'add';
 
-        window.location.href = `save_recipe.php?recipe_id=${recipeId}&action=${action}`;
+        // window.location.href = `save_recipe.php?recipe_id=${recipeId}&action=${action}`;
         
         if (!recipeId || isNaN(recipeId)) {
             console.error('Invalid recipeId:', recipeId);
@@ -339,26 +338,23 @@ if (!$result) {
         }
 
         try {
-            // Формируем URL с параметрами
-            const url = new URL('http://goodnes/html/save_recipe.php');
-            url.searchParams.append('recipe_id', recipeId);
-            url.searchParams.append('action', isSaved ? 'remove' : 'add');
-            
-            const response = await fetch(url, {
+            const response = await fetch('save_recipe.php', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/json',
                 },
-                credentials: 'include' // Для передачи кук и сессии
+                body: JSON.stringify({
+                    recipe_id: recipeId,
+                    action: isSaved ? 'remove' : 'add'
+                })
             });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Server error');
-            }
 
             const data = await response.json();
             
+            if (!response.ok) {
+                throw new Error(data.message || 'Ошибка сервера');
+            }
+
             if (data.success) {
                 this.classList.toggle('saved');
                 this.textContent = isSaved ? 'Сохранить' : 'Сохранено';
@@ -372,7 +368,6 @@ if (!$result) {
         }
     });
 });
-
 
 
 

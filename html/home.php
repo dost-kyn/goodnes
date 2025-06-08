@@ -2,23 +2,76 @@
 session_start();
 require_once '../connect/connect.php';
 
+// $sql_popular = "SELECT 
+//            id,
+//            name,
+//            cooking_time,
+//            calorie,
+//            caregories,
+//            maun_image,
+//            created_at 
+//            
+//         FROM recipes 
+//         ORDER BY created_at DESC 
+//         LIMIT 8";
+
 $sql_popular = "SELECT 
-           id,
-           name,
-           cooking_time,
-           calorie,
-           caregories,
-           maun_image,
-           created_at 
-        FROM recipes
-        ORDER BY created_at DESC 
-        LIMIT 8";
+    r.id,
+    r.name,
+    r.cooking_time,
+    r.calorie,
+    r.caregories,
+    r.maun_image,
+    r.created_at,
+    IFNULL((SELECT 1 FROM saved_recipes sr WHERE sr.user_id = ? AND sr.recipe_id = r.id LIMIT 1), 0) AS is_saved
+FROM 
+    recipes r
+ORDER BY 
+    r.created_at DESC
+LIMIT 8";
 
-$result_popular = mysqli_query($connect, $sql_popular);
 
-if (!$result_popular) {
+// $result_popular = mysqli_query($connect, $sql_popular);
+
+
+$stmt = mysqli_prepare($connect, $sql_popular);
+mysqli_stmt_bind_param($stmt, "i", $user_id); // Привязываем параметр user_id
+mysqli_stmt_execute($stmt);
+$popular_result = mysqli_stmt_get_result($stmt);
+
+
+if (!$popular_result) {
     die("Ошибка запроса: " . mysqli_error($connect));
 }
+
+
+
+$stmt = mysqli_prepare($connect, $sql_popular);
+if (!$stmt) {
+    die("Ошибка подготовки запроса: " . mysqli_error($connect));
+}
+
+// Убедитесь что $user_id определен
+$user_id = $_SESSION['user']['id'] ?? 0; // Добавьте эту строку
+
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+
+if (!mysqli_stmt_execute($stmt)) {
+    die("Ошибка выполнения запроса: " . mysqli_stmt_error($stmt));
+}
+
+$result = mysqli_stmt_get_result($stmt);
+if (!$result) {
+    die("Ошибка получения результата: " . mysqli_error($connect));
+}
+
+
+
+
+$test_data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+error_log(print_r($test_data, true));
+mysqli_data_seek($result, 0); // Возвращаем указатель на начало
+
 ?>
 
 <!DOCTYPE html>
@@ -30,6 +83,11 @@ if (!$result_popular) {
     <link rel="stylesheet" href="/css/header_footer.css">
     <link rel="stylesheet" href="/css/home.css">
     <title>OVENLY GOODNESS</title>
+    <style>
+        .recipes_btn.save-recipe.saved {
+            color: #555555;
+        }
+    </style>
 </head>
 
 <body>
@@ -163,7 +221,7 @@ if (!$result_popular) {
             <button class="pre">⭠</button>
             <div class="recipes_cards">
 
-                <?php while ($card = mysqli_fetch_assoc($result_popular)): ?>
+                <?php while ($card = mysqli_fetch_assoc($result)): ?>
                     <a href="recipe_page.php?id=<?= htmlspecialchars($card['id']) ?>" class="recipes_card"
                         data-id="<?= htmlspecialchars($card['id']) ?>"
                         data-cooking-time="<?= htmlspecialchars($card['cooking_time']) ?>">
@@ -181,7 +239,12 @@ if (!$result_popular) {
                             <p class="recipes_category">Категория: <?= htmlspecialchars($card['caregories']) ?></p>
 
                         </div>
-                        <button class="recipes_btn">Сохранить</button>
+                        <?php if (isset($_SESSION['user']['id'])): ?>
+                            <button class="recipes_btn save-recipe <?= ($card['is_saved'] == 1) ? 'saved' : '' ?>"
+                                data-recipe-id="<?= $card['id'] ?>">
+                                <?= ($card['is_saved'] == 1) ? 'Сохранено' : 'Сохранить' ?>
+                            </button>
+                        <?php endif; ?>
                     </a>
                 <?php endwhile; ?>
 
@@ -321,6 +384,58 @@ if (!$result_popular) {
         </div>
     </footer>
 </body>
+<script>
+    // кнопка сохранить
+    document.querySelectorAll('.save-recipe').forEach(button => {
+        button.addEventListener('click', async function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const recipeId = this.dataset.recipeId;
+            const isSaved = this.classList.contains('saved');
+            // const action = isSaved ? 'remove' : 'add';
+
+            // window.location.href = `save_recipe.php?recipe_id=${recipeId}&action=${action}`;
+
+            if (!recipeId || isNaN(recipeId)) {
+                console.error('Invalid recipeId:', recipeId);
+                alert('Ошибка: некорректный ID рецепта');
+                return;
+            }
+
+            try {
+                const response = await fetch('save_recipe.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        recipe_id: recipeId,
+                        action: isSaved ? 'remove' : 'add'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Ошибка сервера');
+                }
+
+                if (data.success) {
+                    this.classList.toggle('saved');
+                    this.textContent = isSaved ? 'Сохранить' : 'Сохранено';
+                    this.style.backgroundColor = isSaved ? '' : '#4CAF50';
+                } else {
+                    alert(data.message || 'Ошибка операции');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Ошибка: ' + error.message);
+            }
+        });
+    });
+
+</script>
 <script src="/js/tema.js"></script>
 <script src="/js/home.js"></script>
 

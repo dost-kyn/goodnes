@@ -2,47 +2,34 @@
 session_start();
 require_once '../connect/connect.php';
 
-// Разрешаем CORS (для разработки)
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET");
-header("Access-Control-Allow-Headers: Content-Type");
 header('Content-Type: application/json');
-
-// Включаем отладку
 ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Проверяем авторизацию
+// Проверка авторизации
 if (empty($_SESSION['user']['id'])) {
     http_response_code(401);
     die(json_encode(['success' => false, 'message' => 'Требуется авторизация']));
 }
 
-// Получаем данные из POST или GET
-$requestData = array_merge($_GET, $_POST);
-$user_id = (int)$_SESSION['user']['id'];
-$recipe_id = isset($requestData['recipe_id']) ? (int)$requestData['recipe_id'] : 0;
-$action = isset($requestData['action']) ? $requestData['action'] : '';
+// Получаем JSON данные
+$json = file_get_contents('php://input');
+$data = json_decode($json, true);
 
-// Логирование для отладки
-error_log("Request data: " . print_r($requestData, true));
-error_log("User ID: $user_id, Recipe ID: $recipe_id, Action: $action");
-
-// Проверяем ID рецепта
-if ($recipe_id <= 0) {
+// Валидация
+if (json_last_error() !== JSON_ERROR_NONE) {
     http_response_code(400);
-    die(json_encode([
-        'success' => false, 
-        'message' => 'Неверный ID рецепта',
-        'received_data' => $requestData
-    ]));
+    die(json_encode(['success' => false, 'message' => 'Неверный формат данных']));
 }
+
+$user_id = (int)$_SESSION['user']['id'];
+$recipe_id = isset($data['recipe_id']) ? (int)$data['recipe_id'] : 0;
+$action = $data['action'] ?? '';
 
 try {
     if ($action === 'add') {
-        // Проверяем, не сохранен ли уже рецепт
-        $check = $connect->prepare("SELECT 1 FROM saved_recipes WHERE user_id = ? AND recipe_id = ?");
+        // Проверка существования записи
+        $check = $connect->prepare("SELECT id FROM saved_recipes WHERE user_id = ? AND recipe_id = ?");
         $check->bind_param("ii", $user_id, $recipe_id);
         $check->execute();
         
@@ -51,33 +38,29 @@ try {
         }
 
         // Получаем текущую дату и время
-        $saved_at = date('Y-m-d'); // Формат: Год-Месяц-День Часы:Минуты:Секунды
+        $saved_at = date('Y-m-d');
 
-        // Сохраняем рецепт с датой
+        // 
         $stmt = $connect->prepare("INSERT INTO saved_recipes (user_id, recipe_id, saved_at) VALUES (?, ?, ?)");
         $stmt->bind_param("iis", $user_id, $recipe_id, $saved_at);
         $stmt->execute();
-        $connect->commit();
         
         echo json_encode([
             'success' => true,
             'message' => 'Рецепт успешно сохранен',
-            'debug' => [
-                'user_id' => $user_id,
-                'recipe_id' => $recipe_id,
-                'saved_at' => $saved_at
-            ]
+            'id' => $stmt->insert_id
         ]);
         
     } elseif ($action === 'remove') {
-        // Удаляем рецепт из сохраненных
+        // Удаление
         $stmt = $connect->prepare("DELETE FROM saved_recipes WHERE user_id = ? AND recipe_id = ?");
         $stmt->bind_param("ii", $user_id, $recipe_id);
         $stmt->execute();
         
         echo json_encode([
             'success' => true,
-            'message' => 'Рецепт успешно удален'
+            'message' => 'Рецепт удален',
+            'deleted_rows' => $stmt->affected_rows
         ]);
         
     } else {
@@ -86,28 +69,9 @@ try {
     }
 } catch (Exception $e) {
     http_response_code(500);
-    error_log("Database error: " . $e->getMessage());
     echo json_encode([
-        'success' => false, 
+        'success' => false,
         'message' => 'Ошибка базы данных',
         'error' => $e->getMessage()
     ]);
 }
-
-
-
-
-
-// echo 'id пользователя = ' . $user_id . '. id рецепта = ' . $recipe_id . '. активность кнопки = ' .$action;
-
-// echo "<pre>";
-// echo "GET данные:\n";
-// print_r($_GET);
-// echo "\nPOST данные:\n";
-// print_r($_POST);
-// echo "\nСессия:\n";
-// print_r($_SESSION);
-// echo "</pre>";
-// exit();
-// 
-// ?>

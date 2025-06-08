@@ -63,6 +63,31 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
 //     var_dump($sql_reviews); // Посмотрите какой запрос формируется
 //     var_dump(mysqli_error($connect)); // Проверьте ошибки SQL
 // }
+
+
+
+
+
+// Получаем ID пользователя (если авторизован)
+$user_id = isset($_SESSION['user']['id']) ? (int) $_SESSION['user']['id'] : 0;
+
+// Запрос для проверки, сохранен ли этот конкретный рецепт у текущего пользователя
+$is_saved = 0; // По умолчанию не сохранен
+
+if ($user_id > 0 && $recipe_id > 0) {
+    $sql = "SELECT 1 AS is_saved FROM saved_recipes 
+            WHERE user_id = ? AND recipe_id = ? LIMIT 1";
+
+    $stmt = mysqli_prepare($connect, $sql);
+    mysqli_stmt_bind_param($stmt, "ii", $user_id, $recipe_id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $is_saved = (int) $row['is_saved'];
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -229,7 +254,12 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
                 </div>
 
                 <div class="main_info_save">
-                    <button class="main_info_btn">Сохранить</button>
+                    <?php if (isset($_SESSION['user']['id'])): ?>
+                        <button class="main_info_btn recipes_btn save-recipe <?= $is_saved ? 'saved' : '' ?>"
+                            data-recipe-id="<?= $recipe_id ?>">
+                            <?= $is_saved ? 'Сохранено' : 'Сохранить' ?>
+                        </button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -433,6 +463,61 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
     <script src="/js/home.js"></script>
     <script src="/js/recipe_page.js"></script>
     <script>
+        // кнопка сохранить
+        document.querySelectorAll('.save-recipe').forEach(button => {
+            button.addEventListener('click', async function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const recipeId = this.dataset.recipeId;
+                const isSaved = this.classList.contains('saved');
+                // const action = isSaved ? 'remove' : 'add';
+
+                // window.location.href = `save_recipe.php?recipe_id=${recipeId}&action=${action}`;
+
+                if (!recipeId || isNaN(recipeId)) {
+                    console.error('Invalid recipeId:', recipeId);
+                    alert('Ошибка: некорректный ID рецепта');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('save_recipe.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            recipe_id: recipeId,
+                            action: isSaved ? 'remove' : 'add'
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || 'Ошибка сервера');
+                    }
+
+                    if (data.success) {
+                        this.classList.toggle('saved');
+                        this.textContent = isSaved ? 'Сохранить' : 'Сохранено';
+                        this.style.backgroundColor = isSaved ? '' : '#4CAF50';
+                    } else {
+                        alert(data.message || 'Ошибка операции');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Ошибка: ' + error.message);
+                }
+            });
+        });
+
+
+
+
+
+
         // Проверка статуса входа
         function checkLoginStatus() {
             // Проверяем наличие элемента формы

@@ -10,39 +10,38 @@ if (!isset($_SESSION['user']['id'])) {
 
 $user_id = (int) $_SESSION['user']['id'];
 
-// Оригинальный запрос (без изменений)
-$sql = "SELECT 
-            u.id, 
-            u.name, 
-            u.numder_recipes,
-            r.id AS recipe_id, 
-            r.name AS recipe_name,
-            r.cooking_time, 
-            r.calorie, 
-            r.caregories, 
-            r.maun_image,
-            sr.saved_at,
-            rev.id AS review_id,
-            rev.text AS review_text,
-            rev.created_at AS review_date,
-            rev.status AS review_status
-        FROM 
-            users u
-        LEFT JOIN 
-            saved_recipes sr ON u.id = sr.user_id
-        LEFT JOIN 
-            recipes r ON sr.recipe_id = r.id
-        LEFT JOIN
-            reviews rev ON rev.user_id = u.id AND rev.recipe_id = r.id
-        WHERE 
-            u.id = ?
-        ORDER BY
-            sr.saved_at DESC, rev.created_at DESC";
+// Запрос для получения информации о пользователе
+$user_sql = "SELECT id, name FROM users WHERE id = ?";
+$user_stmt = mysqli_prepare($connect, $user_sql);
+mysqli_stmt_bind_param($user_stmt, "i", $user_id);
+mysqli_stmt_execute($user_stmt);
+$user_result = mysqli_stmt_get_result($user_stmt);
+$user = mysqli_fetch_assoc($user_result);
 
-$stmt = mysqli_prepare($connect, $sql);
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
+// Запрос для получения сохраненных рецептов пользователя
+$recipes_sql = "SELECT 
+                r.id AS recipe_id, 
+                r.name AS recipe_name,
+                r.cooking_time, 
+                r.calorie, 
+                r.caregories, 
+                r.maun_image,
+                sr.saved_at
+            FROM 
+                saved_recipes sr
+            JOIN 
+                recipes r ON sr.recipe_id = r.id
+            WHERE 
+                sr.user_id = ?
+            ORDER BY
+                sr.saved_at DESC";
+
+$recipes_stmt = mysqli_prepare($connect, $recipes_sql);
+mysqli_stmt_bind_param($recipes_stmt, "i", $user_id);
+mysqli_stmt_execute($recipes_stmt);
+$recipes_result = mysqli_stmt_get_result($recipes_stmt);
+
+
 
 // Новый запрос только для отзывов пользователя
 $reviews_sql = "SELECT 
@@ -187,51 +186,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_review'])) {
             OVENLY GOODNESS — мир <br> ароматной выпечки</p>
     </section>
 
+    <div class="name_user">
+        <h1 class="name_user_h1"><?php echo htmlspecialchars($user['name'] ?? 'Пользователь') ?></h1>
+    </div>
+
+    <section class="search">
+        <div class="find">
+            <input class="search_inp" type="text" placeholder="Поиск..">
+            <button class="search_btn">Найти</button>
+        </div>
+
+        <div class="blog">
+            <button class="blog_btn" onclick="window.location.href='blog.php'">Блоги</button>
+        </div>
+    </section>
+
+    <section class="catalog">
+        <div class="recipes_cards">
 
 
-    <?php if ($result && mysqli_num_rows($result) > 0): ?>
-        <?php $first = true; ?>
-        <?php while ($row = mysqli_fetch_assoc($result)): ?>
-            <?php if ($first): ?>
-                <div class="name_user">
-                    <h1 class="name_user_h1"><?php echo $row['name'] ?></h1>
-                </div>
-                <?php $first = false; ?>
-            <?php endif; ?>
-
-
-
-
-            <section class="search">
-                <div class="find">
-                    <input class="search_inp" type="text" placeholder="Поиск..">
-                    <button class="search_btn">Найти</button>
-                </div>
-
-                <div class="blog">
-                    <button class="blog_btn" onclick="window.location.href='blog.php'">Блоги</button>
-                </div>
-            </section>
-
-            <section class="catalog">
-                <div class="recipes_cards">
-
-                    <?php if ($row['recipe_id']): ?>
-                        <a href="recipe_page.php?id=<?= htmlspecialchars($row['recipe_id']) ?>" class="recipes_card">
-                            <h1 class="recipes_title"><?php echo $row['recipe_name'] ?></h1>
-                            <div class="recipes_image">
-                                <img src="<?php echo $row['maun_image'] ?>" alt="" class="recipes_image_img">
-                            </div>
-                            <div class="recipes_info">
-                                <p class="recipes_calory">Калорийность: <?php echo $row['calorie'] ?> ккал</p>
-                                <p class="recipes_category">Категория: <?php echo $row['caregories'] ?></p>
-                            </div>
-                            <form method="POST" onsubmit="return confirm('Вы уверены, что хотите удалить этот рецепт?')">
-                                <input type="hidden" name="recipe_id" value="<?php echo $row['recipe_id']; ?>">
-                                <button type="submit" name="delete_recipe" class="recipes_btn">Удалить</button>
-                            </form>
-                        </a>
-                    <?php endif; ?>
+            <?php if ($recipes_result && mysqli_num_rows($recipes_result) > 0): ?>
+                <?php while ($recipe = mysqli_fetch_assoc($recipes_result)): ?>
+                    <a href="recipe_page.php?id=<?= htmlspecialchars($recipe['recipe_id']) ?>" class="recipes_card">
+                        <h1 class="recipes_title"><?= htmlspecialchars($recipe['recipe_name']) ?></h1>
+                        <div class="recipes_image">
+                            <img src="<?= htmlspecialchars($recipe['maun_image']) ?>" alt="" class="recipes_image_img">
+                        </div>
+                        <div class="recipes_info">
+                            <p class="recipes_calory">Калорийность: <?= htmlspecialchars($recipe['calorie']) ?> ккал</p>
+                            <p class="recipes_category">Категория: <?= htmlspecialchars($recipe['caregories']) ?></p>
+                        </div>
+                        <form method="POST" onsubmit="return confirm('Вы уверены, что хотите удалить этот рецепт?')">
+                            <input type="hidden" name="recipe_id" value="<?= $recipe['recipe_id'] ?>">
+                            <button type="submit" name="delete_recipe" class="recipes_btn">Удалить</button>
+                        </form>
+                    </a>
                 <?php endwhile; ?>
             <?php else: ?>
                 <p>Нет сохранённых рецептов.</p>
