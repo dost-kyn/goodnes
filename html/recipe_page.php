@@ -30,14 +30,17 @@ mysqli_stmt_execute($stmt_steps);
 $result_steps = mysqli_stmt_get_result($stmt_steps);
 $steps = mysqli_fetch_all($result_steps, MYSQLI_ASSOC);
 
-// Запрос для получения отзывов к рецепту
-$sql_reviews = "SELECT * FROM reviews WHERE recipe_id = ? ORDER BY created_at DESC";
+// Запрос для получения отзывов к рецепту с именем пользователя
+$sql_reviews = "SELECT r.*, u.name as user_name 
+                FROM reviews r 
+                JOIN users u ON r.user_id = u.id 
+                WHERE r.recipe_id = ? AND r.status = 'approved' 
+                ORDER BY r.created_at DESC";
 $stmt_reviews = mysqli_prepare($connect, $sql_reviews);
 mysqli_stmt_bind_param($stmt_reviews, "i", $recipe_id);
 mysqli_stmt_execute($stmt_reviews);
 $result_reviews = mysqli_stmt_get_result($stmt_reviews);
 $reviews = mysqli_fetch_all($result_reviews, MYSQLI_ASSOC);
-
 
 // Создаем соответствие между значениями caregories и ID чекбоксов
 $categoryMapping = [
@@ -52,6 +55,14 @@ $categoryMapping = [
 // Получаем ID чекбокса для текущей категории
 $checkboxId = $categoryMapping[strtolower($recipe['caregories'])] ?? '';
 $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) : '#';
+
+
+// После выполнения запроса на отзывы
+if (empty($reviews)) {
+    echo "Нет отзывов для рецепта ID: $recipe_id";
+    var_dump($sql_reviews); // Посмотрите какой запрос формируется
+    var_dump(mysqli_error($connect)); // Проверьте ошибки SQL
+}
 ?>
 
 <!DOCTYPE html>
@@ -374,7 +385,7 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
 <section class="review">
     <div class="review_info">
         <div class="review_quantity">
-            <span class="review_quan_num"><?= count($reviews) ?></span>
+            <span class="review_quan_num">0</span> <!-- Будет обновлено JS -->
             <span class=""> Отзыва(ов)</span>
         </div>
         <?php if (isset($_SESSION['user'])): ?>
@@ -384,32 +395,19 @@ $categoryLink = $checkboxId ? 'catalog.php?category=' . urlencode($checkboxId) :
         <?php endif; ?>
     </div>
     
-    <div class="review_content">
-        <?php if (empty($reviews)): ?>
-            <p class="no-reviews">Пока нет отзывов к этому рецепту. Будьте первым!</p>
-        <?php else: ?>
-            <?php foreach ($reviews as $review): ?>
-                <?php 
-                // Получаем информацию о пользователе, оставившем отзыв
-                $user_stmt = $connect->prepare("SELECT name FROM users WHERE id = ?");
-                $user_stmt->bind_param("i", $review['user_id']);
-                $user_stmt->execute();
-                $user_result = $user_stmt->get_result();
-                $user = $user_result->fetch_assoc();
-                ?>
-                
-                <div class="review_box">
-                    <div class="review_box_info">
-                        <span class="review_name"><?= htmlspecialchars($user['name'] ?? 'Аноним') ?></span>
-                        <span class="review_date"><?= date('d.m.Y', strtotime($review['created_at'])) ?></span>
-                    </div>
-                    <p class="review_box_text"><?= nl2br(htmlspecialchars($review['text'])) ?></p>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </div>
+<div class="review_content">
+    <?php foreach ($reviews as $review): ?>
+        <div class="review_box" style="display: none;">
+            <div class="review_box_info">
+                <span class="review_name"><?= htmlspecialchars($review['user_name'] ?? 'Аноним') ?></span>
+                <span class="review_date"><?= date('d.m.Y', strtotime($review['created_at'])) ?></span>
+            </div>
+            <p class="review_box_text"><?= nl2br(htmlspecialchars($review['text'])) ?></p>
+        </div>
+    <?php endforeach; ?>
+</div>
 
-    <?php if (count($reviews) > 4): ?>
+    <?php if (count($reviews) > 2): ?>
         <div class="review_more">
             <button class="review_more_btn">Показать ещё+</button>
         </div>

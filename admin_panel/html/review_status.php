@@ -29,12 +29,19 @@ try {
     }
 
     // Определяем текстовый статус
-    $statusText = match($newStatus) {
-        1 => 'pending',
-        2 => 'approved',
-        3 => 'rejected',
-        default => 'pending'
-    };
+switch ((int)$newStatus) {
+    case 1:
+        $statusText = 'pending';
+        break;
+    case 2:
+        $statusText = 'approved';
+        break;
+    case 3:
+        $statusText = 'rejected';
+        break;
+    default:
+        $statusText = 'pending';
+}
 
     // Подготовка запроса
     $query = "UPDATE reviews SET 
