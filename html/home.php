@@ -23,6 +23,7 @@ if (!$result_popular) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,6 +49,7 @@ if (!$result_popular) {
                 <a href="blog.php" class="header_nav_blog">Блог</a>
 
                 <?php if (isset($_SESSION['user'])): ?>
+                    <a href="profile.php" class="header_nav_profile">Профиль</a>
                     <a href="/connect/logout.php" class="header_nav_exit">Выйти</a>
                 <?php else: ?>
                     <a href="/components/modal_auth.php" class="header_nav_exit">Войти</a>
@@ -64,6 +66,34 @@ if (!$result_popular) {
             </div>
         </div>
     </header>
+
+    <div class="mobile-menu-overlay"></div>
+    <nav class="mobile-menu">
+        <button class="mobile-menu-close">
+            <span></span>
+            <span></span>
+        </button>
+
+        <div class="mobile-menu-content">
+            <button class="mobile-menu-theme">
+                <img src="/image/tema.svg" data-theme-image data-light="/image/tema.svg"
+                    data-dark="/image/tema-dark.svg" class="mobile-menu-theme-img">
+                <span>Сменить тему</span>
+            </button>
+
+            <a href="catalog.php" class="mobile-menu-link">Каталог</a>
+            <a href="blog.php" class="mobile-menu-link">Блог</a>
+
+            <?php if (isset($_SESSION['user'])): ?>
+                <a href="profile.php" class="mobile-menu-link">Профиль</a>
+                <a href="/connect/logout.php" class="mobile-menu-link">Выйти</a>
+            <?php else: ?>
+                <a href="/components/modal_auth.php" class="mobile-menu-link">Войти</a>
+            <?php endif; ?>
+        </div>
+    </nav>
+
+
     <section class="banner">
         <div class="banner_image">
             <img src="/image/banner_image.jpg" alt="" class="banner_image_img">
@@ -263,12 +293,12 @@ if (!$result_popular) {
                     data-dark="/image/лого-dark.svg" class="footer_logo_img">
             </div>
             <div class="footer_cataloge">
-                <a href="" class="footer_cataloge_link">Кексы</a>
-                <a href="" class="footer_cataloge_link">Пироги</a>
-                <a href="" class="footer_cataloge_link">Хлеб</a>
-                <a href="" class="footer_cataloge_link">Торты</a>
-                <a href="" class="footer_cataloge_link">Конфеты</a>
-                <a href="" class="footer_cataloge_link">Печенье</a>
+                <a href="catalog.php" class="footer_cataloge_link">Кексы</a>
+                <a href="catalog.php" class="footer_cataloge_link">Пироги</a>
+                <a href="catalog.php" class="footer_cataloge_link">Хлеб</a>
+                <a href="catalog.php" class="footer_cataloge_link">Торты</a>
+                <a href="catalog.php" class="footer_cataloge_link">Конфеты</a>
+                <a href="catalog.php" class="footer_cataloge_link">Печенье</a>
             </div>
             <div class="footer_info">
                 <p class="footer_phone">+8 999 035 6471</p>
@@ -287,7 +317,7 @@ if (!$result_popular) {
             </div>
         </div>
         <div class="footer_confi">
-            <a href="">Политика конфиденциальности</a>
+            <a href="policy.php">Политика конфиденциальности</a>
         </div>
     </footer>
 </body>
