@@ -1,5 +1,103 @@
 <?php
 session_start();
+
+require_once __DIR__ . '/../../connect/connect.php';
+
+// if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+//     // 1. Сохраняем основную инфу о рецепте
+//     $name = mysqli_real_escape_string($connect, $_POST['name']);
+//     $cooking_time = mysqli_real_escape_string($connect, $_POST['cooking_time']);
+//     $calorie = mysqli_real_escape_string($connect, $_POST['calorie']);
+//     $portions = mysqli_real_escape_string($connect, $_POST['portions']);
+//     $caregories = mysqli_real_escape_string($connect, $_POST['caregories']);
+
+//     // Обработка главного изображения
+//     $maun_image = '';
+//     if (isset($_FILES['maun_image']) && $_FILES['maun_image']['error'] == UPLOAD_ERR_OK) {
+//         $upload_dir = '/image/recipe/main/';
+//         if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $upload_dir)) {
+//             mkdir($_SERVER['DOCUMENT_ROOT'] . $upload_dir, 0777, true);
+//         }
+
+//         $file_ext = pathinfo($_FILES['maun_image']['name'], PATHINFO_EXTENSION);
+//         $new_filename = uniqid() . '.' . $file_ext;
+//         $maun_image = $upload_dir . $new_filename;
+//         $upload_path = $_SERVER['DOCUMENT_ROOT'] . $maun_image;
+
+//         if (!move_uploaded_file($_FILES['maun_image']['tmp_name'], $upload_path)) {
+//             $_SESSION['error'] = "Ошибка при загрузке главного изображения";
+//             header("Location: " . $_SERVER['PHP_SELF']);
+//             exit();
+//         }
+//     }
+
+//     $description = mysqli_real_escape_string($connect, $_POST['description']);
+//     $ingredients = mysqli_real_escape_string($connect, $_POST['ingredients']);
+
+//     $created_at = date('Y-m-d H:i:s');
+
+//     $sql_recipe = "INSERT INTO recipes (id, name, cooking_time, calorie, portions, caregories, maun_image, description, ingredients, created_at) 
+//     VALUES (null, '$name', '$cooking_time', '$calorie', '$portions', '$caregories', '$maun_image', '$description', '$ingredients', '$created_at')";
+
+
+//     // Перед выполнением запроса добавьте:
+//     error_log("SQL запрос: " . $sql_recipe);
+//     error_log("Данные: " . print_r($_POST, true));
+//     error_log("Файлы: " . print_r($_FILES, true));
+
+//     if (!mysqli_query($connect, $sql_recipe)) {
+//         error_log("Ошибка MySQL: " . mysqli_error($connect));
+//         $_SESSION['error'] = "Ошибка при сохранении рецепта: " . mysqli_error($connect);
+//         header("Location: " . $_SERVER['PHP_SELF']);
+//         exit();
+//     }
+
+
+
+//     if (!mysqli_query($connect, $sql_recipe)) {
+//         $_SESSION['error'] = "Ошибка при сохранении рецепта: " . mysqli_error($connect);
+//         header("Location: " . $_SERVER['PHP_SELF']);
+//         exit();
+//     }
+//     $recipe_id = mysqli_insert_id($connect);
+
+// // 2. Сохраняем шаги рецепта
+// if (isset($_POST['step_description']) && is_array($_POST['step_description'])) {
+//     foreach ($_POST['step_description'] as $i => $step_desc) {
+//         $step_number = $i + 1;
+//         $step_description = mysqli_real_escape_string($connect, $step_desc);
+
+//         $image_name = '';
+//         if (isset($_FILES['step_image']['name'][$i]) && $_FILES['step_image']['error'][$i] == UPLOAD_ERR_OK) {
+//             $upload_dir = '/image/recipe/steps/';
+//             if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $upload_dir)) {
+//                 mkdir($_SERVER['DOCUMENT_ROOT'] . $upload_dir, 0777, true);
+//             }
+
+//             $file_ext = pathinfo($_FILES['step_image']['name'][$i], PATHINFO_EXTENSION);
+//             $new_filename = uniqid() . '.' . $file_ext;
+//             $image_name = $upload_dir . $new_filename;
+//             $upload_path = $_SERVER['DOCUMENT_ROOT'] . $image_name;
+
+//             if (!move_uploaded_file($_FILES['step_image']['tmp_name'][$i], $upload_path)) {
+//                 $_SESSION['error'] = "Ошибка при загрузке изображения для шага $step_number";
+//                 continue;
+//             }
+//         }
+
+//         $sql_step = "INSERT INTO recipe_steps (recipe_id, step_number, description, image_path) 
+//                     VALUES ('$recipe_id', '$step_number', '$step_description', '$image_name')";
+//         if (!mysqli_query($connect, $sql_step)) {
+//             $_SESSION['error'] = "Ошибка при сохранении шага $step_number: " . mysqli_error($connect);
+//         }
+//     }
+// }
+
+//     $_SESSION['success'] = "Рецепт успешно сохранен!";
+//     header("Location: recipes.php");
+//     exit();
+// }
+
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +120,8 @@ session_start();
             <div class="sidebar_nav">
                 <a href="users.html" class="sidebar_nav_link users">Пользователи</a>
                 <a href="reviews.php" class="sidebar_nav_link reviews">Отзывы</a>
-                <a href="recipes.php" class="sidebar_nav_link recipes" style="text-decoration-line: underline;">Рецепты</a>
+                <a href="recipes.php" class="sidebar_nav_link recipes"
+                    style="text-decoration-line: underline;">Рецепты</a>
                 <a href="blog.php" class="sidebar_nav_link">Блоги</a>
             </div>
         </section>
@@ -36,8 +135,8 @@ session_start();
             </section>
 
             <section class="container_review">
-
-                <form class="modal_form" action="more_create.php" method="POST" enctype="multipart/form-data">
+                <!--  -->
+                <form class="modal_form" method="POST" action="more_create.php" enctype="multipart/form-data">
                     <table class="table_users">
                         <tr class="table_row">
                             <th class="table_column_1">Название</th>
@@ -79,13 +178,23 @@ session_start();
                         <tr class="table_row">
                             <th class="table_column_1">Ингридиенты</th>
                             <th><input type="text" class="table_inp" name="ingredients"></th>
-                        <!-- <tr class="table_row">
+                        <tr class="table_row">
                             <th class="table_column_1">Инструкция</th>
                             <th class="table_column_2">
-                                <p>Фото 1: <input type="file"></p>
-                                <p>Описание 1: <input type="text" class="table_inp"></p>
+
+                                <!-- <div class="step-container">
+                                    <div class="step-item">
+                                        <p>Фото 1: <input type="file" name="step_image[]"></p>
+                                        <p>Описание шага 1: <textarea class="table_inp" name="step_description[]"
+                                                required></textarea></p>
+                                    </div>
+                                </div> -->
+
+                                <!-- <p>Фото 1: <input type="file" name="step_image" required></p>
+                                <p>Описание шага 1: <input type="text" class="table_inp" name="step_description"
+                                        required></p> -->
                             </th>
-                        </tr> -->
+                        </tr>
                         <tr class="table_row">
                             <th>
 
@@ -127,8 +236,8 @@ session_start();
             newTh.className = 'table_column_2';
 
             newTh.innerHTML = `
-            <p>Фото ${counter} : <input type="file"></p>
-            <p>Описание ${counter} : <input type="text" class="table_inp"></p>`;
+            <p>Фото ${counter} : <input type="file" name="step_image" required></p>
+            <p>Описание шага ${counter} : <input type="text" class="table_inp" name="step_description" required></p>`;
 
             newRow.appendChild(document.createElement('th')); // Пустая ячейка слева
             newRow.appendChild(newTh);
