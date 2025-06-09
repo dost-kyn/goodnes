@@ -61,7 +61,8 @@ $enum_row = mysqli_fetch_assoc($enum_result);
 preg_match("/^enum\(\'(.*)\'\)$/", $enum_row['Type'], $matches);
 $enum_values = explode("','", $matches[1]);
 
-
+// var_dump($steps);
+// var_dump($recipe);
 ?>
 
 
@@ -157,7 +158,7 @@ $enum_values = explode("','", $matches[1]);
 
           <tr class="table_row">
             <th class="table_column_1">Главная фотография</th>
-            <th class="table_column_2" data-field="maun_image"><?= htmlspecialchars($recipe['maun_image']) ?></th>
+            <th class="table_column_2" data-field="maun_image"><img src="<?= htmlspecialchars($recipe['maun_image']) ?>"></th>
           </tr>
 
           <tr class="table_row">
@@ -185,8 +186,7 @@ $enum_values = explode("','", $matches[1]);
                             <div class="current-image-wrapper">
                                 <p class="current-image-info">
                                     <strong>Фото для шага <?= htmlspecialchars($step['number']) ?>:</strong><br>
-                                    <span class="image-path"><?= htmlspecialchars($step['image_path']) ?></span>
-                                    <img src="<?= htmlspecialchars($step['image_path']) ?>" class="step-preview-image" 
+                                    <img src="/<?= htmlspecialchars($step['image_path']) ?>" class="step-preview-image" 
                                          onerror="this.style.display='none'" style="width:400px">
                                     
                                 </p>

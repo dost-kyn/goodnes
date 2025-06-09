@@ -1,383 +1,92 @@
-<!-- <?php
-
+<?php
 session_start();
 require_once __DIR__ . '/../../connect/connect.php';
 
-// if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-//     // 1. Обработка основных данных рецепта
-//     $name = $_POST['name'];
-//     $cooking_time = $_POST['cooking_time'];
-//     $calorie = $_POST['calorie'];
-//     $portions = $_POST['portions'];
-//     $caregories = $_POST['caregories'];
-//     $description = $_POST['description'];
-//     $ingredients = $_POST['ingredients'];
-//     $created_at = date('Y-m-d H:i:s');
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // 1. Сохраняем основную информацию о рецепте
+    $name = mysqli_real_escape_string($connect, $_POST['name']);
+    $cooking_time = mysqli_real_escape_string($connect, $_POST['cooking_time']);
+    $calorie = mysqli_real_escape_string($connect, $_POST['calorie']);
+    $portions = mysqli_real_escape_string($connect, $_POST['portions']);
+    $caregories = mysqli_real_escape_string($connect, $_POST['caregories']);
+    $description = mysqli_real_escape_string($connect, $_POST['description']);
+    $ingredients = mysqli_real_escape_string($connect, $_POST['ingredients']);
 
-//     // Валидация обязательных полей
-//     if (empty($name) || empty($cooking_time) || empty($caregories)) {
-//         $_SESSION['error'] = "Не все обязательные поля заполнены";
-//         header('Location: /admin_panel/html/more_create.php'); //
-//         exit();
-//     }
+    $maun_image = '';
+    if (isset($_FILES['maun_image']) && $_FILES['maun_image']['error'] == UPLOAD_ERR_OK) {
+        $upload_dir = '/image/recipe/main/';
+        if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $upload_dir)) {
+            mkdir($_SERVER['DOCUMENT_ROOT'] . $upload_dir, 0777, true);
+        }
 
-//     // 2. Обработка главного изображения
-//     $maun_image = '';
-//     if (isset($_FILES['maun_image']) && $_FILES['maun_image']['error'] === UPLOAD_ERR_OK) {
-//         $uploadDir = __DIR__ . '/../../image/recipe/main/';
+        $file_ext = pathinfo($_FILES['maun_image']['name'], PATHINFO_EXTENSION);
+        $new_filename = uniqid() . '.' . $file_ext;
+        $maun_image = $upload_dir . $new_filename;
+        $upload_path = $_SERVER['DOCUMENT_ROOT'] . $maun_image;
 
-//         if (!file_exists($uploadDir)) {
-//             mkdir($uploadDir, 0777, true);
-//         }
-
-//         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-//         $fileType = mime_content_type($_FILES['maun_image']['tmp_name']);
-
-//         if (!in_array($fileType, $allowedTypes)) {
-//             $_SESSION['error'] = "Недопустимый тип файла. Разрешены только JPEG, PNG и GIF";
-//             header('Location: /admin_panel/html/more_create.php'); //
-//             exit();
-//         }
-
-//         $extension = pathinfo($_FILES['maun_image']['name'], PATHINFO_EXTENSION);
-//         $fileName = uniqid() . '.' . $extension;
-//         $targetPath = $uploadDir . $fileName;
-
-//         if (move_uploaded_file($_FILES['maun_image']['tmp_name'], $targetPath)) {
-//             $maun_image = '/image/recipe/main/' . $fileName;
-//         } else {
-//             $_SESSION['error'] = "Ошибка при загрузке главного изображения";
-//             header('Location: /admin_panel/html/more_create.php'); //
-//             exit();
-//         }
-//     }
-
-//     // 3. Сохранение основного рецепта
-//     try {
-//         $stmt = $connect->prepare("INSERT INTO recipes 
-//             (name, cooking_time, calorie, portions, caregories, maun_image, description, ingredients, created_at) 
-//             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-//         $stmt->bind_param(
-//             'ssiisssss',
-//             $name,
-//             $cooking_time,
-//             $calorie,
-//             $portions,
-//             $caregories,
-//             $maun_image,
-//             $description,
-//             $ingredients,
-//             $created_at
-//         );
-
-//         if (!$stmt->execute()) {
-//             throw new Exception('Ошибка при сохранении рецепта: ' . $stmt->error);
-//         }
-
-//         $recipe_id = $stmt->insert_id;
-
-//         // 4. Обработка и сохранение этапов рецепта
-//         if (!empty($_POST['step_description'])) {
-//             // Если один этап (не массив)
-//             if (!is_array($_POST['step_description'])) {
-//                 $step_descriptions = [$_POST['step_description']];
-//                 $step_images = [$_FILES['step_image']];
-//             } else {
-//                 $step_descriptions = $_POST['step_description'];
-//                 $step_images = $_FILES['step_image'];
-//             }
-
-//             foreach ($step_descriptions as $i => $step_desc) {
-//                 $step_number = $i + 1;
-//                 $step_description = $step_desc;
-//                 $step_image_path = '';
-
-//                 // // Обработка изображения для этапа
-//                 // if (isset($step_images['name'][$i]) && $step_images['error'][$i] === UPLOAD_ERR_OK) {
-//                 //     $uploadDirSteps = __DIR__ . '/../../image/recipe/steps/';
-
-//                 //     if (!file_exists($uploadDirSteps)) {
-//                 //         mkdir($uploadDirSteps, 0777, true);
-//                 //     }
-
-//                 //     $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-//                 //     $fileType = mime_content_type($step_images['tmp_name'][$i]);
-
-//                 //     if (!in_array($fileType, $allowedTypes)) {
-//                 //         continue; // Пропускаем этот этап, но продолжаем обработку
-//                 //     }
-
-//                 //     $extension = pathinfo($step_images['name'][$i], PATHINFO_EXTENSION);
-//                 //     $fileName = uniqid() . '.' . $extension;
-//                 //     $targetPath = $uploadDirSteps . $fileName;
-
-//                 //     if (move_uploaded_file($step_images['tmp_name'][$i], $targetPath)) {
-//                 //         $step_image_path = '/image/recipe/steps/' . $fileName;
-//                 //     }
-//                 // }
-
-//                 // Сохранение этапа
-//                 $stmt_step = $connect->prepare("INSERT INTO recipe_steps 
-//                     (recipe_id, step_number, description, image_path, created_at) 
-//                     VALUES (?, ?, ?, ?, ?)");
-
-//                 $stmt_step->bind_param(
-//                     'iisss',
-//                     $recipe_id,
-//                     $step_number,
-//                     $step_description,
-//                     $step_image_path,
-//                     $created_at
-//                 );
-
-//                 if (!$stmt_step->execute()) {
-//                     error_log("Ошибка при сохранении шага: " . $stmt_step->error);
-//                     continue; // Пропускаем ошибку шага, но продолжаем обработку
-//                 }
-//             }
-//         }
-
-//         $_SESSION['success'] = "Рецепт успешно сохранен!";
-//         header('Location: /admin_panel/html/more_create.php');//
-//         exit();
-
-//     } catch (Exception $e) {
-//         // Удаляем загруженные файлы, если запрос не удался
-//         if (!empty($maun_image)) {
-//             $filePath = __DIR__ . '/../../' . ltrim($maun_image, '/');
-//             if (file_exists($filePath)) {
-//                 unlink($filePath);
-//             }
-//         }
-
-//         $_SESSION['error'] = 'Ошибка: ' . $e->getMessage();
-//         header('Location: /admin_panel/html/more_create.php'); //
-//         exit();
-//     }
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-$name = $_POST['name'];
-$cooking_time = $_POST['cooking_time'];
-$calorie = $_POST['calorie'];
-$portions = $_POST['portions'];
-$caregories = $_POST['caregories'];
-$maun_image = $_FILES['maun_image'];
-$description = $_POST['description'];
-$ingredients = $_POST['ingredients'];
-
-$step_description = $_POST['step_description'];
-$step_image = $_FILES['step_image'];
-
-if (empty($name) || empty($cooking_time) || empty($caregories)) {
-    die('Не все обязательные поля заполнены');
-}
-
-
-
-
-if (isset($_FILES['maun_image']) && $_FILES['maun_image']['error'] === UPLOAD_ERR_OK) {
-    $uploadDir = __DIR__ . '/../../image/recipe/';
-
-    // Проверяем и создаем директорию
-    if (!file_exists($uploadDir)) {
-        mkdir($uploadDir, 0777, true);
+        if (!move_uploaded_file($_FILES['maun_image']['tmp_name'], $upload_path)) {
+            $_SESSION['error'] = "Ошибка при загрузке главного изображения";
+            header("Location: new_recipes.php");
+            exit();
+        }
     }
 
-    // Проверяем тип файла
-    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-    $fileType = mime_content_type($_FILES['maun_image']['tmp_name']);
+    $created_at = date('Y-m-d H:i:s');
+$bons=0;
+    $sql_recipe = "INSERT INTO recipes (name, cooking_time, calorie, portions, caregories, maun_image, description, ingredients,number_review, created_at) 
+                   VALUES ('$name', '$cooking_time', '$calorie', '$portions', '$caregories', '$maun_image', '$description', '$ingredients','$bons', '$created_at')";
 
-    if (!in_array($fileType, $allowedTypes)) {
-        die('Недопустимый тип файла. Разрешены только JPEG, PNG и GIF');
+    if (!mysqli_query($connect, $sql_recipe)) {
+        $_SESSION['error'] = "Ошибка при сохранении рецепта: " . mysqli_error($connect);
+        header("Location: new_recipes.php");
+        exit();
     }
+    
+    $recipe_id = mysqli_insert_id($connect);
 
-    // Генерируем уникальное имя файла
-    $extension = pathinfo($_FILES['maun_image']['name'], PATHINFO_EXTENSION);
-    $fileName = uniqid() . '.' . $extension;
-    $targetPath = $uploadDir . $fileName;
-
-    if (move_uploaded_file($_FILES['maun_image']['tmp_name'], $targetPath)) {
-        $maun_image = '/image/recipe/' . $fileName;
-    } else {
-        die('Ошибка при загрузке файла');
-    }
-}
-
-
-// if (isset($_FILES['step_image']) && $_FILES['step_image']['error'] === UPLOAD_ERR_OK) {
-//     $uploadDir2 = __DIR__ . '/../../image/recipe/steps/';
-
-//     // Проверяем и создаем директорию
-//     if (!file_exists($uploadDir2)) {
-//         mkdir($uploadDir2, 0777, true);
-//     }
-
-//     // Проверяем тип файла
-//     $allowedTypes2 = ['image/jpeg', 'image/png', 'image/gif'];
-//     $fileType2 = mime_content_type($_FILES['step_image']['tmp_name']);
-
-//     if (!in_array($fileType2, $allowedTypes2)) {
-//         die('Недопустимый тип файла. Разрешены только JPEG, PNG и GIF');
-//     }
-
-//     // Генерируем уникальное имя файла
-//     $extension2 = pathinfo($_FILES['step_image']['name'], PATHINFO_EXTENSION);
-//     $fileName2 = uniqid() . '.' . $extension2;
-//     $targetPath2 = $uploadDir2 . $fileName2;
-
-//     if (move_uploaded_file($_FILES['step_image']['tmp_name'], $targetPath2)) {
-//         $step_image = '/image/recipe/steps/' . $fileName2;
-//     } else {
-//         die('Ошибка при загрузке файла');
-//     }
-// }
-
-$recipe_id = $stmt->insert_id;
-
-if (!empty($_POST['step_description'])) {
-    // Если один этап (не массив)
-    if (!is_array($_POST['step_description'])) {
-        $step_descriptions = [$_POST['step_description']];
-        // $step_images = [$_FILES['step_image']];
-    } else {
-        $step_descriptions = $_POST['step_description'];
-        // $step_images = $_FILES['step_image'];
-    }
-
-    foreach ($step_descriptions as $i => $step_desc) {
+    // 2. Сохраняем шаги рецепта
+    if (isset($_POST['step_description']) && is_array($_POST['step_description'])) {
+    foreach ($_POST['step_description'] as $i => $step_desc) {
         $step_number = $i + 1;
-        $step_description = $step_desc;
-        $step_image = '';
+        $step_description = mysqli_real_escape_string($connect, $step_desc);
 
-
-        if (isset($_FILES['step_image']) && $_FILES['step_image']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir2 = __DIR__ . '/../../image/recipe/steps/';
-
-            // Проверяем и создаем директорию
-            if (!file_exists($uploadDir2)) {
-                mkdir($uploadDir2, 0777, true);
+        $image_name = '';
+        if (isset($_FILES['step_image']['error'][$i]) && $_FILES['step_image']['error'][$i] == UPLOAD_ERR_OK) {
+            $upload_dir = 'image/recipe/steps/'; 
+            $full_dir = $_SERVER['DOCUMENT_ROOT'] . '/' . $upload_dir;
+            
+            if (!file_exists($full_dir)) {
+                mkdir($full_dir, 0777, true);
             }
 
-            // Проверяем тип файла
-            $allowedTypes2 = ['image/jpeg', 'image/png', 'image/gif'];
-            $fileType2 = mime_content_type($_FILES['step_image']['tmp_name']);
+            $file_ext = pathinfo($_FILES['step_image']['name'][$i], PATHINFO_EXTENSION);
+            $new_filename = uniqid() . '.' . $file_ext;
+            $image_name = $upload_dir . $new_filename;
+            $upload_path = $full_dir . $new_filename;
 
-            if (!in_array($fileType2, $allowedTypes2)) {
-                die('Недопустимый тип файла. Разрешены только JPEG, PNG и GIF');
-            }
-
-            // Генерируем уникальное имя файла
-            $extension2 = pathinfo($_FILES['step_image']['name'], PATHINFO_EXTENSION);
-            $fileName2 = uniqid() . '.' . $extension2;
-            $targetPath2 = $uploadDir2 . $fileName2;
-
-            if (move_uploaded_file($_FILES['step_image']['tmp_name'], $targetPath2)) {
-                $step_image = '/image/recipe/steps/' . $fileName2;
-            } else {
-                die('Ошибка при загрузке файла');
+            if (!move_uploaded_file($_FILES['step_image']['tmp_name'][$i], $upload_path)) {
+                error_log("Ошибка загрузки файла шага $step_number");
+                $_SESSION['error'] = "Ошибка при загрузке изображения для шага $step_number";
+                continue;
             }
         }
 
-
-        $stmt_step = $connect->prepare("INSERT INTO recipe_steps 
-                    (recipe_id, step_number, description, image_path, created_at) 
-                    VALUES (?, ?, ?, ?, ?)");
-
-        $stmt_step->bind_param(
-            'iisss',
-            $recipe_id,
-            $step_number,
-            $step_description,
-            $step_image,
-            $created_at
-        );
-
-        if (!$stmt_step->execute()) {
-            error_log("Ошибка при сохранении шага: " . $stmt_step->error);
-            continue; // Пропускаем ошибку шага, но продолжаем обработку
+        $sql_step = "INSERT INTO recipe_steps (recipe_id, step_number, description, image_path) 
+                    VALUES ('$recipe_id', '$step_number', '$step_description', '$image_name')";
+        
+        if (!mysqli_query($connect, $sql_step)) {
+            error_log("Ошибка SQL при сохранении шага: " . mysqli_error($connect));
+            $_SESSION['error'] = "Ошибка при сохранении шага $step_number: " . mysqli_error($connect);
+        } else {
+            error_log("Успешно сохранён шаг $step_number для рецепта $recipe_id");
         }
     }
 }
 
-
-// Подготовленный запрос для защиты от SQL-инъекций
-
-$date = new DateTime();
-$created_at = $date->format('Y-m-d');
-
-try {
-    $stmt = $connect->prepare("INSERT INTO recipes 
-        (name, cooking_time, calorie, portions, caregories, maun_image, description, ingredients, number_review, created_at) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?)");
-
-    $stmt->bind_param(
-        'ssiisssss',
-        $name,
-        $cooking_time,
-        $calorie,
-        $portions,
-        $caregories,
-        $maun_image,
-        $description,
-        $ingredients,
-        $created_at
-    );
-
-
-    $stmt2 = $connect->prepare("INSERT INTO recipe_steps 
-        (recipe_id, step_number, description, maun_image, created_at) 
-        VALUES (?, ?, ?, ?, ?)");
-
-    $stmt2->bind_param(
-        'iisss',
-        $recipe_id,
-        $step_number,
-        $description,
-        $maun_image,
-        $created_at
-    );
-
-    if (!$stmt->execute()) {
-        throw new Exception('Ошибка при сохранении рецепта: ' . $stmt->error);
-    }
-
-    // Успешное завершение
-    header('Location: /admin_panel/html/recipes.php?success=1');
+    $_SESSION['success'] = "Рецепт успешно сохранен!";
+    header("Location: recipes.php");
     exit();
-
-} catch (Exception $e) {
-    // Удаляем загруженный файл, если запрос не удался
-    if (!empty($maun_image)) {
-        $filePath = __DIR__ . '/../../' . ltrim($maun_image, '/');
-        if (file_exists($filePath)) {
-            unlink($filePath);
-        }
-    }
-
-    die('Ошибка: ' . $e->getMessage());
+} else {
+    header("Location: new_recipes.php");
+    exit();
 }
-
-
-
-// $sql = "INSERT INTO recipes (id, name, cooking_time, calorie, portions, caregories, maun_image, description, ingredients, number_review, created_at)
-//  VALUES (NULL, '$name', '$cooking_time', '$calorie', $portions, '$caregories', '$maun_image', '$description', '$ingredients')"; -->

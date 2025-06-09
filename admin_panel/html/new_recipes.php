@@ -236,8 +236,8 @@ require_once __DIR__ . '/../../connect/connect.php';
             newTh.className = 'table_column_2';
 
             newTh.innerHTML = `
-            <p>Фото ${counter} : <input type="file" name="step_image" required></p>
-            <p>Описание шага ${counter} : <input type="text" class="table_inp" name="step_description" required></p>`;
+            <p>Фото ${counter} : <input type="file" name="step_image[]" required></p>
+            <p>Описание шага ${counter} : <input type="text" class="table_inp" name="step_description[]" required></p>`;
 
             newRow.appendChild(document.createElement('th')); // Пустая ячейка слева
             newRow.appendChild(newTh);
