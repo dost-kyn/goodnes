@@ -245,7 +245,7 @@ if ($user_id > 0 && $recipe_id > 0) {
                     </div>
                     <div class="main_info_m">
                         <span>Калорийность: </span>
-                        <span class="calories"><?= htmlspecialchars($recipe['calorie']) ?>Ккал</span>
+                        <span class="calories"><?= htmlspecialchars($recipe['calorie']) ?> Ккал</span>
                     </div>
                     <div class="main_info_m">
                         <span>Категория: </span>
@@ -512,9 +512,6 @@ if ($user_id > 0 && $recipe_id > 0) {
                 }
             });
         });
-
-
-
 
 
 

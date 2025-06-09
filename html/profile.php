@@ -268,7 +268,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_review'])) {
                         <div class="review_box">
                             <div class="review_box_info">
                                 <span class="review_name"><?= htmlspecialchars($_SESSION['user']['name'] ?? 'Вы') ?></span>
-                                <a href="/recipe.php?id=<?= $review['recipe_id'] ?>" class="review_recipe">
+                                <a href="/html/recipe_page.php?id=<?= $review['recipe_id'] ?>" class="review_recipe">
                                     <?= htmlspecialchars($review['recipe_name']) ?>
                                 </a>
                                 <span class="review_date"><?= date('d.m.Y', strtotime($review['review_date'])) ?></span>
