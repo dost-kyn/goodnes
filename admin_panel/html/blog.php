@@ -73,10 +73,10 @@ $result = mysqli_query($connect, $sql);
 
           <?php while ($row = mysqli_fetch_assoc($result)): ?>
             <tr class="table_row">
-              <td><?= $row['row_num'] ?></td>
-              <td><?= $row['name'] ?></td>
-              <td><?= $row['number_image'] ?></td>
-              <td><?= $row['created_at'] ?></td>
+              <td class="table_cell"><?= $row['row_num'] ?></td>
+              <td class="table_cell name_blog"><?= $row['name'] ?></td>
+              <td class="table_cell"><?= $row['number_image'] ?></td>
+              <td class="table_cell"><?= $row['created_at'] ?></td>
               <td class="more"><button class="more_btn"><a href="more_blog.php?id=<?= $row['id'] ?>">Подробнее</a></button></td>
             </tr>
           <?php endwhile; ?>
@@ -96,6 +96,60 @@ $result = mysqli_query($connect, $sql);
       </section>
     </section>
   </div>
+  <script>
+    //  ПОИСК 
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.querySelector('.search_inp');
+    const searchBtn = document.querySelector('.search_btn');
+    const tableRows = document.querySelectorAll('.table_row:not(.table_row_titles)');
+    
+    // Функция нормализации текста
+    function normalizeText(text) {
+        return text ? text.toString().toLowerCase().trim() : '';
+    }
+
+    // Функция поиска
+    function performSearch() {
+        const query = normalizeText(searchInput.value);
+        
+        tableRows.forEach(row => {
+            const nameCell = row.querySelector('.name_blog');
+            const nameText = normalizeText(nameCell?.textContent);
+            
+            const categoryCell = row.querySelector('.row_categories');
+            const categoryText = normalizeText(categoryCell?.textContent);
+            
+            // Проверяем совпадение в названии или категории
+            const nameMatch = nameText.includes(query);
+            const categoryMatch = categoryText.includes(query);
+            
+            row.style.display = (nameMatch) ? '' : 'none';
+        });
+    }
+
+    // Функция сброса
+    function resetSearch() {
+        tableRows.forEach(row => {
+            row.style.display = '';
+        });
+    }
+
+    // Обработчики событий
+    const handleSearch = () => {
+        if (searchInput.value.trim() === '') {
+            resetSearch();
+        } else {
+            performSearch();
+        }
+    };
+
+    searchBtn.addEventListener('click', handleSearch);
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleSearch();
+    });
+    searchInput.addEventListener('input', handleSearch);
+});
+  </script>
   <script src="/js/catalog.js"></script>
 </body>
 
