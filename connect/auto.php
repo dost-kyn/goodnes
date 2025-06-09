@@ -45,7 +45,7 @@ if (password_verify($password, $user['password'])) {
 
     // Обычный редирект
     if ($user['id'] == 1) {
-        header('Location: ../admin/admin.php');
+        header('Location: ../admin_panel/html/users.php');
     } else {
         header('Location: ../html/home.php');
     }

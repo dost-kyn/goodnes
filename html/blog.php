@@ -58,7 +58,7 @@ unset($blog); // Разрываем ссылку на последний эле�
 
     <header class="header">
         <div class="header_content">
-            <a class="header_logo" href="home.html">
+            <a class="header_logo" href="home.php">
                 <img src="/image/лого.svg" data-theme-image data-light="/image/лого.svg"
                     data-dark="/image/лого-dark.svg" class="header_logo_img">
             </a>
@@ -68,9 +68,15 @@ unset($blog); // Разрываем ссылку на последний эле�
                     <img src="/image/tema.svg" data-theme-image data-light="/image/tema.svg"
                         data-dark="/image/tema-dark.svg" class="header_nav_tema_img">
                 </button>
-                <a href="" class="header_nav_catalog">Каталог</a>
-                <a href="" class="header_nav_blog">Блог</a>
-                <a href="" class="header_nav_exit">Вход</a>
+                <a href="catalog.php" class="header_nav_catalog">Каталог</a>
+                <a href="blog.php" class="header_nav_blog">Блог</a>
+
+                <?php if (isset($_SESSION['user'])): ?>
+                    <a href="profile.php" class="header_nav_profile">Профиль</a>
+                    <a href="/connect/logout.php" class="header_nav_exit">Выйти</a>
+                <?php else: ?>
+                    <a href="/components/modal_auth.php" class="header_nav_exit">Войти</a>
+                <?php endif; ?>
 
                 <button class="header_nav_btn">
                     <div class="header_nav_span">
@@ -79,9 +85,36 @@ unset($blog); // Разрываем ссылку на последний эле�
                         <span></span>
                     </div>
                 </button>
+
             </div>
         </div>
     </header>
+
+    <div class="mobile-menu-overlay"></div>
+    <nav class="mobile-menu">
+        <button class="mobile-menu-close">
+            <span></span>
+            <span></span>
+        </button>
+
+        <div class="mobile-menu-content">
+            <button class="mobile-menu-theme">
+                <img src="/image/tema.svg" data-theme-image data-light="/image/tema.svg"
+                    data-dark="/image/tema-dark.svg" class="mobile-menu-theme-img">
+                <span>Сменить тему</span>
+            </button>
+
+            <a href="catalog.php" class="mobile-menu-link">Каталог</a>
+            <a href="blog.php" class="mobile-menu-link">Блог</a>
+
+            <?php if (isset($_SESSION['user'])): ?>
+                <a href="profile.php" class="mobile-menu-link">Профиль</a>
+                <a href="/connect/logout.php" class="mobile-menu-link">Выйти</a>
+            <?php else: ?>
+                <a href="/components/modal_auth.php" class="mobile-menu-link">Войти</a>
+            <?php endif; ?>
+        </div>
+    </nav>
 
     <section class="crumds">
         <div class="crumbs_content">

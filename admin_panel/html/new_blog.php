@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <th class="table_column_2">
                                     <p>Заголовок: <input type="text" class="table_inp" name="title[]" required></p>
                                     <p>Фото: <input type="file" name="image[]" required></p>
-                                    <p>Описание: <input type="text" class="table_inp" name="description[]" required></p>
+                                    <p>Описание: <textarea class="table_inp" name="description[]" required></textarea></p>      
                                 </th>
                             </tr>
                         </tbody>
@@ -150,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <th class="table_column_2">
                         <p>Заголовок: <input type="text" class="table_inp" name="title[]" required></p>
                         <p>Фото: <input type="file" name="image[]" required></p>
-                        <p>Описание: <input type="text" class="table_inp" name="description[]" required></p>
+                        <p>Описание: <textarea class="table_inp" name="description[]" required></textarea></p>
                     </th>
                 `;
                 stepsContainer.appendChild(newRow);

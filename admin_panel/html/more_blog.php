@@ -3,14 +3,14 @@
 session_start();
 
 require_once __DIR__ . '/../../connect/connect.php';
-// Получаем ID блога из URL
+// Get blog ID from URL
 $blog_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($blog_id <= 0) {
     die("Неверный ID блога");
 }
 
-// Запрос для получения основной информации о блоге
+// Query to get main blog info
 $sql_blog = "SELECT 
                 b.id,
                 b.name,
@@ -33,7 +33,7 @@ if (!$blog) {
     die("Блог не найден");
 }
 
-// Запрос для получения шагов блога
+// Query to get blog steps
 $sql_steps = "SELECT 
                 step_number,
                 title,
@@ -72,6 +72,7 @@ $steps = mysqli_fetch_all($result_steps, MYSQLI_ASSOC);
             line-height: 1.4;
             font-family: inherit;
             box-sizing: border-box;
+            white-space: pre-wrap; /* Preserve line breaks */
         }
 
         .step-container {
@@ -86,6 +87,12 @@ $steps = mysqli_fetch_all($result_steps, MYSQLI_ASSOC);
 
         .file-input-wrapper {
             margin-top: 10px;
+        }
+        
+        .description-content {
+            white-space: pre-line; /* This will show line breaks */
+            text-align: left;
+            padding: 5px;
         }
     </style>
 </head>
@@ -159,8 +166,8 @@ $steps = mysqli_fetch_all($result_steps, MYSQLI_ASSOC);
 
                                     <?php if (!empty($step['description'])): ?>
                                         <div data-field="step_description_<?= $step['step_number'] ?>">
-                                            <p><strong>Описание:</strong> <?= nl2br(htmlspecialchars($step['description'])) ?>
-                                            </p>
+                                            <p><strong>Описание:</strong></p>
+                                            <div class="description-content"><?= htmlspecialchars($step['description']) ?></div>
                                         </div>
                                     <?php endif; ?>
                                 </div>
@@ -193,7 +200,7 @@ $steps = mysqli_fetch_all($result_steps, MYSQLI_ASSOC);
         }
 
         editButton.addEventListener('click', function () {
-            // Обработка основных полей
+            // Handle main fields
             editableCells.forEach(cell => {
                 const fieldName = cell.dataset.field;
                 if (!fieldName) return;
@@ -202,7 +209,7 @@ $steps = mysqli_fetch_all($result_steps, MYSQLI_ASSOC);
                 const textContent = extractTextFromHTML(content);
 
                 if (fieldName === 'id' || fieldName === 'created_at') {
-                    return; // Не редактируем эти поля
+                    return; // Skip non-editable fields
                 }
 
                 if (content.includes('<p>') || content.includes('<br>') || textContent.length > 50) {
@@ -223,11 +230,11 @@ $steps = mysqli_fetch_all($result_steps, MYSQLI_ASSOC);
                 }
             });
 
-            // Обработка шагов блога
+            // Handle blog steps
             document.querySelectorAll('.step-container').forEach(container => {
                 const stepNumber = container.dataset.step;
 
-                // Обработка заголовка шага
+                // Handle step title
                 const titleContainer = container.querySelector(`[data-field="step_title_${stepNumber}"]`);
                 if (titleContainer) {
                     const textContent = extractTextFromHTML(titleContainer.innerHTML.replace(/<strong>Заголовок:<\/strong>/, ''));
@@ -240,8 +247,7 @@ $steps = mysqli_fetch_all($result_steps, MYSQLI_ASSOC);
                     titleContainer.appendChild(input);
                 }
 
-                // Обработка изображения шага
-                // Обработка изображений шагов
+                // Handle step image
                 document.querySelectorAll('.step-preview-image').forEach(img => {
                     const container = img.closest('[data-field^="step_image"]');
                     if (!container) return;
@@ -258,13 +264,13 @@ $steps = mysqli_fetch_all($result_steps, MYSQLI_ASSOC);
                     const previewWrapper = document.createElement('div');
                     previewWrapper.className = 'image-upload-wrapper';
 
-                    // Показываем текущее изображение
+                    // Show current image
                     const currentImage = document.createElement('img');
                     currentImage.src = currentSrc;
                     currentImage.className = 'current-step-image';
                     currentImage.style.maxWidth = '200px';
 
-                    // Контейнер для нового превью
+                    // Container for new preview
                     const newPreview = document.createElement('img');
                     newPreview.className = 'new-step-preview';
                     newPreview.style.display = 'none';
@@ -289,15 +295,18 @@ $steps = mysqli_fetch_all($result_steps, MYSQLI_ASSOC);
                     previewWrapper.appendChild(newPreview);
                 });
 
-                // Обработка описания шага
+                // Handle step description
                 const descContainer = container.querySelector(`[data-field="step_description_${stepNumber}"]`);
                 if (descContainer) {
-                    const textContent = extractTextFromHTML(descContainer.innerHTML.replace(/<strong>Описание:<\/strong>/, ''));
+                    const descriptionContent = descContainer.querySelector('.description-content');
+                    const textContent = descriptionContent ? descriptionContent.textContent : '';
+                    
                     const textarea = document.createElement('textarea');
                     textarea.className = 'editable-textarea-step';
                     textarea.value = textContent.trim();
                     textarea.dataset.field = `step_description_${stepNumber}`;
-                    descContainer.innerHTML = '<strong>Описание:</strong> ';
+                    
+                    descContainer.innerHTML = '<strong>Описание:</strong>';
                     descContainer.appendChild(textarea);
                 }
             });
@@ -310,7 +319,7 @@ $steps = mysqli_fetch_all($result_steps, MYSQLI_ASSOC);
             const formData = new FormData();
             formData.append('id', <?= $blog_id ?>);
 
-            // Собираем данные основных полей
+            // Collect main fields data
             document.querySelectorAll('.editable').forEach(input => {
                 const fieldName = input.dataset.field;
                 if (fieldName) {
@@ -318,7 +327,7 @@ $steps = mysqli_fetch_all($result_steps, MYSQLI_ASSOC);
                 }
             });
 
-            // Собираем данные шагов
+            // Collect steps data
             document.querySelectorAll('.editable-step').forEach(input => {
                 formData.append(input.dataset.field, input.value);
             });
@@ -327,14 +336,14 @@ $steps = mysqli_fetch_all($result_steps, MYSQLI_ASSOC);
                 formData.append(textarea.dataset.field, textarea.value);
             });
 
-            // Собираем файлы изображений шагов
+            // Collect step images
             document.querySelectorAll('.editable-file-step').forEach(input => {
                 if (input.files[0]) {
                     formData.append(input.name, input.files[0]);
                 }
             });
 
-            // Отправка данных
+            // Send data
             fetch('more_blog_edit.php', {
                 method: 'POST',
                 body: formData
@@ -359,36 +368,35 @@ $steps = mysqli_fetch_all($result_steps, MYSQLI_ASSOC);
                 });
         });
 
-deleteButton.addEventListener('click', function() {
-    if (confirm('Вы точно хотите удалить этот блог? Это действие нельзя отменить.')) {
-        fetch('more_blog_delete.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `id=${<?= $blog_id ?>}`
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Ошибка сервера: ' + response.status);
+        deleteButton.addEventListener('click', function() {
+            if (confirm('Вы точно хотите удалить этот блог? Это действие нельзя отменить.')) {
+                fetch('more_blog_delete.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `id=${<?= $blog_id ?>}`
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Ошибка сервера: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert('Блог успешно удален!');
+                        window.location.href = 'blog.php'; // Redirect to blogs list
+                    } else {
+                        alert('Ошибка: ' + (data.message || 'Не удалось удалить блог'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Ошибка соединения: ' + error.message);
+                });
             }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                alert('Блог успешно удален!');
-                window.location.href = 'blog.php'; // Перенаправляем на список блогов
-            } else {
-                alert('Ошибка: ' + (data.message || 'Не удалось удалить блог'));
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Ошибка соединения: ' + error.message);
         });
-    }
-});
     </script>
 </body>
-
 </html>
